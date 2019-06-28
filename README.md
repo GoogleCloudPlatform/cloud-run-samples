@@ -12,6 +12,7 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 | Service to Service Request | Snippet: Authenticated requests between Cloud Run services | [Go][authentication_go]          |
 | Global State               | Snippet: Using global state for in-memory caching          | [Nodejs][global_state_nodejs]    |
 | Lazy Initialization        | Snippet: Global state and lazy loading faster cold start   | [Nodejs][global_lazy_nodejs]     |
+| Ultra-minimal Web Server   | A zero-source, "hello, world" web server                   | [netcat][netcat]                 |
 
 ## Contributing changes
 
