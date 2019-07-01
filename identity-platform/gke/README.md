@@ -1,7 +1,7 @@
 # Authenticating Cloud Run on GKE end users using Istio and Identity Platform
 
 This directory contains the sample code used in the tutorial
-[Authenticating Cloud Run on GKE end users using Istio and Identity Platform](https://cloud.google.com/run/docs/authenticating/identity-platform-gke).
+[Authenticating Cloud Run on GKE end users using Istio and Identity Platform](https://cloud.google.com/solutions/authenticating-cloud-run-on-gke-end-users-using-istio-and-identity-platform).
 The tutorial demonstrates how to authenticate end users to applications
 deployed to [Cloud Run on GKE](https://cloud.google.com/run/) using
 [Istio authentication policies](https://istio.io/docs/concepts/security/#authentication-policies)
@@ -13,7 +13,7 @@ Follow the steps below to create the GCP resources used in the tutorial.
 
 1. Open Cloud Shell:
 
-    [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/cloud-run-samples.git&cloudshell_working_dir=identity-platform/gke&cloudshell_tutorial=README.md)
+    [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/cloud-run-samples.git&cloudshell_working_dir=identity-platform/gke&cloudshell_tutorial=README.md&_ga=2.189344555.-1649901269.1516710237)
 
 2. Define environment variables for the GKE cluster name and Compute Engine
     zone:
@@ -32,7 +32,7 @@ Follow the steps below to create the GCP resources used in the tutorial.
             --zone $ZONE
 
 4. Go to the
-    [Identity Platform Marketplace page](https://console.cloud.google.com/marketplace/details/google-cloud-platform/customer-identity).
+    [Identity Platform Marketplace page](https://console.cloud.google.com/marketplace/details/google-cloud-platform/customer-identity?_ga=2.118565641.-1649901269.1516710237).
 
 5. Turn on Identity Platform by clicking **Enable Identity Platform**.
 
@@ -103,7 +103,7 @@ Follow the steps below to create the GCP resources used in the tutorial.
             kubectl apply -f -
 
 15. Follow the steps in the
-    [tutorial](https://cloud.google.com/run/docs/authenticating/identity-platform-gke)
+    [tutorial](https://cloud.google.com/solutions/authenticating-cloud-run-on-gke-end-users-using-istio-and-identity-platform)
     to create a test user and verify the solution.
 
 ## Cleaning up
