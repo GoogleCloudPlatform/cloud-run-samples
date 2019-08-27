@@ -41,4 +41,4 @@ spec:
     route:
     - destination:
         host: istio-ingressgateway.istio-system.svc.cluster.local
-# [ENV run_gke_auth_identityplatform_virtualservice]
+# [END run_gke_auth_identityplatform_virtualservice]
