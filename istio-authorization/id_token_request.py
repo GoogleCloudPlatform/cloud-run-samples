@@ -16,6 +16,7 @@
 
 # [START run_gke_invoker_id_token_request]
 import os
+import sys
 from google.auth.transport.requests import AuthorizedSession
 from google.oauth2 import service_account
 
@@ -28,11 +29,16 @@ def request(method, url, target_audience=None, service_account_file=None,
       method (str): The HTTP request method to use
             ('GET', 'OPTIONS', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE')
       url: The URL where the HTTP request will be sent.
-      target_audience (str): The value to use in the audience ('aud') claim
-            of the ID token. Defaults to the value of 'url' if not provided.
-      service_account_file (str): The full path to the service account
-            credentials JSON file. Defaults to
+      target_audience (str): Optional, the value to use in the audience
+            ('aud') claim of the ID token. Defaults to the value of 'url'
+            if not provided.
+      service_account_file (str): Optional, the full path to the service
+            account credentials JSON file. Defaults to
             '<working directory>/service-account.json'.
+      data: Optional dictionary, list of tuples, bytes, or file-like object
+            to send in the body of the request.
+      headers (dict): Optional dictionary of HTTP headers to send with the
+            request.
       **kwargs: Any of the parameters defined for the request function:
             https://github.com/requests/requests/blob/master/requests/api.py
             If no timeout is provided, it is set to 90 seconds.
@@ -73,3 +79,13 @@ def request(method, url, target_audience=None, service_account_file=None,
     else:
         return resp.text
 # [END run_gke_invoker_id_token_request]
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print("Usage: python id_token_request.py <url> <audience> [headers]")
+        sys.exit(1)
+    url = sys.argv[1]
+    target_audience = sys.argv[2]
+    headers = dict(arg.split(":", 1) for arg in sys.argv[3:])
+    request('GET', url, target_audience=target_audience, headers=headers)
