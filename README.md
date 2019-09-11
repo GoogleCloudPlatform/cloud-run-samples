@@ -6,12 +6,13 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 
 |        Sample              |        Description                                         |     Languages                    |
 | -------------------------- | ---------------------------------------------------------- | -------------------------------- |
-| Identity Platform          | Cloud Run on GKE + Istio + Identity Platform               | [GKE][identity_platform_gke]
+| Identity Platform          | Cloud Run on GKE + Istio + Identity Platform               | [GKE][identity_platform_gke]     |
 | Manual Logging             | Structured logging without client library                  | [Nodejs][manual_logging_nodejs]  |
 | Pub/Sub Push               | Handle messages from a push subscription                   | [Nodejs][pubsub_nodejs], [Python][pubsub_python] |
 | Service to Service Request | Snippet: Authenticated requests between Cloud Run services | [Go][authentication_go]          |
 | Global State               | Snippet: Using global state for in-memory caching          | [Nodejs][global_state_nodejs]    |
 | Lazy Initialization        | Snippet: Global state and lazy loading faster cold start   | [Nodejs][global_lazy_nodejs]     |
+| Istio Authorization        | Cloud Run on GKE + Istio Role-Based Access Control         | [GKE][istio_authorization]       |
 
 ## Contributing changes
 
@@ -31,3 +32,4 @@ Code in this repository is licensed under the Apache 2.0. See [LICENSE](LICENSE)
 [authentication_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/authentication
 [global_state_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/blob/master/functions/tips/index.js#L33
 [global_lazy_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/blob/master/functions/tips/index.js#L55
+[istio_authorization]: istio-authorization
