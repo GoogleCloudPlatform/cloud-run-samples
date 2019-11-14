@@ -4,21 +4,21 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 
 ## Sample Index
 
-|        Sample              |        Description                                         |     Languages                    |
-| -------------------------- | ---------------------------------------------------------- | -------------------------------- |
-| Knative Hello World        | Hello World! A quickstart sample collection.               | [Go][hello_go], [Node.js][hello_nodejs], [Python][hello_python], [Java Spring Boot][hello_java_spring], [Java Spark][hello_java_spark], [C#][hello_csharp], [PHP][hello_php], [Ruby][hello_ruby], [Kotlin][hello_kotlin], [Scala][hello_scala], [Shell][hello_shell] |
-| Manual Logging             | Structured logging without client library                  | [Node.js][manual_logging_nodejs]  |
-| System Package             | Use system-installed binaries.                             | [Go][system_package_go], [Node.js][system_package_nodejs]          |
-| Pub/Sub Push               | Handle messages from a push subscription                   | [Go][pubsub_go], [Node.js][pubsub_nodejs], [Python][pubsub_python], [Java][pubsub_java] |
-| Image Processing           | Event-driven image analysis & transformation               | [Go][imageproc_go], [Node.js][imageproc_nodejs]                    |
-| Cloud SQL (MySQL) .        | Use MySQL with Cloud Run                                   | [Node.js][mysql_nodejs], [Python][mysql_python] |
-| Cloud SQL (Postgres) .        | Use Postgres with Cloud Run                             | [Node.js][postgres_nodejs], [Python][postgres_python] |
-| Service to Service Request | Snippet: Authenticated requests between Cloud Run services | [Go][authentication_go]          |
-| Global State               | Snippet: Using global state for in-memory caching          | [Go][global_state_go], [Nodejs][global_state_nodejs] |
-| Lazy Initialization        | Snippet: Global state and lazy loading faster cold start   | [Go][global_lazy_go], [Nodejs][global_lazy_nodejs]   |
-| Identity Platform          | Cloud Run on GKE + Istio + Identity Platform               | [GKE][identity_platform_gke]     |
-| Istio Authorization        | Cloud Run on GKE + Istio Role-Based Access Control         | [GKE][istio_authorization]       |
-| Hello Broken               | "Broken" service for troubleshooting.                      | [Go][broken_go], [Node.js][broken_nodejs]                          |
+|          Sample            |                     Description                         |              Languages             |
+| -------------------------- | ------------------------------------------------------- | ---------------------------------- |
+| Knative Hello World        | Hello World! A quickstart sample collection.            | [Go][hello_go], [Node.js][hello_nodejs], [Python][hello_python], [Java Spring Boot][hello_java_spring], [Java Spark][hello_java_spark], [C#][hello_csharp], [PHP][hello_php], [Ruby][hello_ruby], [Kotlin][hello_kotlin], [Scala][hello_scala], [Shell][hello_shell] |
+| Manual Logging             | Structured logging without client library               | [Node.js][manual_logging_nodejs], [Python][manual_logging_python], [Java][manual_logging_java]                         |
+| System Package             | Use system-installed binaries.                          | [Go][system_package_go], [Node.js][system_package_nodejs], [Java][system_package_java]                                 |
+| Pub/Sub Push               | Handle messages from a push subscription                | [Go][pubsub_go], [Node.js][pubsub_nodejs], [Python][pubsub_python], [Java][pubsub_java] |
+| Image Processing           | Event-driven image analysis & transformation            | [Go][imageproc_go], [Node.js][imageproc_nodejs], [Python][imageproc_python], [Java][imageproc_java]                 |
+| Cloud SQL (MySQL)          | Use MySQL with Cloud Run                                | [Node.js][mysql_nodejs], [Python][mysql_python]             |
+| Cloud SQL (Postgres)       | Use Postgres with Cloud Run                             | [Node.js][postgres_nodejs], [Python][postgres_python] |  
+| Service to Service Request | Snippet: Authenticated requests between services        | [Go][authentication_go]          |
+| Global State               | Snippet: Using global state for in-memory caching       | [Go][global_state_go], [Nodejs][global_state_nodejs]      |
+| Lazy Initialization        | Snippet: Lazy loading faster cold start                 | [Go][global_lazy_go], [Nodejs][global_lazy_nodejs]       |
+| Identity Platform          | Cloud Run for Anthos + Istio + Identity Platform        | [GKE][identity_platform_gke]     |
+| Istio Authorization        | Cloud Run for Anthos + Istio Role-Based Access Control  | [GKE][istio_authorization]       |
+| Hello Broken               | "Broken" service for troubleshooting.                   | [Go][broken_go], [Node.js][broken_nodejs]            |
 
 [hello_go]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-go
 [hello_nodejs]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-nodejs
@@ -32,14 +32,19 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 [hello_scala]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-scala
 [hello_shell]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-shell
 [manual_logging_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/run/logging-manual
+[manual_logging_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/run/logging-manual
+[manual_logging_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/master/run/logging-manual
 [system_package_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/system_package
 [system_package_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/run/system-package
+[system_package_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/master/run/system-package
 [pubsub_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/pubsub
 [pubsub_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/run/pubsub
 [pubsub_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/run/pubsub
 [pubsub_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/master/run/pubsub
 [imageproc_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/image-processing
 [imageproc_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/run/image-processing
+[imageproc_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/run/image-processing
+[imageproc_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/master/run/image-processing
 [mysql_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/cloud-sql/mysql/mysql
 [mysql_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/cloud-sql/mysql/sqlalchemy
 [postgres_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/cloud-sql/postgres/knex
