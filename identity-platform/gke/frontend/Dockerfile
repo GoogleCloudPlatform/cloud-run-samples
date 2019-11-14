@@ -14,7 +14,7 @@
 
 # https://docs.docker.com/engine/reference/builder/
 
-FROM python:3.7-alpine
+FROM python:3.8
 ENV PORT=8080
 COPY requirements.txt .
 RUN pip install -r requirements.txt
