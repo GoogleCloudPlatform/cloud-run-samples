@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# https://archive.istio.io/v1.1/docs/reference/config/istio.authentication.v1alpha1/
+# https://istio.io/docs/reference/config/istio.authentication.v1alpha1/
 # https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_jwt_library
 
 # [START run_gke_auth_identityplatform_authenticationpolicy]
@@ -20,10 +20,10 @@ apiVersion: authentication.istio.io/v1alpha1
 kind: Policy
 metadata:
   name: api-origin-auth
-  namespace: istio-system
+  namespace: gke-system
 spec:
   targets:
-  - name: istio-ingressgateway
+  - name: istio-ingress
     ports:
     - number: 80
     - number: 443
