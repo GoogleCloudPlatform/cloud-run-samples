@@ -7,7 +7,7 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 |          Sample            |                     Description                         |              Languages             |
 | -------------------------- | ------------------------------------------------------- | ---------------------------------- |
 | Knative Hello World        | Hello World! A quickstart sample collection.            | [Go][hello_go], [Node.js][hello_nodejs], [Python][hello_python], [Java Spring Boot][hello_java_spring], [Java Spark][hello_java_spark], [C#][hello_csharp], [PHP][hello_php], [Ruby][hello_ruby], [Kotlin][hello_kotlin], [Scala][hello_scala], [Shell][hello_shell] |
-| Manual Logging             | Structured logging without client library               | [Node.js][manual_logging_nodejs], [Python][manual_logging_python], [Java][manual_logging_java]                         |
+| Manual Logging             | Structured logging without client library               | [Go][manual_logging_go], [Node.js][manual_logging_nodejs], [Python][manual_logging_python], [Java][manual_logging_java]|
 | System Package             | Use system-installed binaries.                          | [Go][system_package_go], [Node.js][system_package_nodejs], [Java][system_package_java]                                 |
 | Pub/Sub Push               | Handle messages from a push subscription                | [Go][pubsub_go], [Node.js][pubsub_nodejs], [Python][pubsub_python], [Java][pubsub_java] |
 | Image Processing           | Event-driven image analysis & transformation            | [Go][imageproc_go], [Node.js][imageproc_nodejs], [Python][imageproc_python], [Java][imageproc_java]                 |
@@ -31,6 +31,7 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 [hello_kotlin]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-kotlin
 [hello_scala]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-scala
 [hello_shell]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-shell
+[manual_logging_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/logging-manual
 [manual_logging_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/run/logging-manual
 [manual_logging_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/run/logging-manual
 [manual_logging_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/master/run/logging-manual
