@@ -18,8 +18,8 @@
 export EXTERNAL_IP=""
 while [ -z "$EXTERNAL_IP" ]; do
   sleep 2
-  EXTERNAL_IP=$(kubectl -n istio-system get svc istio-ingressgateway \
-     --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  EXTERNAL_IP=$(kubectl -n gke-system get svc istio-ingress \
+     -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 done
 echo "$EXTERNAL_IP"
 # [END run_gke_invoker_external_ip]
