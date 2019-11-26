@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# https://archive.istio.io/v1.1/docs/reference/config/networking/v1alpha3/virtual-service/
+# https://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/
 
 # [START run_gke_auth_identityplatform_virtualservice]
 apiVersion: networking.istio.io/v1alpha3
@@ -21,24 +21,24 @@ metadata:
   name: cloud-run-gke-auth
 spec:
   gateways:
-  - knative-ingress-gateway.knative-serving.svc.cluster.local
+  - gke-system-gateway.knative-serving.svc.cluster.local
   hosts:
-  - '*'
+  - "*"
   http:
   - match:
     - uri:
-        prefix: /api/
+        prefix: "/api/"
     rewrite:
       authority: backend.api.svc.cluster.local
     route:
     - destination:
-        host: istio-ingressgateway.istio-system.svc.cluster.local
+        host: cluster-local-gateway.gke-system.svc.cluster.local
   - match:
     - uri:
-        prefix: /
+        prefix: "/"
     rewrite:
       authority: frontend.public.svc.cluster.local
     route:
     - destination:
-        host: istio-ingressgateway.istio-system.svc.cluster.local
+        host: cluster-local-gateway.gke-system.svc.cluster.local
 # [END run_gke_auth_identityplatform_virtualservice]

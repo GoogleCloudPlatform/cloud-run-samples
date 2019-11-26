@@ -1,9 +1,9 @@
-# Authenticating Cloud Run on GKE end users using Istio and Identity Platform
+# Authenticating end users of Cloud Run for Anthos services using Istio and Identity Platform
 
 This directory contains the sample code used in the tutorial
-[Authenticating Cloud Run on GKE end users using Istio and Identity Platform](https://cloud.google.com/solutions/authenticating-cloud-run-on-gke-end-users-using-istio-and-identity-platform).
+[Authenticating end users of Cloud Run for Anthos services using Istio and Identity Platform](https://cloud.google.com/solutions/authenticating-cloud-run-on-gke-end-users-using-istio-and-identity-platform).
 The tutorial demonstrates how to authenticate end users to applications
-deployed to [Cloud Run on GKE](https://cloud.google.com/run/) using
+deployed to [Cloud Run for Anthos](https://cloud.google.com/run/) using
 [Istio authentication policies](https://istio.io/docs/concepts/security/#authentication-policies)
 and [Identity Platform](https://cloud.google.com/identity-platform/).
 
@@ -21,14 +21,13 @@ Follow the steps below to create the GCP resources used in the tutorial.
         CLUSTER=cloud-run-gke-auth-tutorial
         ZONE=us-central1-c
 
-3. Create a GKE cluster with the Cloud Run and Istio add-ons:
+3. Create a GKE cluster with the Cloud Run add-on:
 
         gcloud beta container clusters create $CLUSTER \
-            --addons HttpLoadBalancing,Istio,CloudRun \
-            --cluster-version 1.13 \
+            --addons HorizontalPodAutoscaling,HttpLoadBalancing,CloudRun \
             --enable-ip-alias \
             --enable-stackdriver-kubernetes \
-            --machine-type n1-standard-4
+            --machine-type n1-standard-2 \
             --zone $ZONE
 
 4. Go to the
@@ -73,7 +72,7 @@ Follow the steps below to create the GCP resources used in the tutorial.
 11. Deploy the frontend container image to Cloud Run on GKE as a service in
     the `public` namespace:
 
-        gcloud beta run deploy frontend \
+        gcloud run deploy frontend \
             --namespace public \
             --image gcr.io/$GOOGLE_CLOUD_PROJECT/cloud-run-gke-auth-frontend \
             --platform gke \
@@ -83,7 +82,7 @@ Follow the steps below to create the GCP resources used in the tutorial.
 12. Deploy the backend container image to Cloud Run on GKE as a service in
     the `api` namespace:
 
-        gcloud beta run deploy backend \
+        gcloud run deploy backend \
             --namespace api \
             --image gcr.io/$GOOGLE_CLOUD_PROJECT/cloud-run-gke-auth-backend \
             --platform gke \
@@ -91,13 +90,13 @@ Follow the steps below to create the GCP resources used in the tutorial.
             --cluster-location $ZONE
 
 13. Create an
-    [Istio virtual service](https://archive.istio.io/v1.1/docs/reference/config/networking/v1alpha3/virtual-service/)
+    [Istio virtual service](https://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/)
     that routes requests by URI path:
 
         kubectl apply -f istio/virtualservice.yaml
 
 14. Create an
-    [Istio authentication policy](https://archive.istio.io/v1.1/docs/reference/config/istio.authentication.v1alpha1/):
+    [Istio authentication policy](https://istio.io/docs/reference/config/istio.authentication.v1alpha1/):
 
         envsubst < istio/authenticationpolicy.template.yaml | \
             kubectl apply -f -
