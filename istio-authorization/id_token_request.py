@@ -88,4 +88,5 @@ if __name__ == "__main__":
     url = sys.argv[1]
     target_audience = sys.argv[2]
     headers = dict(arg.split(":", 1) for arg in sys.argv[3:])
-    request('GET', url, target_audience=target_audience, headers=headers)
+    out = request('GET', url, target_audience=target_audience, headers=headers)
+    print(out)

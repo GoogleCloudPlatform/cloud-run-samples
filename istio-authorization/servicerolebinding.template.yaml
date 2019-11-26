@@ -24,8 +24,6 @@ spec:
   subjects:
   - properties:
       request.auth.claims[email]: $SERVICE_ACCOUNT_EMAIL
-  - properties:
-      request.auth.claims[sub]: "$SERVICE_ACCOUNT_ID"  # unique ID of $SERVICE_ACCOUNT_EMAIL
   roleRef:
     kind: ServiceRole
     name: invoker

@@ -23,7 +23,7 @@ spec:
   - jwt:
       issuer: https://accounts.google.com
       audiences:
-      - http://$EXTERNAL_IP
+      - http://example.com
       jwksUri: https://www.googleapis.com/oauth2/v3/certs
   principalBinding: USE_ORIGIN
 # [END run_gke_invoker_authenticationpolicy]
