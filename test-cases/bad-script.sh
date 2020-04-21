@@ -1,13 +1,13 @@
 #!/bin/bash
 
-echo "Hello World"
+echo $0 # Unquoted variable
+var = 42 # Spaces around = in assignments
+$foo=42 # $ in assignments
 
-if [ $1 -gt 100 ]
+n=0 # Unused variable
+if [[ n != 0 ]] # Constant test expressions, should be "$n"
 then
-echo Hey that\'s a large number.
-pwd
+echo this is incorrect
 fi
 
-files=(foo bar); echo "$files"
-
-PATH="$PATH:~/bin" 
+PATH="$PATH:~/bin" # Includes tilde in path
