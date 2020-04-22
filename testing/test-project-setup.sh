@@ -16,46 +16,43 @@
 set -e
 
 setup () {
-  # TEAM FOLDER must be in set in local environment
+  echo "HELLO THERE!"
+  # TEAM FOLDER is an optional variable to be in set in local environment
   if [[ ! ${TEAM_FOLDER} ]]
   then echo "WARNING: You are creating this project without a Team Folder.\n\n\
 If you are creating this project in an organization, there may be \
-a policy on project folders. To move the project after completion \
-see https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
+a policy on project folders and project creation may fail. To move the project \
+after completion see \
+https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
   fi
 
-  export PARENT_PROJECT=$(gcloud config get-value project)
-  # PARENT PROJECT required for getting billing account
-  if [[ ! ${PARENT_PROJECT} ]]
-  then echo "PARENT_PROJECT missing"; exit
+  # PROJECT SUFFIX must be in set in local environment
+  if [[ ! ${PROJECT_SUFFIX} ]]
+  then echo "PROJECT_SUFFIX must be set in local environment."; exit
   fi
+  export TESTING_PROJECT=cloud-run-samples-test-${PROJECT_SUFFIX}
 
-  export BILLING_ACCOUNT=$(gcloud beta billing projects describe ${PARENT_PROJECT} --format="value(billingAccountName)" || sed -e 's/.*\///g')
   # BILLING ACCOUNT required for API enablement
+  export BILLING_ACCOUNT=$(gcloud beta billing projects describe $(gcloud config get-value project) --format="value(billingAccountName)" || sed -e 's/.*\///g')
   if [[ ! ${BILLING_ACCOUNT} ]]
   then echo "BILLING_ACCOUNT missing. \
             Please select an active project with a billing account, by running \
             gcloud config set project {PROJECT_ID}"; exit
   fi
 
-  export TESTING_PROJECT=$(printf "cloud-run-samples-test-%06d" $((RANDOM%999999)))
-  export PROJECT_REGION=us-central1
-
-  echo "Setting up project for Cloud Run Samples Testing..."; set -x
-  if [[ ${TEAM_FOLDER} ]]
+  echo "Setting up project for Cloud Run Samples Testing..."
+  if [[ ${TEAM_FOLDER} ]]; set -x
   then gcloud projects create ${TESTING_PROJECT} --folder=${TEAM_FOLDER}
   else gcloud projects create ${TESTING_PROJECT}
   fi
 
   gcloud beta billing projects link ${TESTING_PROJECT} --billing-account=${BILLING_ACCOUNT}
-  set +x; echo
 
-  echo "Enabling apis..."; set -x
+  echo "Enabling apis..."
   gcloud services enable run.googleapis.com --project $TESTING_PROJECT
   gcloud services enable cloudbuild.googleapis.com --project $TESTING_PROJECT
   gcloud services enable pubsub.googleapis.com --project $TESTING_PROJECT
   gcloud services enable containerregistry.googleapis.com --project $TESTING_PROJECT
-  set +x; echo
 
   echo "Project setup complete"
 }
