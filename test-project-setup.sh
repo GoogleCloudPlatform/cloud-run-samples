@@ -17,19 +17,19 @@
 setup () {
   # TEAM FOLDER must be in set in local environment
   if [[ ! ${TEAM_FOLDER} ]]
-  then exit
+  then echo "TEAM_FOLDER missing"; exit
   fi
 
   export PARENT_PROJECT=$(gcloud config get-value project)
   # PARENT PROJECT required for getting billing account
   if [[ ! ${PARENT_PROJECT} ]]
-  then exit
+  then echo "PARENT_PROJECT missing"; exit
   fi
 
   export BILLING_ACCOUNT=$(gcloud beta billing projects describe ${PARENT_PROJECT} --format="value(billingAccountName)" || sed -e 's/.*\///g')
   # BILLING ACCOUNT required for API enablement
   if [[ ! ${BILLING_ACCOUNT} ]]
-  then exit
+  then echo "BILLING_ACCOUNT missing"; exit
   fi
 
   export TESTING_PROJECT=$(printf "cloud-run-samples-test-%06d" $((RANDOM%999999)))
