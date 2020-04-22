@@ -9,7 +9,7 @@ A Google Cloud Project is required in order to run the tests in the Cloud Run Sa
 
 ## Test Project Setup
 
-The [test-project-setup.sh](./test-project-setup.sh) script will set up ap roject with the appropriate permissions to run the tests.  To run the script you will need to set the following environment variables locally:
+The [test-project-setup.sh](./test-project-setup.sh) script will set up a project with the appropriate permissions to run the tests.  To run the script you will need to set the following environment variables locally:
 
 * TEAM_FOLDER
  * The numeric ID of the [folder](https://cloud.google.com/sdk/gcloud/reference/projects/create#--folder)
@@ -22,6 +22,6 @@ The [test-project-setup.sh](./test-project-setup.sh) script will set up ap rojec
 
 The script checks your current active project to obtain the Billing Account, in order to enable the API's.  This account is then linked to the new testing project.
 
-If your current project does not have a billing account enabled, it will force the program to exit. 
+If your current project does not have a billing account enabled, it will force the program to exit. To select a project to use for your billing account, run ` gcloud config set project {PROJECT_ID}`
 
 
