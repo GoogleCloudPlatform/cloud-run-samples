@@ -16,7 +16,6 @@
 set -e
 
 setup () {
-  echo "HELLO THERE!"
   # TEAM FOLDER is an optional variable to be in set in local environment
   if [[ ! ${TEAM_FOLDER} ]]
   then echo "WARNING: You are creating this project without a Team Folder.\n\n\
