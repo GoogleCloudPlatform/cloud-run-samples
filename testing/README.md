@@ -33,6 +33,8 @@ Cloud Build templates for Cloud Run E2E testing can be found in the
 
 ## Cloud Build Triggers
 
+Before trigger creation, you need to enable access for the Cloud Build service account to deploy the service. More information can be found in [Setting up continuous deployment with Cloud Build][access]. The Cloud Build GitHub App also needs to be installed and connected to the repository. More info can be found in [Installing the Cloud Build app][app].
+
 ### Individual Sample Triggers
 
 Add `$SAMPLE` as an env var:
@@ -81,5 +83,6 @@ steps:
       hadolint */Dockerfile
 ```
 
-
+[access]: https://cloud.google.com/run/docs/continuous-deployment-with-cloud-build#continuous
+[app]: https://cloud.google.com/cloud-build/docs/automating-builds/create-github-app-triggers#installing_the_cloud_build_app
 [sub]: https://cloud.google.com/cloud-build/docs/configuring-builds/substitute-variable-values#using_user-defined_substitutions
