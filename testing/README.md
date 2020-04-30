@@ -28,8 +28,40 @@ If your current project does not have a billing account enabled, it will force t
 ## Cloud Build Templates
 
 Cloud Build templates for Cloud Run E2E testing can be found in the
-`cloudbuild-templates/` directory. [User-defined substitutions][sub],
-`_SAMPLE` and `_SERVICE`, need to be updated per sample.
+`cloudbuild-templates/` directory. The `TODO` comment highlights areas that will
+need to be updated:
+
+* [User-defined substitutions][sub], such as `_SAMPLE` and `_SERVICE`.
+
+* Evaluate the `--allow-unauthenticated` flag.
+
+* Add integration tests, see examples below:
+
+  * Using a shell script:
+    ```
+    - id: 'Integration Tests'
+      name: 'alpine:latest'
+      entrypoint: '/bin/sh'
+      dir: $_SAMPLE
+      args:
+      - '-c'
+      - |
+        SERVICE_URL=$(cat _service_url) sh integration-tests.sh
+    ```
+
+  * Language specific testing:
+    ```
+    - id: 'Integration Tests'
+      name: 'maven:latest'
+      entrypoint: '/bin/bash'
+      dir: $_SAMPLE
+      args:
+      - '-c'
+      - |
+        SERVICE_URL=$(cat _service_url) mvn verify
+    ```
+**Note:** The build steps for getting the Cloud Run URL and IP are used to
+export environment variables into the test runner.
 
 ## Cloud Build Triggers
 

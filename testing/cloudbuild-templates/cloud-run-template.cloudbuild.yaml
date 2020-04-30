@@ -36,14 +36,14 @@ steps:
     echo "Cloud Run URL for ${_SERVICE} is $(cat _service_url)"
 
 - id: 'Integration Tests'
-  # Update the following image name, entrypoint, and args to fit your testing needs
+  # TODO: Update the following image name, entrypoint, and args to fit your testing needs
   name: 'alpine:latest'
   entrypoint: '/bin/sh'
   dir: $_SAMPLE
   args:
   - '-c'
   - |
-    SERVICE_URL=$(cat _service_url) sh integration-tests.sh
+    echo "Add integration tests!"
 
 - id: 'Teardown'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
@@ -61,6 +61,7 @@ steps:
 # images:
 # - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${COMMIT_SHA}'
 
+# TODO: Update these User-defined substitutions
 substitutions:
   _SAMPLE: SAMPLE_FOLDER_NAME
   _SERVICE: SERVICE_NAME
