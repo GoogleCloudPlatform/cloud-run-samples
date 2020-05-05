@@ -3,7 +3,7 @@ steps:
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
   args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}', '.']
-  dir: '${_SAMPLE}'
+  dir: '${_SAMPLE_DIR}'
 
 - id: 'Push Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
@@ -40,7 +40,7 @@ steps:
   # TODO: Update the following image name, entrypoint, and args to fit your testing needs
   name: 'alpine:3'
   entrypoint: '/bin/sh'
-  dir: '${_SAMPLE}'
+  dir: '${_SAMPLE_DIR}'
   args:
   - '-c'
   - |
@@ -64,7 +64,7 @@ steps:
 
 # TODO: Update these User-defined substitutions
 substitutions:
-  _SAMPLE: SAMPLE_FOLDER_NAME
   _SERVICE: SERVICE_NAME
-  _CLOUDSDK_VERSION: latest
+  _SAMPLE_DIR: SAMPLE_DIRECTORY
   _SERVICE_REGION: us-central1
+  _CLOUDSDK_VERSION: latest
