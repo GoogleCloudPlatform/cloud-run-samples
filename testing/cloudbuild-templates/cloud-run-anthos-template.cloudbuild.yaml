@@ -2,24 +2,25 @@ steps:
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
-  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${COMMIT_SHA}', '$_SAMPLE']
+  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}', '.']
+  dir: '${_SAMPLE}'
 
 - id: 'Push Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
-  args: ['push', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${COMMIT_SHA}']
+  args: ['push', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}']
 
 - id: 'Deploy to Cloud Run'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
   args:
   - 'run'
   - 'deploy'
-  - '${_SERVICE}-${COMMIT_SHA}'
+  - '${_SERVICE}-${SHORT_SHA}'
   - '--image'
-  - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${COMMIT_SHA}'
+  - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}'
   - '--cluster'
   - '${_CLUSTER}'
   - '--cluster-location'
-  - '${_SERVICE_REGION}'
+  - '${_CLUSTER_LOCATION}'
   - '--platform'
   - 'gke'
 
@@ -30,8 +31,8 @@ steps:
   - '-c'
   - |
     get_url() {
-        gcloud run services describe ${_SERVICE}-${COMMIT_SHA} --format 'value(status.url)' \
-          --platform gke --cluster ${_CLUSTER} --cluster-location ${_SERVICE_REGION}
+        gcloud run services describe ${_SERVICE}-${SHORT_SHA} --format 'value(status.url)' \
+          --platform gke --cluster ${_CLUSTER} --cluster-location ${_CLUSTER_LOCATION}
     }
     echo $(get_url) > _service_url
     echo "Cloud Run URL for ${_SERVICE} is $(cat _service_url)"
@@ -43,16 +44,17 @@ steps:
   - '-c'
   - |
     get_ip() {
-        gcloud container clusters get-credentials ${_CLUSTER} --zone ${_SERVICE_REGION} --project ${PROJECT_ID} \
-        && kubectl get svc istio-ingress --namespace gke-system -o yaml | sed -n -e 's/    - ip: //p'
+        gcloud container clusters get-credentials ${_CLUSTER} --zone ${_CLUSTER_LOCATION} --project ${PROJECT_ID} \
+        && kubectl get svc istio-ingress --namespace gke-system \
+          --output 'jsonpath={.status.loadBalancer.ingress[0].ip}'
     }
     echo $(get_ip) > _service_ip
 
 - id: 'Integration Tests'
   # TODO: Update the following image name, entrypoint, and args to fit your testing needs
-  name: 'alpine:latest'
+  name: 'alpine:3'
   entrypoint: '/bin/sh'
-  dir: $_SAMPLE
+  dir: '${_SAMPLE}'
   args:
   - '-c'
   - |
@@ -65,19 +67,19 @@ steps:
   - '-c'
   - |
     set -x
-    gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${COMMIT_SHA}
-    gcloud --quiet run services delete ${_SERVICE}-${COMMIT_SHA} --platform gke
+    gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
+    gcloud --quiet run services delete ${_SERVICE}-${SHORT_SHA} --platform gke
     set +x
     echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
 
 # Uncomment if skipping teardown to associate build with container image.
 # images:
-# - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${COMMIT_SHA}'
+# - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}'
 
 # TODO: Update these User-defined substitutions
 substitutions:
   _SAMPLE: SAMPLE_FOLDER_NAME
   _SERVICE: SERVICE_NAME
   _CLUSTER: CLUSTER_NAME
+  _CLUSTER_LOCATION: _CLUSTER_LOCATION
   _CLOUDSDK_VERSION: latest
-  _SERVICE_REGION: us-central1-a

@@ -2,21 +2,22 @@ steps:
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
-  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${COMMIT_SHA}', '$_SAMPLE']
+  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}', '.']
+  dir: '${_SAMPLE}'
 
 - id: 'Push Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
-  args: ['push', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${COMMIT_SHA}']
+  args: ['push', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}']
 
 - id: 'Deploy to Cloud Run'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
   args:
   - 'run'
   - 'deploy'
-  - '${_SERVICE}-${COMMIT_SHA}'
+  - '${_SERVICE}-${SHORT_SHA}'
   - '--image'
-  - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${COMMIT_SHA}'
-  - '--allow-unauthenticated' # TODO: Evaluate if sample requires authenticated requests
+  - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}'
+  - '--no-allow-unauthenticated' # TODO: Evaluate if sample requires unauthenticated requests
   - '--region'
   - '${_SERVICE_REGION}'
   - '--platform'
@@ -29,7 +30,7 @@ steps:
   - '-c'
   - |
     get_url() {
-        gcloud run services describe ${_SERVICE}-${COMMIT_SHA} --format 'value(status.url)' \
+        gcloud run services describe ${_SERVICE}-${SHORT_SHA} --format 'value(status.url)' \
           --platform managed --region ${_SERVICE_REGION}
     }
     echo $(get_url) > _service_url
@@ -37,9 +38,9 @@ steps:
 
 - id: 'Integration Tests'
   # TODO: Update the following image name, entrypoint, and args to fit your testing needs
-  name: 'alpine:latest'
+  name: 'alpine:3'
   entrypoint: '/bin/sh'
-  dir: $_SAMPLE
+  dir: '${_SAMPLE}'
   args:
   - '-c'
   - |
@@ -52,14 +53,14 @@ steps:
   - '-c'
   - |
     set -x
-    gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${COMMIT_SHA}
-    gcloud --quiet run services delete ${_SERVICE}-${COMMIT_SHA} --region ${_SERVICE_REGION} --platform managed
+    gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
+    gcloud --quiet run services delete ${_SERVICE}-${SHORT_SHA} --region ${_SERVICE_REGION} --platform managed
     set +x
     echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
 
 # Uncomment if skipping teardown to associate build with container image.
 # images:
-# - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${COMMIT_SHA}'
+# - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}'
 
 # TODO: Update these User-defined substitutions
 substitutions:
