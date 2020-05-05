@@ -40,7 +40,7 @@ need to be updated:
   * Using a shell script:
     ```
     - id: 'Integration Tests'
-      name: 'alpine:latest'
+      name: 'alpine:3'
       entrypoint: '/bin/sh'
       dir: $_SAMPLE
       args:
@@ -52,7 +52,7 @@ need to be updated:
   * Language specific testing:
     ```
     - id: 'Integration Tests'
-      name: 'maven:latest'
+      name: 'maven:3-openjdk-11'
       entrypoint: '/bin/bash'
       dir: $_SAMPLE
       args:
@@ -69,9 +69,9 @@ Before trigger creation, you need to enable access for the Cloud Build service a
 
 ### Individual Sample Triggers
 
-Add `$SAMPLE` as an env var:
+Add the sample directory name as the `$SAMPLE` env var:
 ```shell
-export SAMPLE=SAMPLE_FOLDER_NAME
+export SAMPLE=SAMPLE_DIRECTORY
 ```
 
 Create the Cloud Build trigger:
@@ -113,6 +113,14 @@ steps:
     - '-c'
     - |
       hadolint */Dockerfile
+```
+
+## Cloud Build Manual Trigger
+
+To manually trigger a Cloud Build from your CLI:
+```
+cd $SAMPLE
+gcloud builds submit --substitutions '_SAMPLE_DIR=.,SHORT_SHA=manual'
 ```
 
 [access]: https://cloud.google.com/run/docs/continuous-deployment-with-cloud-build#continuous
