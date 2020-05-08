@@ -11,3 +11,5 @@ echo this is incorrect
 fi
 
 PATH="$PATH:~/bin" # Includes tilde in path
+
+
