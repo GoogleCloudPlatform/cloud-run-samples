@@ -10,7 +10,6 @@
  	"yaml", 
  	"py",
  	"html",
- 	"txt",
- 	"json"
+ 	"txt"
  ]
 }
