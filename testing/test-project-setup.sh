@@ -53,12 +53,14 @@ https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
   gcloud services enable pubsub.googleapis.com --project $TESTING_PROJECT
   gcloud services enable containerregistry.googleapis.com --project $TESTING_PROJECT
 
-  echo "Giving project permission to cloud-devrel group..."
+  if [[ ${IAM_OWNER} ]]
+  echo "Giving project permission to owner..."
   gcloud projects add-iam-policy-binding ${TESTING_PROJECT} \
-    --member="group:cloud-devrel@twosync.google.com" --role="roles/owner"
+    --member="${IAM_OWNER}" --role="roles/owner"
   gcloud projects add-iam-policy-binding ${TESTING_PROJECT} \
-    --member="group:cloud-devrel@twosync.google.com" --role="roles/resourcemanager.projectIamAdmin"
-
+    --member="${IAM_OWNER}" --role="roles/resourcemanager.projectIamAdmin"
+  fi
+  
   echo "Project setup complete"
 }
 
