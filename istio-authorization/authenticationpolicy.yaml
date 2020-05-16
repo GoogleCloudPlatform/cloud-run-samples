@@ -24,6 +24,13 @@ spec:
       issuer: https://accounts.google.com
       audiences:
       - http://example.com
+      # These paths are needed to allow Cloud Run to probe
+      triggerRules:
+      - excludedPaths:
+        - exact: /_internal/knative/activator/probe
+        - exact: /healthz
+        - exact: /probe
+        - exact: /metrics
       jwksUri: https://www.googleapis.com/oauth2/v3/certs
   principalBinding: USE_ORIGIN
 # [END run_gke_invoker_authenticationpolicy]
