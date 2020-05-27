@@ -22,13 +22,13 @@ spec:
   action: ALLOW
   rules:
   - when:
-    - key: request.auth.audiences
+    - key: request.auth.claims[aud]
       values:
       - http://example.com
     - key: request.auth.claims[iss]
       values:
       - https://accounts.google.com
-    - key: request.auth.principal
+    - key: request.auth.claims[email]
       values:
       - $SERVICE_ACCOUNT_EMAIL
 # [END run_gke_invoker_authorizationpolicy_invoker]
