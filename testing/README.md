@@ -120,7 +120,7 @@ steps:
 To manually trigger a Cloud Build from your CLI:
 ```
 cd $SAMPLE
-gcloud builds submit --substitutions '_SAMPLE_DIR=.,SHORT_SHA=manual'
+gcloud builds submit --substitutions '_SAMPLE_DIR=.'
 ```
 
 [access]: https://cloud.google.com/run/docs/continuous-deployment-with-cloud-build#continuous

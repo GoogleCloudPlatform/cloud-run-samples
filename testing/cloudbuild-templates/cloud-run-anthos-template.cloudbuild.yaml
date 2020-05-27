@@ -1,28 +1,40 @@
 steps:
+- id: 'Generate UUID'
+  name: 'ubuntu'
+  entrypoint: '/bin/bash'
+  args:
+  - '-c'
+  - |
+    cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 15 | head -n 1 > _uuid
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
-  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}', '.']
+  entrypoint: /bin/bash
   dir: '${_SAMPLE_DIR}'
+  args:
+  - -c
+  - |
+    docker build -t gcr.io/${PROJECT_ID}/${_SERVICE}:$(/bin/cat _uuid) .
 
 - id: 'Push Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
-  args: ['push', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}']
+  entrypoint: /bin/bash
+  args:
+  - -c
+  - |
+    docker push gcr.io/${PROJECT_ID}/${_SERVICE}:$(/bin/cat _uuid)
 
 - id: 'Deploy to Cloud Run'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
+  entrypoint: /bin/bash
   args:
-  - 'run'
-  - 'deploy'
-  - '${_SERVICE}-${SHORT_SHA}'
-  - '--image'
-  - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}'
-  - '--cluster'
-  - '${_CLUSTER}'
-  - '--cluster-location'
-  - '${_CLUSTER_LOCATION}'
-  - '--platform'
-  - 'gke'
+  - -c
+  - |
+    gcloud run deploy ${_SERVICE}-$(/bin/cat _uuid) \
+     --image gcr.io/${PROJECT_ID}/${_SERVICE}:$(/bin/cat _uuid) \
+     --cluster ${_CLUSTER} \
+     --cluster-location ${_CLUSTER_LOCATION} \
+     --platform gke
 
 - id: 'Get Cloud Run URL'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
@@ -31,8 +43,8 @@ steps:
   - '-c'
   - |
     get_url() {
-        gcloud run services describe ${_SERVICE}-${SHORT_SHA} --format 'value(status.url)' \
-          --platform gke --cluster ${_CLUSTER} --cluster-location ${_CLUSTER_LOCATION}
+        gcloud run services describe ${_SERVICE}-$(/bin/cat _uuid) --format 'value(status.url)' \
+          --platform managed --region ${_SERVICE_REGION}
     }
     echo $(get_url) > _service_url
     echo "Cloud Run URL for ${_SERVICE} is $(cat _service_url)"
@@ -67,14 +79,14 @@ steps:
   - '-c'
   - |
     set -x
-    gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
-    gcloud --quiet run services delete ${_SERVICE}-${SHORT_SHA} --platform gke
+    gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:$(/bin/cat _uuid)
+    gcloud --quiet run services delete ${_SERVICE}-$(/bin/cat _uuid) --platform gke
     set +x
     echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
 
 # Uncomment if skipping teardown to associate build with container image.
 # images:
-# - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}'
+# - 'gcr.io/${PROJECT_ID}/${_SERVICE}'
 
 # TODO: Update these User-defined substitutions
 substitutions:
