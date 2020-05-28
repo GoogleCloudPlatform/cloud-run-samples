@@ -33,3 +33,27 @@ accept your pull requests.
    recommended coding standards for this organization.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
 1. Submit a pull request.
+
+## New Samples
+
+### Should the sample be in this repository?
+
+* If the sample is going to appear on cloud.google.com or be used by developers following instructions on cloud.google.com, it can be hosted in this repository.
+* Tutorial instructions should not be included in the sample: the README should be used to point to separately published tutorials, and only contain instructions where a more official location is not available.
+* If the sample highlights specific coding language practices in the context of Cloud Run, it should be hosted in a language-specific repository where the language practices can be properly reviewed, maintained, and subject to automated testing. This repository focuses on Dockerfiles, YAML, Shell scripts, and "architectural" solutions.
+
+| Language | Repository                                                 |
+| -------- | ---------------------------------------------------------- |
+| Node.js  | https://github.com/GoogleCloudPlatform/nodejs-docs-samples |
+| Golang   | https://github.com/GoogleCloudPlatform/golang-samples      |
+| Python   | https://github.com/GoogleCloudPlatform/python-docs-samples |
+| Java     | https://github.com/GoogleCloudPlatform/java-docs-samples   |
+| C#       | https://github.com/GoogleCloudPlatform/dotnet-docs-samples |
+| PHP      | https://github.com/GoogleCloudPlatform/php-docs-samples    |
+| Ruby     | https://github.com/GoogleCloudPlatform/ruby-docs-samples   |
+| Kotlin   | https://github.com/GoogleCloudPlatform/kotlin-samples      |
+| C++      | https://github.com/GoogleCloudPlatform/cpp-samples         |
+
+### Maintenance
+
+You may be asked to be the maintainer of a sample you contribute depending on it's intended use.

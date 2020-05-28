@@ -12,5 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-google-auth==1.14.3
-requests==2.23.0
+# [START run_gke_invoker_authorizationpolicy_knative_serving]
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-knative-serving
+  namespace: tutorial
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces:
+        - knative-serving
+    to:
+    - operation:
+        methods:
+        - GET
+        paths:
+        - /healthz
+        - /metrics
+        - /probe
+        - /_internal/knative/*
+# [END run_gke_invoker_authorizationpolicy_knative_serving]
