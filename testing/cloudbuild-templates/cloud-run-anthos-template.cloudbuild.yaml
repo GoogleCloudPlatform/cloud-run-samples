@@ -1,11 +1,4 @@
 steps:
-- id: 'Generate a Short ID for Cloud Run Service Name'
-  name: 'ubuntu'
-  entrypoint: '/bin/bash'
-  args:
-  - '-c'
-  - | # Generate a random 15 character alphanumeric string (lowercase only)
-    cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
@@ -22,6 +15,7 @@ steps:
   args:
   - -c
   - | # Cloud Run Service name must be less than 63 characters
+    cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id # Generate a random 15 character alphanumeric string (lowercase only)
     gcloud run deploy ${_SERVICE}-$(cat _short_id) \
      --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
      --cluster ${_CLUSTER} \
