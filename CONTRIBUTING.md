@@ -34,6 +34,25 @@ accept your pull requests.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
 1. Submit a pull request.
 
+## Repository Layout
+
+Sample apps should be in a top-level directory: /sample-app.
+
+If the code has different instructions per platform, this should be explicitly noted in the README.
+
+If the code is different per platform, a sub-directory should be used:
+
+```
+.
+└── sample-app
+    ├── managed
+    └── anthos
+```
+
+Samples that demonstrate integrations with Events for Cloud Run should be prefixed with `events-`: `events-sample-app`.
+
+The [`testing`](https://github.com/GoogleCloudPlatform/cloud-run-samples/tree/master/testing) directory contains resources for automated testing.
+
 ## New Samples
 
 ### Should the sample be in this repository?
@@ -53,6 +72,7 @@ accept your pull requests.
 | Ruby     | https://github.com/GoogleCloudPlatform/ruby-docs-samples   |
 | Kotlin   | https://github.com/GoogleCloudPlatform/kotlin-samples      |
 | C++      | https://github.com/GoogleCloudPlatform/cpp-samples         |
+
 
 ### Maintenance
 
