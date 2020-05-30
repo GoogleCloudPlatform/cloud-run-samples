@@ -95,11 +95,10 @@ export TRIGGER_NAME=NAME
 Create the Cloud Build trigger:
 ```shell
 gcloud beta builds triggers create github \
---build-config=$SAMPLE/cloudbuild.yaml \
+--build-config=cloudbuild.yaml \
 --repo-name=cloud-run-samples \
 --repo-owner=GoogleCloudPlatform \
---pull-request-pattern="^master$" \
---name=$TRIGGER_NAME
+--pull-request-pattern="^master$" 
 ```
 
 Example `cloudbuild.yaml`
