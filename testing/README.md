@@ -98,7 +98,8 @@ gcloud beta builds triggers create github \
 --build-config=cloudbuild.yaml \
 --repo-name=cloud-run-samples \
 --repo-owner=GoogleCloudPlatform \
---pull-request-pattern="^master$" 
+--pull-request-pattern="^master$" \
+--description=pull-request 
 ```
 
 Example `cloudbuild.yaml`
