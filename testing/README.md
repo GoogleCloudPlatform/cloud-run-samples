@@ -67,7 +67,7 @@ export environment variables into the test runner.
 
 Before trigger creation, you need to enable access for the Cloud Build service account to deploy the service. More information can be found in [Setting up continuous deployment with Cloud Build][access]. The Cloud Build GitHub App also needs to be installed and connected to the repository. More info can be found in [Installing the Cloud Build app][app].
 
-### Individual Sample Triggers
+### Individual Sample Pull Request Triggers
 
 Add the sample directory name as the `$SAMPLE` env var:
 ```shell
@@ -80,9 +80,9 @@ gcloud beta builds triggers create github \
 --build-config=$SAMPLE/cloudbuild.yaml \
 --repo-name=cloud-run-samples \
 --repo-owner=GoogleCloudPlatform \
---pull-request-pattern="^master$"
---name=$SAMPLE \
---include-files=$SAMPLE/*
+--pull-request-pattern="^master$" \
+--included-files=$SAMPLE/* \
+--description=pull-request 
 ```
 
 ### Repo Trigger
@@ -98,8 +98,8 @@ gcloud beta builds triggers create github \
 --build-config=cloudbuild.yaml \
 --repo-name=cloud-run-samples \
 --repo-owner=GoogleCloudPlatform \
---pull-request-pattern="^master$"
---name=$TRIGGER_NAME
+--pull-request-pattern="^master$" \
+--description=pull-request 
 ```
 
 Example `cloudbuild.yaml`
