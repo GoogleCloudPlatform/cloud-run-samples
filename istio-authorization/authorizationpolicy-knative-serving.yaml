@@ -34,4 +34,6 @@ spec:
         - /metrics
         - /probe
         - /_internal/knative/*
+  selector:
+    matchLabels: {}
 # [END run_gke_invoker_authorizationpolicy_knative_serving]

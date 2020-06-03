@@ -31,4 +31,6 @@ spec:
     - key: request.auth.claims[email]
       values:
       - $SERVICE_ACCOUNT_EMAIL
+  selector:
+    matchLabels: {}
 # [END run_gke_invoker_authorizationpolicy_invoker]
