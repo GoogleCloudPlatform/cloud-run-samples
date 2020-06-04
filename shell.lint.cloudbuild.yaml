@@ -1,0 +1,10 @@
+steps:
+- id: 'Lint Shell'
+  name: 'koalaman/shellcheck-alpine'
+  entrypoint: '/bin/sh'
+  args:
+  - -c
+  - |
+    for f in $(find . -name '*.sh' -not -path "./testing/*")
+      do shellcheck -f gcc $f || exit 1
+    done

@@ -1,0 +1,10 @@
+steps:
+- id: 'Lint Dockerfile'
+  name: 'hadolint/hadolint:latest-debian'
+  entrypoint: '/bin/bash'
+  args:
+  - -c
+  - |
+    for f in $(find . -name '*Dockerfile' -not -path "./testing/*")
+      do hadolint $f || exit 1
+    done

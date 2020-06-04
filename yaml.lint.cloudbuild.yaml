@@ -1,0 +1,10 @@
+steps:
+- id: 'Lint YAML'
+  name: 'cytopia/yamllint'
+  entrypoint: '/bin/sh'
+  args:
+  - -c
+  - | #ignored files in .yamllint config
+    for f in $(find ./* -name '*.yaml')
+      do yamllint -f parsable $f || exit 1
+    done
