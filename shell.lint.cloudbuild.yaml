@@ -6,5 +6,5 @@ steps:
   - -c
   - |
     for f in $(find . -name '*.sh' -not -path "./testing/*")
-      do shellcheck -f gcc $f || exit 1
+      do shellcheck -f gcc $f
     done
