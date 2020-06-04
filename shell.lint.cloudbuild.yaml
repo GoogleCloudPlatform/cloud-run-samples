@@ -4,7 +4,7 @@ steps:
   entrypoint: '/bin/sh'
   args:
   - -c
-  - |
+  - | # Recursively find shell scripts (not in testing dir)
     for f in $(find . -name '*.sh' -not -path "./testing/*")
       do shellcheck -f gcc $f
     done

@@ -4,7 +4,7 @@ steps:
   entrypoint: '/bin/sh'
   args:
   - -c
-  - | #ignored files in .yamllint config
+  - | # Recursively find yaml files (ignored files in .yamllint config)
     for f in $(find ./* -name '*.yaml')
       do yamllint -f parsable $f
     done
