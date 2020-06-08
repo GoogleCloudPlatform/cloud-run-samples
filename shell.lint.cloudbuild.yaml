@@ -5,9 +5,7 @@ steps:
   args:
   - -c
   - | # Recursively find shell scripts (not in testing dir)
-    catchError() {
-      shellcheck -f gcc $1;
-      shellcheck -f gcc $1 | grep -q "error"
-      if [[ $? -eq 0 ]]; then echo "fail" > ./build-status.txt ; fi
-    }
-    find . -name '*.sh' -not -path "./testing/*" -exec sh -c 'catchError {}' \;
+    find . -name '*.sh' -not -path './testing/*' -exec shellcheck -f gcc {} \;
+    find . -name '*.sh' -not -path './testing/*' \
+      -exec shellcheck -f gcc {} \; | grep -q 'error'
+    if [[ $? -eq 0 ]] ; then exit 1 ; fi
