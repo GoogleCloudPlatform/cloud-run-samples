@@ -5,7 +5,7 @@ steps:
   args:
   - -c
   - | # Recursively find shell scripts (not in testing dir)
-    function catchError {
+    catchError() {
       shellcheck -f gcc $1;
       shellcheck -f gcc $1 | grep -q "error"
       if [[ $? -eq 0 ]]; then echo "fail" > ./build-status.txt ; fi
