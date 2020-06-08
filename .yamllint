@@ -6,4 +6,4 @@ ignore: |
   *cloudbuild.yaml
 
 rules:
-  document-start: disable
+  document-start: disable # https://yamllint.readthedocs.io/en/stable/rules.html#module-yamllint.rules.document_start

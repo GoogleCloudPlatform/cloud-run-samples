@@ -1,4 +1,6 @@
 ---
-
+  
+# Samples prioritize latest security updates over deterministic builds.
+# https://github.com/hadolint/hadolint/wiki/DL3008
 ignored:
   - DL3008

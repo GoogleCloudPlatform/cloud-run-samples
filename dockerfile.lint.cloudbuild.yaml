@@ -1,10 +1,8 @@
 steps:
 - id: 'Lint Dockerfile'
-  name: 'hadolint/hadolint:latest-debian'
-  entrypoint: '/bin/bash'
+  name: 'hadolint/hadolint:latest-alpine' # https://hub.docker.com/r/hadolint/hadolint
+  entrypoint: '/bin/sh'
   args:
   - -c
   - | # Recursively find dockerfiles (not in testing dir)
-    for f in $(find . -name '*Dockerfile' -not -path "./testing/*")
-      do hadolint $f
-    done
+    find . -name '*Dockerfile' -not -path "./testing/*" -exec hadolint {} \;
