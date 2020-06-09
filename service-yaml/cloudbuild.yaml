@@ -1,0 +1,93 @@
+steps:
+
+- id: 'Build Container Image'
+  name: 'gcr.io/cloud-builders/docker:latest'
+  dir: '${_SAMPLE_DIR}'
+  # This image is trivial so caching is not a concern.
+  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}', '.'] # Tag docker image with git commit sha
+
+- id: 'Push Container Image'
+  name: 'gcr.io/cloud-builders/docker:latest'
+  args: ['push', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}']
+
+- id: 'Prepare service.yaml'
+  name: 'mikefarah/yq'
+  entrypoint: '/bin/sh'
+  args:
+  - '-c'
+  - |
+    set -e
+    # Generate a random 15 character alphanumeric string (lowercase only)
+    # Used to create short unique name for the Cloud Run service.
+    cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id
+    yq m snippet.*.yaml template.service.yaml > service.yaml
+    sed -i "s|<var>IMAGE</var>|gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}|g" service.yaml
+    sed -i "s|<var>SERVICE</var>|${_SERVICE}-$(cat _short_id)|g" service.yaml
+
+    # Inject non-default service configuration options.
+    sed -i "s|<var>SIZE</var>|${_MEMORY_CONFIG}|g" service.yaml
+    sed -i "s|<var>CPU</var>|${_CPU_CONFIG}|g" service.yaml
+    cat service.yaml
+    
+- id: 'Deploy to Cloud Run'
+  name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
+  entrypoint: /bin/bash
+  args:
+  - '-c'
+  - | 
+    gcloud beta run services replace service.yaml
+
+- id: 'Get Cloud Run URL'
+  name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
+  entrypoint: '/bin/bash'
+  args:
+  - '-c'
+  - |
+    get_url() {
+        gcloud run services describe ${_SERVICE}-$(cat _short_id) --format 'value(status.url)'
+    }
+    echo $(get_url) > _service_url
+    echo "Cloud Run URL for ${_SERVICE}-$(cat _short_id) is $(cat _service_url)"
+    echo $(gcloud config config-helper --format=value\(credential.id_token\)) > _request_token
+
+- id: 'Integration Tests'
+  name: 'gcr.io/cloud-builders/curl'
+  entrypoint: '/bin/sh'
+  args:
+  - '-c'
+  - |
+    chmod +x healthcheck.sh
+    ./healthcheck.sh -u $(cat _service_url) -a $(cat _request_token)
+
+- id: 'Teardown'
+  name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
+  entrypoint: '/bin/bash'
+  args:
+  - '-c'
+  - |
+    set -x
+    gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
+    gcloud --quiet run services delete ${_SERVICE}-$(cat _short_id)
+    set +x
+    echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
+
+# Uncomment if skipping teardown to associate build with container image.
+# images:
+# - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}'
+
+options:
+  env:
+    - CLOUDSDK_RUN_PLATFORM=managed
+    - CLOUDSDK_RUN_REGION=${_SERVICE_REGION}
+
+# TODO: Update these User-defined substitutions
+substitutions:
+  _SERVICE: yaml-test
+  _SAMPLE_DIR: service-yaml
+  _SERVICE_REGION: us-central1
+  _CLOUDSDK_VERSION: latest
+  
+  # The following substitutions are used to inject non-default configuration
+  # values into the deployed service.
+  _MEMORY_CONFIG: 128M
+  _CPU_CONFIG: "'2'"

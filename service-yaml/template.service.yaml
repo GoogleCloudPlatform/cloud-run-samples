@@ -1,0 +1,28 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  creationTimestamp: '2020-06-09T20:15:30.113604Z'
+  labels:
+    cloud.googleapis.com/location: us-central1
+  name: yaml-test
+  resourceVersion: AAWnrGQca9g
+  uid: e39c8f09-6f85-4659-8957-1fb4b8367e8c
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: '1000'
+    spec:
+      containerConcurrency: 80
+      containers:
+      - image: <var>IMAGE</var>
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 256Mi
+      timeoutSeconds: 900
+  traffic:
+  - latestRevision: true
+    percent: 100
