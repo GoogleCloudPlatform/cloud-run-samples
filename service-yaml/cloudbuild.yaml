@@ -20,13 +20,18 @@ steps:
     # Generate a random 15 character alphanumeric string (lowercase only)
     # Used to create short unique name for the Cloud Run service.
     cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id
+
+    # Merge all YAML snippets together with the template for a complete service.
     yq m snippet.*.yaml template.service.yaml > service.yaml
-    sed -i "s|<var>IMAGE</var>|gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}|g" service.yaml
-    sed -i "s|<var>SERVICE</var>|${_SERVICE}-$(cat _short_id)|g" service.yaml
+
+    # Adapt service to the current build pipeline.
+    sed -i "s|: IMAGE|: gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}|g" service.yaml
+    sed -i "s|: SERVICE|: ${_SERVICE}-$(cat _short_id)|g" service.yaml
 
     # Inject non-default service configuration options.
-    sed -i "s|<var>SIZE</var>|${_MEMORY_CONFIG}|g" service.yaml
-    sed -i "s|<var>CPU</var>|${_CPU_CONFIG}|g" service.yaml
+    # This uses 
+    sed -i "s|: SIZE|: ${_MEMORY_CONFIG}|g" service.yaml
+    sed -i "s|: CPU|: ${_CPU_CONFIG}|g" service.yaml
     cat service.yaml
     
 - id: 'Deploy to Cloud Run'
@@ -90,4 +95,4 @@ substitutions:
   # The following substitutions are used to inject non-default configuration
   # values into the deployed service.
   _MEMORY_CONFIG: 128M
-  _CPU_CONFIG: "'2'"
+  _CPU_CONFIG: '2'
