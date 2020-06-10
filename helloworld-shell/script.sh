@@ -19,4 +19,3 @@ set -e
 echo "Hello ${NAME:-World}!"
 
 # [END run_helloworld_shell]
- 
