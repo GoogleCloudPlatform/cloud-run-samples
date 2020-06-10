@@ -10,5 +10,5 @@ spec:
       - image: '{{"<var>"}}IMAGE{{"</var>"}}'
         resources:
           limits:
-            cpu: '{{"<var>"}}<var>CPU{{"</var>"}}'
+            cpu: '{{"<var>"}}CPU{{"</var>"}}'
 # [END run_yaml_limits_cpu]
