@@ -5,7 +5,8 @@ steps:
   args:
   - -c
   - | # Recursively find dockerfiles (not in testing dir)
-    find . -name '*Dockerfile' -not -path "./testing/*" -exec hadolint {} \;
     find . -name '*Dockerfile' -not -path "./testing/*" \
-      -exec hadolint {} \;| grep -q 'Dockerfile'
+      -exec hadolint {} \; \
+      | tee /dev/tty \
+      | grep -q 'Dockerfile'
     if [[ $? -eq 0 ]] ; then exit 1 ; fi

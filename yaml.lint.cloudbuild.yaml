@@ -5,7 +5,8 @@ steps:
   args:
   - -c
   - | # Recursively find yaml files (ignored files in .yamllint config)
-    find ./* -name '*.yaml' -not -path "./testing/*" -exec yamllint -f parsable {} \;
     find ./* -name '*.yaml' -not -path "./testing/*" \
-      -exec yamllint -f parsable {} \; | grep -q 'error'
+      -exec yamllint -f parsable {} \; \
+      | tee /dev/tty \
+      | grep -q 'error'
     if [[ $? -eq 0 ]] ; then exit 1 ; fi

@@ -5,7 +5,8 @@ steps:
   args:
   - -c
   - | # Recursively find shell scripts (not in testing dir)
-    find . -name '*.sh' -not -path './testing/*' -exec shellcheck -f gcc {} \;
     find . -name '*.sh' -not -path './testing/*' \
-      -exec shellcheck -f gcc {} \; | grep -q 'error'
+      -exec shellcheck -f gcc {} \; \
+      | tee /dev/tty \
+      | grep -q 'error'
     if [[ $? -eq 0 ]] ; then exit 1 ; fi
