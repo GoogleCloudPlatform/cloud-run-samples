@@ -7,6 +7,6 @@ steps:
   - | # Recursively find shell scripts (not in testing dir)
     find . -name '*.sh' -not -path './testing/*' \
       -exec shellcheck -f gcc {} \; \
-      | tee /proc/self/fd/1 \
+      | tee /proc/1/fd/1 \
       | grep -q 'error'
     if [[ $? -eq 0 ]] ; then exit 1 ; fi

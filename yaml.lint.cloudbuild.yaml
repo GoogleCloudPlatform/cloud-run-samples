@@ -7,6 +7,6 @@ steps:
   - | # Recursively find yaml files (ignored files in .yamllint config)
     find ./* -name '*.yaml' -not -path "./testing/*" \
       -exec yamllint -f parsable {} \; \
-      | tee /proc/self/fd/1 \
+      | tee /proc/1/fd/1 \
       | grep -q 'error'
     if [[ $? -eq 0 ]] ; then exit 1 ; fi
