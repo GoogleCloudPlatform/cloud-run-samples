@@ -12,6 +12,7 @@ steps:
 
 - id: 'Prepare service.yaml'
   name: 'mikefarah/yq'
+  dir: '${_SAMPLE_DIR}'
   entrypoint: '/bin/sh'
   args:
   - '-c'
@@ -84,6 +85,7 @@ options:
   env:
     - CLOUDSDK_RUN_PLATFORM=managed
     - CLOUDSDK_RUN_REGION=${_SERVICE_REGION}
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 
 # TODO: Update these User-defined substitutions
 substitutions:

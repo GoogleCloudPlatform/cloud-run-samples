@@ -1,0 +1,5 @@
+./cloudbuild.yaml
+./snippet.cpu.yaml
+./snippet.memory.yaml
+./template.service.yaml
+./snippet.env.yaml
