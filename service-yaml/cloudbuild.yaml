@@ -37,6 +37,7 @@ steps:
     
 - id: 'Deploy to Cloud Run'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
+  dir: '${_SAMPLE_DIR}'
   entrypoint: /bin/bash
   args:
   - '-c'
