@@ -5,7 +5,7 @@
 # You may obtain a copy of the License at
 #
 #    https://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,6 +39,7 @@ RUN go build -mod=readonly -v -o server
 # https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
 FROM debian:buster-slim
 RUN set -x && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    --no-install-recommends \
     ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
@@ -49,4 +50,4 @@ COPY script.sh ./
 # Run the web service on container startup.
 CMD ["/app/server"]
 
-# [END run_helloworld_dockerfile]
+# [END run_helloworld_dockerfile] 

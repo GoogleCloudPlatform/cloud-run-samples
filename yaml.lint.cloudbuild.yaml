@@ -1,0 +1,12 @@
+steps:
+- id: 'Lint YAML'
+  name: 'cytopia/yamllint' # https://hub.docker.com/r/cytopia/yamllint
+  entrypoint: '/bin/sh'
+  args:
+  - -c
+  - | # Recursively find yaml files (ignored files in .yamllint config)
+    find ./* -name '*.yaml' -not -path "./testing/*" \
+      -exec yamllint -f parsable {} \; \
+      | tee /dev/stdout \
+      | grep -q 'error'
+    if [[ $? -eq 0 ]] ; then exit 1 ; fi

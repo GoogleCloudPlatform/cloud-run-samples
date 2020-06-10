@@ -1,0 +1,9 @@
+---
+
+ignored:
+  # Samples prioritize latest security updates over deterministic builds.
+  # https://github.com/hadolint/hadolint/wiki/DL3008
+  - DL3008 # Pin versions in apt get install.
+  # $PORT variable needs to be interpolated in CMD args at runtime.
+  # https://github.com/hadolint/hadolint/wiki/DL3025
+  - DL3025 # Use arguments JSON notation for CMD and ENTRYPOINT arguments
