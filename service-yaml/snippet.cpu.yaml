@@ -2,13 +2,13 @@
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: <var>SERVICE</var>
+  name: '{{"<var>"}}SERVICE{{"</var>"}}'
 spec:
   template:
     spec:
       containers:
-      - image: <var>IMAGE</var>
+      - image: '{{"<var>"}}IMAGE{{"</var>"}}'
         resources:
           limits:
-            cpu: <var>CPU</var>
+            cpu: '{{"<var>"}}<var>CPU{{"</var>"}}'
 # [END run_yaml_limits_cpu]
