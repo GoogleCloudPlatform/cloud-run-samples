@@ -1,4 +1,3 @@
-#!/bin/bash
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +13,9 @@
 # limitations under the License.
 
 # [START run_helloworld_shell]
+#!/bin/bash
 
 set -e
 echo "Hello ${NAME:-World}!"
 
 # [END run_helloworld_shell]
- 
