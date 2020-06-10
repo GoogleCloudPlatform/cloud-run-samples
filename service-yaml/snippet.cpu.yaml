@@ -7,7 +7,7 @@ spec:
   template:
     spec:
       containers:
-      - image: '{{"<var>"}}IMAGE{{"</var>"}}'
+      - image: "{{'<var>'}}IMAGE{{'</var>'}}"
         resources:
           limits:
             cpu: '{{"<var>"}}CPU{{"</var>"}}'
