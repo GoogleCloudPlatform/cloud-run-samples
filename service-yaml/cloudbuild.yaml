@@ -34,7 +34,7 @@ steps:
     sed -i "s|: 'CPU|: '${_CPU_CONFIG}|g" service.yaml
 - id: 'Deploy to Cloud Run'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
-  dir: '${_SAMPLE_DIR}'
+  dir: '${_SAMPLE_DIR}' # Same directory as service.yaml
   entrypoint: /bin/bash
   args:
   - '-c'
@@ -46,10 +46,12 @@ steps:
 
 - id: 'Get Cloud Run URL'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
+  dir: '${_SAMPLE_DIR}' # Same directory as _short_id
   entrypoint: '/bin/bash'
   args:
   - '-c'
   - |
+    set -e
     get_url() {
         gcloud run services describe ${_SERVICE}-$(cat _short_id) --format 'value(status.url)'
     }
@@ -59,6 +61,7 @@ steps:
 
 - id: 'Integration Tests'
   name: 'gcr.io/cloud-builders/curl'
+  dir: '${_SAMPLE_DIR}' # Same directory as _service_url and _request_token
   entrypoint: '/bin/sh'
   args:
   - '-c'
@@ -66,9 +69,11 @@ steps:
     set -x
     chmod +x healthcheck.sh
     ./healthcheck.sh -u $(cat _service_url) -a $(cat _request_token)
+    rm _request_token
 
 - id: 'Teardown'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
+  dir: '${_SAMPLE_DIR}' # Same directory as _short_id.
   entrypoint: '/bin/bash'
   args:
   - '-c'
