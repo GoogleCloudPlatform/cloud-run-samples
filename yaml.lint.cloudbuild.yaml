@@ -4,9 +4,17 @@ steps:
   entrypoint: '/bin/sh'
   args:
   - -c
-  - | # Recursively find yaml files (ignored files in .yamllint config)
-    find ./* -name '*.yaml' -not -path "./testing/*" \
-      -exec yamllint -f parsable {} \; \
-      | tee /proc/1/fd/1 \
-      | grep -q 'error'
-    if [[ $? -eq 0 ]] ; then exit 1 ; fi
+  - | # Recursively find yaml files (yamllint must be run in directory)
+    find . -name '*.yaml' -not -path "./testing/*" -not -path "*.lint.cloudbuild.yaml" \
+      -exec sh -c '
+      root=$(pwd)
+      lint () {
+        cd "$root" || exit
+        dir=$(dirname "$@")
+        cd "$dir" || exit
+        file=$(basename "$@")
+        yamllint -d relaxed -f parsable "$file" | tee /proc/1/fd/1 | grep -q "error"
+        if [[ $? -eq 0 ]] ; then error=1 ; fi
+      }
+      lint "$@"' sh {} \;
+    if [[ $error -eq 1 ]] ; then exit 1 ; fi
