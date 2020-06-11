@@ -5,7 +5,7 @@ steps:
   args:
   - -c
   - | # Recursively find yaml files (yamllint must be run in directory)
-    find . -name '*.yaml' -not -path "./testing/*" -not -path "*.lint.cloudbuild.yaml" \
+    find . -name "*.yaml" -not -path "./testing/*" -not -path "*.lint.cloudbuild.yaml" \
       -exec sh -c '
       root=$(pwd)
       lint () {
