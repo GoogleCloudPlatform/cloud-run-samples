@@ -53,11 +53,16 @@ steps:
   - |
     set -e
     get_url() {
-        gcloud run services describe ${_SERVICE}-$(cat _short_id) --format 'value(status.url)'
+      gcloud run services describe ${_SERVICE}-$(cat _short_id) --format 'value(status.url)'
     }
     echo $(get_url) > _service_url
     echo "Cloud Run URL for ${_SERVICE}-$(cat _short_id) is $(cat _service_url)"
-    echo $(gcloud config config-helper --format=value\(credential.id_token\)) > _request_token
+
+    get_token() {
+      gcloud config config-helper --format 'value(credential.id_token)''
+    }
+    echo $(get_token) > _request_token
+    echo "Created identity token for Cloud Run requests"
 
 - id: 'Integration Tests'
   name: 'gcr.io/cloud-builders/curl'
@@ -66,10 +71,10 @@ steps:
   args:
   - '-c'
   - |
-    set -x
+    set -ex
     chmod +x healthcheck.sh
+    trap 'rm _request_token' EXIT
     ./healthcheck.sh -u $(cat _service_url) -a $(cat _request_token)
-    rm _request_token
 
 - id: 'Teardown'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'

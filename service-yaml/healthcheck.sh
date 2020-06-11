@@ -22,7 +22,7 @@
 
 ## Defaults
 content="Hello, World!"
-retries=10
+retries=5
 interval=5
 url="http://localhost:3000"
 
@@ -46,7 +46,11 @@ echo "url: "$url
 export auth
 
 gcurl() {
-    test "$auth" && curl -H "Authorization: Bearer $auth" "$@" || curl "$@"
+    if [ -z "$auth" ]; then
+      curl -H "Authorization: Bearer $auth" "$@"
+    else
+      curl "$@"
+    fi
 }
 
 for i in $(seq 0 $retries); do
