@@ -39,9 +39,12 @@ steps:
   args:
   - '-c'
   - |
-    set -x
+    echo -e "\nservice.yaml >>>"
     cat service.yaml
+    echo -e "\nCLOUDSDK environment variables >>>"
     env | grep CLOUDSDK
+    echo
+    set -x
     gcloud beta run services replace service.yaml
 
 - id: 'Get Cloud Run URL'
@@ -51,18 +54,22 @@ steps:
   args:
   - '-c'
   - |
-    set -e
+    set -ex
     get_url() {
-      gcloud run services describe ${_SERVICE}-$(cat _short_id) --format 'value(status.url)'
+      gcloud run services describe ${_SERVICE}-$(cat _short_id) \
+        --format 'value(status.url)'
     }
     echo $(get_url) > _service_url
     echo "Cloud Run URL for ${_SERVICE}-$(cat _short_id) is $(cat _service_url)"
 
     get_token() {
-      gcloud config config-helper --format 'value(credential.id_token)'
+      gcloud auth print-identity-token \
+        --audiences="$(cat _service_url)"
     }
+
     echo $(get_token) > _request_token
-    echo "Created identity token for Cloud Run requests"
+    echo "Created identity token for Cloud Run requests."
+    cat _request_token
 
 - id: 'Integration Tests'
   name: 'gcr.io/cloud-builders/curl'

@@ -43,10 +43,9 @@ echo "retries: "$retries
 echo "interval: "$interval
 echo "content: "$content
 echo "url: "$url
-export auth
 
 gcurl() {
-    if [ -z "$auth" ]; then
+    if [ -n "$auth" ]; then
       curl -H "Authorization: Bearer $auth" "$@"
     else
       curl "$@"
