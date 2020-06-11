@@ -59,7 +59,7 @@ steps:
     echo "Cloud Run URL for ${_SERVICE}-$(cat _short_id) is $(cat _service_url)"
 
     get_token() {
-      gcloud config config-helper --format 'value(credential.id_token)''
+      gcloud config config-helper --format 'value(credential.id_token)'
     }
     echo $(get_token) > _request_token
     echo "Created identity token for Cloud Run requests"
