@@ -17,7 +17,7 @@ steps:
   args:
   - '-c'
   - |
-    set -e
+    set -ex
     # Generate a random 15 character alphanumeric string (lowercase only)
     # Used to create short unique name for the Cloud Run service.
     cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id
@@ -30,18 +30,18 @@ steps:
     sed -i "s|: SERVICE|: ${_SERVICE}-$(cat _short_id)|g" service.yaml
 
     # Inject non-default service configuration options.
-    # This uses 
     sed -i "s|: SIZE|: ${_MEMORY_CONFIG}|g" service.yaml
-    sed -i "s|: CPU|: ${_CPU_CONFIG}|g" service.yaml
-    cat service.yaml
-    
+    sed -i "s|: 'CPU|: '${_CPU_CONFIG}|g" service.yaml
 - id: 'Deploy to Cloud Run'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
   dir: '${_SAMPLE_DIR}'
   entrypoint: /bin/bash
   args:
   - '-c'
-  - | 
+  - |
+    set -x
+    cat service.yaml
+    env | grep CLOUDSDK
     gcloud beta run services replace service.yaml
 
 - id: 'Get Cloud Run URL'
@@ -63,6 +63,7 @@ steps:
   args:
   - '-c'
   - |
+    set -x
     chmod +x healthcheck.sh
     ./healthcheck.sh -u $(cat _service_url) -a $(cat _request_token)
 
