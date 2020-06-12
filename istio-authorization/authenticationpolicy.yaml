@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,8 +22,12 @@ spec:
   origins:
   - jwt:
       issuer: https://accounts.google.com
-      audiences:
-      - http://example.com
       jwksUri: https://www.googleapis.com/oauth2/v3/certs
+      triggerRules:
+      - excludedPaths:
+        - exact: /healthz
+        - exact: /metrics
+        - exact: /probe
+        - prefix: /_internal/knative
   principalBinding: USE_ORIGIN
 # [END run_gke_invoker_authenticationpolicy]
