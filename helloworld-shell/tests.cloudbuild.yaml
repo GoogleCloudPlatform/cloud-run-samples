@@ -4,7 +4,7 @@ steps:
     - 'go'
     - 'get'
     - 'github.com/googleapis/repo-automation-bots/packages/buildcop'
-    - --repo=GoogleCloudPlatform/cloud-run-samples
+    - '-repo=GoogleCloudPlatform/cloud-run-samples'
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
