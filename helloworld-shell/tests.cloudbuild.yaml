@@ -1,20 +1,12 @@
 steps:
 
 - name: golang
-  env:
-  - GO111MODULE=on
-  args: ['go','get','-u','github.com/googleapis/repo-automation-bots/packages/buildcop']
-  volumes:
-  - name: go-modules
-    path: /go
+  args: ['go','mod', 'init','github.com/googleapis/repo-automation-bots/packages/buildcop']
 
 - name: golang
   env:
   - GO111MODULE=on
-  args: ['go','build','github.com/googleapis/repo-automation-bots/packages/buildcop']
-  volumes:
-  - name: go-modules
-    path: /go
+  args: ['go','build','./buildcop']
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
