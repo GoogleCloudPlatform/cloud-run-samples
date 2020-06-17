@@ -6,7 +6,7 @@ steps:
 - name: golang
   env:
   - GO111MODULE=on
-  args: ['go','build','.']
+  args: ['go','build','./']
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
