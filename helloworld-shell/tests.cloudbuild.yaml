@@ -1,13 +1,11 @@
 steps:
-- id: 'Fetch BuildCop Binary'
-  name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION'
-  args: ['gsutil', 'cp', 'gs://cloud-devrel-kokoro-resources/trampoline/linux_amd64/buildcop', 'buildcop']
-
 - id: 'Call BuildCop'
   name: 'gcr.io/google.com/gcloud:$_CLOUDSDK_VERSION'
   entrypoint: /bin/bash
   args:
-    - buildcop
+    - '-c'
+    - |
+      go get https://github.com/googleapis/repo-automation-bots/packages/buildcop
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
