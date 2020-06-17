@@ -1,9 +1,7 @@
 steps:
-
 - id: 'Fetch BuildCop Binary'
   name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION'
-  entrypoint: 'gsutil'
-  args: ['cp', 'gs://cloud-devrel-kokoro-resources/trampoline/linux_amd64/buildcop', 'buildcop']
+  args: ['gsutil', 'cp', 'gs://cloud-devrel-kokoro-resources/trampoline/linux_amd64/buildcop', 'buildcop']
 
 - id: 'Call BuildCop'
   name: 'gcr.io/google.com/gcloud:$_CLOUDSDK_VERSION'
