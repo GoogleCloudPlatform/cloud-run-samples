@@ -9,11 +9,7 @@ steps:
   name: 'gcr.io/google.com/gcloud:$_CLOUDSDK_VERSION'
   entrypoint: /bin/bash
   args:
-    - 'c'
-    - |
-    export MOCHA_REPORTER_OUTPUT=test_output_sponge_log.xml
-    export MOCHA_REPORTER=xunit
-    buildcop
+    - buildcop
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
