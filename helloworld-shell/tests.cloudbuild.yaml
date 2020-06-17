@@ -11,7 +11,7 @@ steps:
   args: ['go','get','-u','github.com/golang/glog']
 
 - name: golang
-  args: ['go','list','-f','{{ .Dir }}','-m','github.com/golang/glog']
+  args: ['go','list','-f','{{ .Dir }}']
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
