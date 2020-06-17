@@ -1,5 +1,6 @@
 steps:
 
+
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
   dir: '${_SAMPLE_DIR}'
