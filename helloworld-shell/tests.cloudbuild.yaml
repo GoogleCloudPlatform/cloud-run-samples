@@ -8,9 +8,6 @@ options:
 steps:
 
 - name: golang
-  args: ['go','mod','init', 'github.com/googleapis/repo-automation-bots/packages/buildcop']
-
-- name: golang
   args: ['go','get','github.com/googleapis/repo-automation-bots/packages/buildcop']
 
 - name: golang
