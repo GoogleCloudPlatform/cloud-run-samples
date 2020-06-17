@@ -2,6 +2,13 @@ steps:
 - name: 'golang'
   args: ['go', 'get', 'https://github.com/googleapis/repo-automation-bots/packages/buildcop']
 
+- name: 'golang'
+  args: 
+    - 'go'
+    - 'build'
+    - './buildcop'
+    - '-repo=GoogleCloudPlatform/cloud-run-samples'
+
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
   dir: '${_SAMPLE_DIR}'
