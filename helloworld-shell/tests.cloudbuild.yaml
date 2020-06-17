@@ -8,7 +8,10 @@ options:
 steps:
 
 - name: golang
-  args: ['go','get','-u','github.com/golang/glog']
+  args: ['go','mod','init']
+
+- name: golang
+  args: ['go','get','github.com/googleapis/repo-automation-bots/packages/buildcop']
 
 - name: golang
   args: ['go','list','-f','{{ .Dir }}']
