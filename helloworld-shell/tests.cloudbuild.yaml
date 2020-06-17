@@ -11,7 +11,7 @@ steps:
 - name: golang
   env:
   - GO111MODULE=on
-  args: ['go','build','github.com/googleapis/repo-automation-bots/packages/buildcop','-repo=GoogleCloudPlatform/cloud-run-samples']
+  args: ['go','build','github.com/googleapis/repo-automation-bots/packages/buildcop']
   volumes:
   - name: go-modules
     path: /go
