@@ -1,20 +1,17 @@
+options:
+  env:
+  - GO111MODULE=on
+  volumes:
+  - name: go-modules
+    path: /go
+
 steps:
 
 - name: golang
-  env:
-  - GO111MODULE=on
   args: ['go','get','-u','github.com/golang/glog']
-  volumes:
-  - name: go-modules
-    path: /go
 
 - name: golang
-  env:
-  - GO111MODULE=on
   args: ['go','list','-f','{{ .Dir }}','-m','github.com/golang/glog']
-  volumes:
-  - name: go-modules
-    path: /go
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
