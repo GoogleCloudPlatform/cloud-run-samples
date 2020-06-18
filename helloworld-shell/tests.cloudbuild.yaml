@@ -3,10 +3,17 @@ steps:
   args: 
     - go
     - get
-    - -ldflags 
-    - "repo=GoogleCloudPlatform/cloud-run-samples"
     - github.com/googleapis/repo-automation-bots/packages/buildcop
+  volumes:
+  - name: go-modules
+    path: /go
 
+- name: golang
+  args: 
+    - buildcop
+  volumes:
+  - name: go-modules
+    path: /go
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
