@@ -11,6 +11,8 @@ steps:
 - name: golang
   args: 
     - buildcop
+    - -service_account=59815374030@cloudbuild.gserviceaccount.com
+    - -repo=GoogleCloudPlatform/cloud-run-samples
   volumes:
   - name: go-modules
     path: /go
