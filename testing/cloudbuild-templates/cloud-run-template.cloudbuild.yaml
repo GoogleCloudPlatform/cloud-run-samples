@@ -17,10 +17,10 @@ steps:
   - | # Cloud Run Service name must be less than 63 characters
     cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id # Generate a random 15 character alphanumeric string (lowercase only)
     gcloud run deploy ${_SERVICE}-$(cat _short_id) \
-     --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
-     --no-allow-unauthenticated \
-     --region ${_SERVICE_REGION} \
-     --platform managed
+      --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
+      --no-allow-unauthenticated \
+      --region ${_SERVICE_REGION} \
+      --platform managed
 
 - id: 'Get Cloud Run URL'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
@@ -28,6 +28,7 @@ steps:
   args:
   - '-c'
   - |
+    set -e
     get_url() {
         gcloud run services describe ${_SERVICE}-$(cat _short_id) --format 'value(status.url)' \
           --platform managed --region ${_SERVICE_REGION}
@@ -35,15 +36,24 @@ steps:
     echo $(get_url) > _service_url
     echo "Cloud Run URL for ${_SERVICE}-$(cat _short_id) is $(cat _service_url)"
 
+    # Cloud Build does not natively mint identity tokens.
+    # A separate mechanism is preloading into Secret Manager
+    # credentials for a service account which can mint tokens.
+    gcloud secrets versions access latest --secret ${_SECRET_NAME} > _sa_key.json
+    gcloud auth activate-service-account ${_RUNNER_IDENTITY} --key-file _sa_key.json --project ${PROJECT_ID}
+    gcloud auth print-identity-token --audiences "$(cat _service_url)" > _id_token
+    rm _sa_key.json
+
 - id: 'Integration Tests'
   # TODO: Update the following image name, entrypoint, and args to fit your testing needs
-  name: 'alpine:3'
+  name: 'gcr.io/cloud-builders/curl'
   entrypoint: '/bin/sh'
   dir: '${_SAMPLE_DIR}'
   args:
   - '-c'
   - |
-    echo "Add integration tests!"
+    set -e
+    curl -si -H "Authorization: Bearer $(cat _id_token)" $(cat _service_url)
 
 - id: 'Teardown'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'

@@ -48,10 +48,10 @@ https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
   gcloud beta billing projects link ${TESTING_PROJECT} --billing-account=${BILLING_ACCOUNT}
 
   echo "Enabling apis..."
-  gcloud services enable run.googleapis.com --project $TESTING_PROJECT
-  gcloud services enable cloudbuild.googleapis.com --project $TESTING_PROJECT
-  gcloud services enable pubsub.googleapis.com --project $TESTING_PROJECT
-  gcloud services enable containerregistry.googleapis.com --project $TESTING_PROJECT
+  for s in run cloudbuild pubsub containerregistry secretmanager cloudfunctions;
+  do
+    gcloud services enable "${s}.googleapis.com" --project $TESTING_PROJECT
+  done
 
   if [[ ${IAM_OWNER} ]]
   echo "Giving project permission to owner..."

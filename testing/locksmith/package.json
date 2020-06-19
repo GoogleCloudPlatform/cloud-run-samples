@@ -1,0 +1,35 @@
+{
+  "name": "locksmith",
+  "private": "true",
+  "version": "0.1.0",
+  "description": "Creates a service account key and stores it in Secret Manager.",
+  "main": "index.js",
+  "scripts": {
+    "#deploy": "gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/token-minter; gcloud run deploy token-minter --image gcr.io/$GOOGLE_CLOUD_PROJECT/token-minter",
+    "deploy": "gcloud functions deploy token-minter",
+    "invoke": "gcloud functions call token-minter",
+    "lint": "eslint '**/*.js'",
+    "fix": "npm run lint -- --fix",
+    "start": "functions-framework --target=tokenMinter",
+    "dev": "SECRET_NAME=${SECRET_NAME:-dev} nodemon --exec functions-framework --target=tokenMinter",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Google LLC",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^1.5.1",
+    "@google-cloud/secret-manager": "^3.0.0",
+    "gcp-metadata": "^4.1.0",
+    "google-auth-library": "^6.0.2",
+    "googleapis": "^52.1.0",
+    "got": "^11.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.0.5"
+  }
+}
