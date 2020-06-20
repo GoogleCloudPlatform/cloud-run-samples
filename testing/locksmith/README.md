@@ -36,7 +36,7 @@ of the cloud-run-samples repo.
 
     # Create a restricted role that only allows creating Service Account keys.
     gcloud iam roles create keyholder \
-        --project adamross-svls-kibble \
+        --project "${GOOGLE_CLOUD_PROJECT}" \
         --title "Key Holder" \
         --permissions iam.serviceAccountKeys.create
         --permissions iam.serviceAccountKeys.delete
@@ -129,5 +129,5 @@ There are several more substitutions now, once this is ready for final PR we'll 
 ```sh
 gcloud builds submit \
   --config cloud-run-template.cloudbuild.yaml \
-  --substitutions 'SHORT_SHA=manual,_RUNNER_IDENTITY=test-runner-identity@adamross-svls-kibble.iam.gserviceaccount.com,_SAMPLE_DIR=.,_SERVICE=test-locksmith,_SECRET_NAME=token-minter-secret'
+  --substitutions 'SHORT_SHA=manual,_RUNNER_IDENTITY=test-runner-identity@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com,_SAMPLE_DIR=.,_SERVICE=test-locksmith,_SECRET_NAME=token-minter-secret'
 ```
