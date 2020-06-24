@@ -5,7 +5,8 @@ steps:
   args: 
     - '-c' 
     - |
-      ls .git
+      export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
+      git rev-parse HEAD
 
 - name: golang
   args: 
