@@ -1,11 +1,4 @@
 steps:
-- name: 'gcr.io/cloud-builders/git'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-  git status
-
 - name: golang
   args: 
     - go
@@ -14,6 +7,10 @@ steps:
   volumes:
   - name: go-modules
     path: /go
+
+- name: 'gcr.io/cloud-builders/git'
+  args: 
+    - status
 
 - name: golang
   args: 
