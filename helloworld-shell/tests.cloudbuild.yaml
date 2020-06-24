@@ -6,7 +6,7 @@ steps:
     - '-c' 
     - |
       cd ..
-      ls -a -R
+      ls -a
 
 - name: golang
   args: 
