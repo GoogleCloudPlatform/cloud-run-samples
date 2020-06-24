@@ -1,22 +1,12 @@
 steps:
 
 - name: 'gcr.io/cloud-builders/git'
+  entrypoint: /bin/bash
   args: 
-    - clone 
-    - git@github.com:GoogleCloudPlatform/cloud-run-samples.git
-  volumes:
-  - name: git-repo
-    path: /git-repo
-
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: bash
-  args: 
-    - '-c'
-    - cd git-repo/cloud-run-samples
-      git rev-parse HEAD > _commit_hash
-  volumes:
-  - name: git-repo
-    path: /git-repo
+    - '-c' 
+    - ls
+      pwd 
+      env
 
 - name: golang
   args: 
