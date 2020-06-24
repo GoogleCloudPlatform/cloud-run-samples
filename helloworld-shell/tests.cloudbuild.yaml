@@ -1,5 +1,5 @@
 steps:
-- name: gcr.io/cloud-builders/gcloud'
+- name: gcr.io/cloud-builders/gcloud
   entrypoint: '/bin/bash'
   args:
     - '-c'
