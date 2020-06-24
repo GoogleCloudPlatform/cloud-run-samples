@@ -6,13 +6,12 @@ steps:
   args:
     - '-c'
     - | # Run build cop only on nightly builds 
-      test=$_PR_NUMBER
-      echo $test
-      if [[ ! $test ]]
+      if [[ $_PR_NUMBER ]]
       then 
+      echo "Skipping Build Cop"
+      else 
       go get github.com/googleapis/repo-automation-bots/packages/buildcop
       buildcop -repo=GoogleCloudPlatform/cloud-run-samples -commit_hash=$COMMIT_SHA
-      else echo "Skipping Build Cop"
       fi
 
 - id: 'Build Container Image'
