@@ -1,0 +1,10 @@
+name: helloworld-pr
+description: pull-request
+github:
+  name: cloud-run-samples
+  owner: GoogleCloudPlatform
+  pullRequest:
+    branch: ^master$
+includedFiles:
+- helloworld-shell/**
+filename: helloworld-shell/tests.cloudbuild.yaml
