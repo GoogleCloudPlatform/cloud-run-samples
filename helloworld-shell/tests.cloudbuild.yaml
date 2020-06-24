@@ -5,7 +5,6 @@ steps:
     - '-c' 
     - git fetch --unshallow
       git rev-parse HEAD > _commit_hash
-      echo $_commit_hash
       echo HELLO
 
 - name: golang
