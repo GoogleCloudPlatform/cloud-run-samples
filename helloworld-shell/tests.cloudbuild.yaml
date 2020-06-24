@@ -1,10 +1,9 @@
 steps:
 
 - name: 'gcr.io/cloud-builders/git'
-  entrypoint: /bin/bash
   args: 
     - '-c' 
-    - cd ./
+    - git fetch --unshallow
       git rev-parse HEAD > _commit_hash
       echo $_commit_hash
       echo HELLO
