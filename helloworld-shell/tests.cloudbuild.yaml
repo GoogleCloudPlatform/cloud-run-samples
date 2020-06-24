@@ -12,6 +12,7 @@ steps:
   args: 
     - buildcop
     - -repo=GoogleCloudPlatform/cloud-run-samples
+    - -commit_hash=:$COMMIT_SHA
   volumes:
   - name: go-modules
     path: /go
