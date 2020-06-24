@@ -6,7 +6,7 @@ steps:
     - '-c' 
     - |
       export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
-      git rev-parse HEAD
+      git fetch --unshallow
 
 - name: golang
   args: 
