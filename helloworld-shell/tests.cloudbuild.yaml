@@ -5,9 +5,7 @@ steps:
   args: 
     - '-c' 
     - |
-      git fetch --unshallow
-      git rev-parse HEAD > _commit_hash
-      echo HELLO
+      ls .git
 
 - name: golang
   args: 
