@@ -6,7 +6,7 @@ steps:
   args:
     - '-c'
     - | # Run build cop only on nightly builds 
-      test = $_PR_NUMBER
+      test=$_PR_NUMBER
       if [[ -z $test ]]
       then 
       go get github.com/googleapis/repo-automation-bots/packages/buildcop
