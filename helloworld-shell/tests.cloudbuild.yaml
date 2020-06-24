@@ -1,10 +1,13 @@
 steps:
 
 - name: 'gcr.io/cloud-builders/git'
+  entrypoint: /bin/bash
   args: 
     - '-c' 
-    - git fetch --unshallow
+    - |
+      git fetch --unshallow
       git rev-parse HEAD > _commit_hash
+      echo $_commit_hash
       echo HELLO
 
 - name: golang
