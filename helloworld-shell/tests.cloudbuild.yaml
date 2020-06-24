@@ -4,6 +4,12 @@ steps:
   entrypoint: /bin/bash
   args: 
     - '-c' 
+    - git rev-parse HEAD
+    
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: /bin/bash
+  args: 
+    - '-c' 
     - ls -a -R
 
 - name: 'gcr.io/cloud-builders/git'
