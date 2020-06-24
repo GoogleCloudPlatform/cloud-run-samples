@@ -5,7 +5,8 @@ steps:
   args: 
     - '-c' 
     - cd ./
-      git rev-parse HEAD
+      git rev-parse HEAD > _commit_hash
+      echo _commit_hash
 
 - name: 'gcr.io/cloud-builders/git'
   entrypoint: /bin/bash
