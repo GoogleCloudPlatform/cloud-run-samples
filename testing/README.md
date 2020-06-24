@@ -68,6 +68,7 @@ export environment variables into the test runner.
 Before trigger creation, you need to enable access for the Cloud Build service account to deploy the service. More information can be found in [Setting up continuous deployment with Cloud Build][access]. The Cloud Build GitHub App also needs to be installed and connected to the repository. More info can be found in [Installing the Cloud Build app][app].
 
 Add a Cloud Build trigger config YAML file:
+
 ```YAML
 name: SAMPLE-pr
 description: pull-request
@@ -82,6 +83,7 @@ filename: SAMPLE_DIR/cloudbuild.yaml
 ```
 
 Create the Cloud Build trigger:
+
 ```shell
 gcloud beta builds triggers create github --trigger-config=path/to/trigger-config.yaml
 ```
