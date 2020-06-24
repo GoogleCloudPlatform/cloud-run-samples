@@ -5,8 +5,18 @@ steps:
   args: 
     - '-c' 
     - ls
-      pwd 
-      env
+
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: /bin/bash
+  args: 
+    - '-c' 
+    - pwd
+
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: /bin/bash
+  args: 
+    - '-c' 
+    - env
 
 - name: golang
   args: 
