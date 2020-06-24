@@ -11,7 +11,6 @@ steps:
 - name: golang
   args: 
     - buildcop
-    - -service_account=gs://cloud-devrel-kokoro-resources/trampoline/linux_amd64/buildcop
     - -repo=GoogleCloudPlatform/cloud-run-samples
   volumes:
   - name: go-modules
