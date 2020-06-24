@@ -5,8 +5,9 @@ steps:
   entrypoint: /bin/bash
   args:
     - '-c'
-    - | # Run build cop only on nightly builds
-      if [[ -v $_PR_NUMBER ]]
+    - | # Run build cop only on nightly builds 
+      test = $_PR_NUMBER
+      if [[ -z $test ]]
       then 
       go get github.com/googleapis/repo-automation-bots/packages/buildcop
       buildcop -repo=GoogleCloudPlatform/cloud-run-samples -commit_hash=$COMMIT_SHA
