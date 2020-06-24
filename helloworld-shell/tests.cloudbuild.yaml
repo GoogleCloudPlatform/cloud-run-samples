@@ -6,7 +6,8 @@ steps:
   args:
     - '-c'
     - | # Run build cop only on nightly builds 
-      if [[ $_PR_NUMBER ]]
+      pr_var=$_PR_NUMBER 
+      if [[ -z $pr_var ]]
       then 
       echo "Skipping Build Cop"
       else 
