@@ -5,8 +5,8 @@ steps:
   args: 
     - '-c' 
     - |
-      export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
-      git fetch --unshallow
+      cd ..
+      ls -a -R
 
 - name: golang
   args: 
