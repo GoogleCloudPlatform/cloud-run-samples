@@ -2,11 +2,15 @@ steps:
 
 - name: golang
   entrypoint: /bin/bash
+  # Run build cop only on nightly builds
   args:
     - '-c'
     - |
+      if [[ ! $_PR_NUMBER ]]
+      then 
       go get github.com/googleapis/repo-automation-bots/packages/buildcop
       buildcop -repo=GoogleCloudPlatform/cloud-run-samples -commit_hash=$COMMIT_SHA
+      fi
 
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
