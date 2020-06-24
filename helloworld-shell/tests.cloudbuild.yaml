@@ -12,6 +12,9 @@ steps:
   args: 
     - '-c'
     - cd git-repo/cloud-run-samples
+  volumes:
+  - name: git-repo
+    path: /git-repo
 
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: bash
