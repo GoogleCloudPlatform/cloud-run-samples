@@ -89,7 +89,7 @@ gcloud beta builds triggers create github --trigger-config=path/to/trigger-confi
 **Note:** The Cloud Build Trigger UI is currently the only way to create manual
 triggers.
 
-## Manually Start Cloud Build
+## Manually Start Cloud Builds
 
 To manually trigger a Cloud Build from your CLI:
 ```
