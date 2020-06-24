@@ -40,8 +40,12 @@ steps:
     # A separate mechanism is preloading into Secret Manager
     # credentials for a service account which can mint tokens.
     gcloud secrets versions access latest --secret ${_SECRET_NAME} > _sa_key.json
+    # Capture the current authenticated account.
+    account=$(gcloud config get-value account)
     gcloud auth activate-service-account ${_RUNNER_IDENTITY} --key-file _sa_key.json --project ${PROJECT_ID}
     gcloud auth print-identity-token --audiences "$(cat _service_url)" > _id_token
+    # Switch to the original account.
+    gcloud config set account ${account}
     rm _sa_key.json
 
 - id: 'Integration Tests'
