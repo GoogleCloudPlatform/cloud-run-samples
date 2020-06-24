@@ -1,4 +1,11 @@
 steps:
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+  git rev-parse HEAD
+
 - name: golang
   args: 
     - go
