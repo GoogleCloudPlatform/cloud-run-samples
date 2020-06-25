@@ -5,9 +5,9 @@ steps:
   entrypoint: /bin/bash
   args:
     - '-c'
-    - | # Run build cop only on nightly builds 
+    - | # Run build cop only on nightly builds, skip PR's 
       pr_var=$_PR_NUMBER 
-      if [[ -z $pr_var ]]
+      if [[ $pr_var ]]
       then 
       echo "Skipping Build Cop"
       else 
