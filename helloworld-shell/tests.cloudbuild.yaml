@@ -72,6 +72,14 @@ steps:
     set +x
     echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
 
+- id: 'What's in here?'
+  name: golang
+  entrypoint: /bin/bash
+  args:
+    - '-c'
+    - |
+      ls -a
+
 # Uncomment if skipping teardown to associate build with container image.
 # images:
 # - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}'
