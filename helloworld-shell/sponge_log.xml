@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This example shows only tags, attributes and content which is currently read by Polarion
+     See http://windyroad.org/dl/Open%20Source/JUnit.xsd -->
+
+<testsuites>
+    <!--Name of the root tag does not matter, but it must not be same as the ones below -->
+    
+    <testsuite timestamp="2011-10-17T23:05:06">
+        <!-- testsuite tags can be nested, timestamp is not required and format is "yyyy-MM-dd'T'HH:mm:ssZ" -->
+        <testsuite>
+            <testcase name="someMethod" classname="SomeClass" time="0.285"/>
+            <!-- test case id is "SomeClass.someMethod", time is not required and is in seconds -->
+        </testsuite>
+        
+        <testcase name="otherMethod" classname="SomeClass" time="0.001">
+            <failure message="failure message" type="package.Exception">
+                <!-- message and type are not required, all text content is added to the created defect -->
+                Failure details
+            </failure>
+        </testcase>
+        
+        <testcase name="otherMethod" classname="OtherClass" time="0.002">
+            <error message="error message" type="package.OtherException">
+                Error Details
+            </error>
+        </testcase>
+    </testsuite>
+</testsuites>
