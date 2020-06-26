@@ -67,29 +67,45 @@ export environment variables into the test runner.
 
 Before trigger creation, you need to enable access for the Cloud Build service account to deploy the service. More information can be found in [Setting up continuous deployment with Cloud Build][access]. The Cloud Build GitHub App also needs to be installed and connected to the repository. More info can be found in [Installing the Cloud Build app][app].
 
-Add a Cloud Build trigger config YAML file:
+1. Add a Cloud Build trigger config YAML file:
 
-```YAML
-name: SAMPLE-pr
-description: pull-request
-github:
-  name: cloud-run-samples
-  owner: GoogleCloudPlatform
-  pullRequest:
-    branch: ^master$
-includedFiles:
-- SAMPLE_DIR/**
-filename: SAMPLE_DIR/cloudbuild.yaml
-```
+  **Pull Request Trigger Config**
 
-Create the Cloud Build trigger:
+  ```YAML
+  name: SAMPLE-pr
+  description: pull-request
+  github:
+    name: cloud-run-samples
+    owner: GoogleCloudPlatform
+    pullRequest:
+      branch: ^master$
+  includedFiles:
+  - SAMPLE_DIR/**
+  filename: SAMPLE_DIR/cloudbuild.yaml
+  ```
 
-```shell
-gcloud beta builds triggers create github --trigger-config=path/to/trigger-config.yaml
-```
+  **Nightly Trigger Config**
 
-**Note:** The Cloud Build Trigger UI is currently the only way to create manual
-triggers.
+  Our nightly testing uses "manual" Cloud Build triggers. The Cloud Build Trigger UI is currently the only way to create manual triggers. A current work around is creating a "Push to branch" event trigger. This can be manually triggered and can be updated via the UI to be a "Manually run" trigger.
+
+  ```YAML
+  name: SAMPLE-nightly
+  description: nightly
+  github:
+    name: cloud-run-samples
+    owner: GoogleCloudPlatform
+    push: # TODO: Update when manual triggers are supported
+      branch: nightly
+  includedFiles:
+  - SAMPLE_DIR/**
+  filename: SAMPLE_DIR/cloudbuild.yaml
+  ```
+
+1. Create a Cloud Build trigger using a config file:
+
+  ```shell
+  gcloud beta builds triggers create github --trigger-config=path/to/trigger-config.yaml
+  ```
 
 ## Manually Start Cloud Builds
 
