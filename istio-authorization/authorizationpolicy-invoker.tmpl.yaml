@@ -16,19 +16,26 @@
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: allow-jwt
-  namespace: tutorial
+  name: invoke-tutorial
+  namespace: gke-system
 spec:
   action: ALLOW
   rules:
-  - when:
+  - to:
+    - operation:
+        hosts:
+        - '*.tutorial.example.com'
+    when:
     - key: request.auth.claims[aud]
       values:
       - http://example.com
-    - key: request.auth.claims[iss]
-      values:
-      - https://accounts.google.com
     - key: request.auth.claims[email]
       values:
       - $SERVICE_ACCOUNT_EMAIL
+    - key: request.auth.claims[iss]
+      values:
+      - https://accounts.google.com
+  selector:
+   matchLabels:
+     istio: ingress-gke-system
 # [END run_gke_invoker_authorizationpolicy_invoker]
