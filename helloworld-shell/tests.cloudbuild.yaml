@@ -72,8 +72,7 @@ steps:
     set +x
     echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
 
-- id: 'What's in here?'
-  name: golang
+- name: golang
   entrypoint: /bin/bash
   args:
     - '-c'
