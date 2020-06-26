@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#set -e
+# This script is used to create new test projects for the Google Cloud Run team
+set -e
 
 export TEAM_FOLDER=859004177471
 export IAM_OWNER=group:cloud-devrel@twosync.google.com
