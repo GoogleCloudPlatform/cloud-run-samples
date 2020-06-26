@@ -16,18 +16,18 @@
 apiVersion: authentication.istio.io/v1alpha1
 kind: Policy
 metadata:
-  name: default
-  namespace: tutorial
+  name: istio-ingress-jwt
+  namespace: gke-system
 spec:
+  targets:
+  - name: istio-ingress
+    ports:
+    - name: http2
+    - name: https
   origins:
   - jwt:
       issuer: https://accounts.google.com
       jwksUri: https://www.googleapis.com/oauth2/v3/certs
-      triggerRules:
-      - excludedPaths:
-        - exact: /healthz
-        - exact: /metrics
-        - exact: /probe
-        - prefix: /_internal/knative
+  originIsOptional: true # use authorization policy to allow or deny request
   principalBinding: USE_ORIGIN
 # [END run_gke_invoker_authenticationpolicy]
