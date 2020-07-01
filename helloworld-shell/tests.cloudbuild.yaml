@@ -47,7 +47,7 @@ steps:
 
 - id: 'Teardown'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
-  entrypoint: /bin/bashasdfasdfasf
+  entrypoint: /bin/bashasdfasdfasfas
   args:
   - '-c'
   - |
