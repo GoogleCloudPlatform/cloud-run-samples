@@ -38,7 +38,7 @@ steps:
 - id: 'Integration Tests'
   # TODO: Update the following image name, entrypoint, and args to fit your testing needs
   name: 'alpine:3'
-  entrypoint: /bin/sh////////
+  entrypoint: /bin/sh
   dir: '${_SAMPLE_DIR}'
   args:
   - '-c'
@@ -47,7 +47,7 @@ steps:
 
 - id: 'Teardown'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
-  entrypoint: /bin/bash
+  entrypoint: /bin/bashasdfasdfasf
   args:
   - '-c'
   - |
