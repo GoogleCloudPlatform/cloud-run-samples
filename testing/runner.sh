@@ -19,4 +19,6 @@ set -e
 export TEAM_FOLDER=859004177471
 export IAM_OWNER=group:cloud-devrel@twosync.google.com
 
+gcloud config set project cloud-run-samples-test
+
 exec "$@"
