@@ -11,7 +11,7 @@ steps:
 
 - id: 'Deploy to Cloud Run'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
-  entrypoint: /bin/bashhhh
+  entrypoint: /bin/bash
   args:
   - '-c'
   - | # Cloud Run Service name must be less than 63 characters
@@ -44,7 +44,6 @@ steps:
   - '-c'
   - |
     echo "Add integration tests!"
-    exit 1
 
 - id: 'Teardown'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
