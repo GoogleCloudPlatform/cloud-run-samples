@@ -24,7 +24,7 @@ steps:
 
 - id: 'Get Cloud Run URL'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
-  entrypoint: /bin/bashhhh
+  entrypoint: /bin/bash
   args:
   - '-c'
   - |
@@ -44,6 +44,7 @@ steps:
   - '-c'
   - |
     echo "Add integration tests!"
+    exit 1
 
 - id: 'Teardown'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'

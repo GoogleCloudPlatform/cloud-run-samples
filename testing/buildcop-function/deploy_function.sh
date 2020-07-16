@@ -22,4 +22,8 @@ cp $(go env GOPATH)/bin/linux_amd64/buildcop buildcop
 
 # Deploy function
 gcloud functions deploy buildcop-worker --region=us-central1 \
---trigger-topic=cloud-builds --runtime=python37 --entry-point=send_to_buildcop
+--trigger-topic=cloud-builds --runtime=python37 --entry-point=send_to_buildcop \
+--no-allow-unauthenticated
+
+# Remove binary from current directory 
+rm buildcop
