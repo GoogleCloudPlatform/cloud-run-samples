@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Get buildcop binary
+# Get buildcop binary encoded for linux
 export GOOS=linux   
 export GOARCH=amd64
 
