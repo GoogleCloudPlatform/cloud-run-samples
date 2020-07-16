@@ -11,7 +11,7 @@ steps:
 
 - id: 'Deploy to Cloud Run'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
-  entrypoint: /bin/bashhhhhh
+  entrypoint: /bin/bash
   args:
   - '-c'
   - | # Cloud Run Service name must be less than 63 characters
@@ -24,7 +24,7 @@ steps:
 
 - id: 'Get Cloud Run URL'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
-  entrypoint: '/bin/bash'
+  entrypoint: '/bin/bash' abascasdbasdf
   args:
   - '-c'
   - |
