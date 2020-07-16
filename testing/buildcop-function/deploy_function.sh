@@ -21,5 +21,5 @@ go get github.com/googleapis/repo-automation-bots/packages/buildcop
 cp $(go env GOPATH)/bin/linux_amd64/buildcop buildcop
 
 # Deploy function
-gcloud functions deploy buildcop-worker-test --region=us-central1 \
+gcloud functions deploy buildcop-worker --region=us-central1 \
 --trigger-topic=cloud-builds --runtime=python37 --entry-point=send_to_buildcop
