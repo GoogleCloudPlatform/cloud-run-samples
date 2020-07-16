@@ -24,7 +24,7 @@ steps:
 
 - id: 'Get Cloud Run URL'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
-  entrypoint: '/bin/bash' abascasdbasdf
+  entrypoint: /bin/bash abascasdbasdf
   args:
   - '-c'
   - |
