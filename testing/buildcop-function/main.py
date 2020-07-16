@@ -89,10 +89,11 @@ def send_to_buildcop(event, context):
             write_xml_file(build_event)
             
             commit_sha = build_event["substitutions"]["COMMIT_SHA"]
-            os.environ["KOKORO_BUILD_ID"] = build_event["id"]
+            build_url = build_event.get("logUrl")
             out = subprocess.run(
                 ["./buildcop", "-repo=GoogleCloudPlatform/cloud-run-samples", 
-                f"-commit_hash={commit_sha}", "-logs_dir=/tmp"],
+                f"-commit_hash={commit_sha}", "-logs_dir=/tmp",
+                f"buildUrl={build_url}"],
                 stdout=subprocess.PIPE).stdout
     except Exception as e:
         print(e)
