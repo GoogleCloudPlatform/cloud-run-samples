@@ -27,3 +27,4 @@ gcloud functions deploy buildcop-worker --region=us-central1 \
 
 # Remove binary from current directory 
 rm buildcop
+rm go.sum

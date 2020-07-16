@@ -94,6 +94,7 @@ def send_to_buildcop(event, context):
                 ["./buildcop", "-repo=GoogleCloudPlatform/cloud-run-samples", 
                 f"-commit_hash={commit_sha}", "-logs_dir=/tmp",
                 f"-build_url={build_url}"],
-                stdout=subprocess.PIPE).stdout
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT).stdout
+            print(out)
     except Exception as e:
         print(e)
