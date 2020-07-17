@@ -2,4 +2,4 @@ module github.com/GoogleCloudPlatform/cloud-run-samples/testing/buildcop-functio
 
 go 1.14
 
-require github.com/googleapis/repo-automation-bots/packages/buildcop v0.0.0-20200716174820-aef5c4576904 // indirect
+require github.com/googleapis/repo-automation-bots/packages/buildcop v0.0.0-20200717205441-adc00ad3395a // indirect
