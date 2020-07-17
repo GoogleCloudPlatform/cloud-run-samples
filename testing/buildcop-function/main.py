@@ -34,7 +34,7 @@ def write_xml_file(build_event):
         status = step["status"]
         start_time, elapsed = get_elapsed_time(step)
 
-        if status == "FAILURE":
+        if status in ("FAILURE", "INTERNAL_ERROR", "TIMEOUT", "EXPIRED"):
             failure = outputs[x] or status
             test = TestCase(
                     name=step.get("id") or step.get("name"),
@@ -82,7 +82,7 @@ def send_to_buildcop(event, context):
         status = build_event.get("status")
 
         # buildcop should only run on complete builds
-        if (status in("SUCCESS", "FAILURE") 
+        if (status in("SUCCESS", "FAILURE", "INTERNAL_ERROR", "TIMEOUT", "EXPIRED")
             # buildcop should not run on Pull Requests
             and "_PR_NUMBER" not in build_event["substitutions"]):
 
