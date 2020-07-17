@@ -1,0 +1,10 @@
+name: helloworld-nightly
+description: nightly
+github:
+  name: cloud-run-samples
+  owner: GoogleCloudPlatform
+  push:
+    branch: nightly
+includedFiles:
+- helloworld-shell/**
+filename: helloworld-shell/tests.cloudbuild.yaml

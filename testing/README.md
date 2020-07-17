@@ -67,55 +67,47 @@ export environment variables into the test runner.
 
 Before trigger creation, you need to enable access for the Cloud Build service account to deploy the service. More information can be found in [Setting up continuous deployment with Cloud Build][access]. The Cloud Build GitHub App also needs to be installed and connected to the repository. More info can be found in [Installing the Cloud Build app][app].
 
-### Individual Sample Pull Request Triggers
+1. Add a Cloud Build trigger config YAML file:
 
-Add the sample directory name as the `$SAMPLE` env var:
-```shell
-export SAMPLE=SAMPLE_DIRECTORY
-```
+  **Pull Request Trigger Config**
 
-Create the Cloud Build trigger:
-```shell
-gcloud beta builds triggers create github \
---build-config=$SAMPLE/cloudbuild.yaml \
---repo-name=cloud-run-samples \
---repo-owner=GoogleCloudPlatform \
---pull-request-pattern="^master$" \
---included-files=$SAMPLE/* \
---description=pull-request 
-```
+  ```YAML
+  name: SAMPLE-pr
+  description: pull-request
+  github:
+    name: cloud-run-samples
+    owner: GoogleCloudPlatform
+    pullRequest:
+      branch: ^master$
+  includedFiles:
+  - SAMPLE_DIR/**
+  filename: SAMPLE_DIR/cloudbuild.yaml
+  ```
 
-### Repo Trigger
+  **Nightly Trigger Config**
 
-Add `$TRIGGER_NAME` as an env var:
-```shell
-export TRIGGER_NAME=NAME
-```
+  Our nightly testing uses "manual" Cloud Build triggers. The Cloud Build Trigger UI is currently the only way to create manual triggers. A current work around is creating a "Push to branch" event trigger. This can be manually triggered and can be updated via the UI to be a "Manually run" trigger.
 
-Create the Cloud Build trigger:
-```shell
-gcloud beta builds triggers create github \
---build-config=cloudbuild.yaml \
---repo-name=cloud-run-samples \
---repo-owner=GoogleCloudPlatform \
---pull-request-pattern="^master$" \
---description=pull-request 
-```
+  ```YAML
+  name: SAMPLE-nightly
+  description: nightly
+  github:
+    name: cloud-run-samples
+    owner: GoogleCloudPlatform
+    push: # TODO: Update when manual triggers are supported
+      branch: nightly
+  includedFiles:
+  - SAMPLE_DIR/**
+  filename: SAMPLE_DIR/cloudbuild.yaml
+  ```
 
-Example `cloudbuild.yaml`
+1. Create a Cloud Build trigger using a config file:
 
-```yaml
-steps:
-- id: 'Lint Dockerfile'
-  name: 'hadolint/hadolint:latest-debian'
-  entrypoint: '/bin/bash'
-  args:
-    - '-c'
-    - |
-      hadolint */Dockerfile
-```
+  ```shell
+  gcloud beta builds triggers create github --trigger-config=path/to/trigger-config.yaml
+  ```
 
-## Cloud Build Manual Trigger
+## Manually Start Cloud Builds
 
 To manually trigger a Cloud Build from your CLI:
 ```
