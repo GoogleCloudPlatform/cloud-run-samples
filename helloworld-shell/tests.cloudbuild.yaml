@@ -44,6 +44,7 @@ steps:
   - '-c'
   - |
     echo "Add integration tests!"
+    exit 1
 
 - id: 'Teardown'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
