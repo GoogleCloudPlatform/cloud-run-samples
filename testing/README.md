@@ -154,15 +154,8 @@ To manually trigger a Cloud Run (fully managed) build via CLI:
 ```sh
 SAMPLE=testing/cloudbuild-templates CLOUDSDK_BUILDS_CONFIG=cloud-run-template.cloudbuild.yaml \
 gcloud builds submit \
-  --substitutions "SHORT_SHA=manual,_SAMPLE_DIR=$SAMPLE,_SECRET_NAME=locksmith-secret,_RUNNER_IDENTITY=test-runner-identity@${TESTING_PROJECT}.iam.gserviceaccount.com"
+  --substitutions "SHORT_SHA=manual,_SAMPLE_DIR=$SAMPLE,_SECRET_NAME=${SECRET_NAME},_RUNNER_IDENTITY=${SERVICE_ACCOUNT}@${TESTING_PROJECT}.iam.gserviceaccount.com"
 ```
-
-export SAMPLE=testing/cloudbuild-templates
-export CLOUDSDK_BUILDS_CONFIG=$SAMPLE/cloud-run-template.cloudbuild.yaml
-gcloud builds submit  \
-  --config "$SAMPLE/cloud-run-template.cloudbuild.yaml" \
-  --substitutions "SHORT_SHA=manual,_SAMPLE_DIR=$SAMPLE,_SECRET_NAME=locksmith-secret,_RUNNER_IDENTITY=test-runner-identity@${TESTING_PROJECT}.iam.gserviceaccount.com,_SERVICE=test" 
-
 
 We run from base directory of the repository for access to the common.sh script.
 
