@@ -17,10 +17,9 @@ steps:
   - | # Cloud Run Service name must be less than 63 characters
     cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id # Generate a random 15 character alphanumeric string (lowercase only)
     gcloud run deploy ${_SERVICE}-$(cat _short_id) \
-     --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
-     --no-allow-unauthenticated \
-     --region ${_SERVICE_REGION} \
-     --platform managed
+      --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
+      --no-allow-unauthenticated \
+      --platform managed
 
 - id: 'Get Cloud Run URL'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
@@ -28,22 +27,29 @@ steps:
   args:
   - '-c'
   - |
-    get_url() {
-        gcloud run services describe ${_SERVICE}-$(cat _short_id) --format 'value(status.url)' \
-          --platform managed --region ${_SERVICE_REGION}
-    }
+    set -e
+    . /workspace/testing/cloudbuild-templates/common.sh
     echo $(get_url) > _service_url
     echo "Cloud Run URL for ${_SERVICE}-$(cat _short_id) is $(cat _service_url)"
+    echo $(get_idtoken) > _id_token
+  env:
+    # Make substitutions available in shell script.
+    - "_SECRET_NAME=${_SECRET_NAME}"
+    - "_RUNNER_IDENTITY=${_RUNNER_IDENTITY}"
+    - "_SERVICE=${_SERVICE}"
+
+# If env is set VAR=VAL without the preceding hyphen in `env:` it concatenates the values.
+# This does not seem like expected behavior. For example:
 
 - id: 'Integration Tests'
   # TODO: Update the following image name, entrypoint, and args to fit your testing needs
-  name: 'alpine:3'
+  name: 'gcr.io/cloud-builders/curl'
   entrypoint: '/bin/sh'
-  dir: '${_SAMPLE_DIR}'
   args:
   - '-c'
   - |
-    echo "Add integration tests!"
+    set -e
+    curl -si -H "Authorization: Bearer $(cat _id_token)" "$(cat _service_url)"
 
 - id: 'Teardown'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
@@ -60,6 +66,11 @@ steps:
 # Uncomment if skipping teardown to associate build with container image.
 # images:
 # - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}'
+
+options:
+  env:
+    - "CLOUDSDK_RUN_REGION=${_SERVICE_REGION}"
+    - "GOOGLE_CLOUD_PROJECT=${PROJECT_ID}"
 
 # TODO: Update these User-defined substitutions
 substitutions:

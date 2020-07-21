@@ -41,8 +41,6 @@ steps:
 # If env is set VAR=VAL without the preceding hyphen in `env:` it concatenates the values.
 # This does not seem like expected behavior. For example:
 
-# locksmith-secret _RUNNER_IDENTITY=test-runner-identity@adamross-svls-kibble.iam.gserviceaccount.com _SERVICE=test
-
 - id: 'Integration Tests'
   # TODO: Update the following image name, entrypoint, and args to fit your testing needs
   name: 'gcr.io/cloud-builders/curl'
