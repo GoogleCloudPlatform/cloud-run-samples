@@ -52,6 +52,7 @@ https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
   gcloud services enable cloudbuild.googleapis.com --project $TESTING_PROJECT
   gcloud services enable pubsub.googleapis.com --project $TESTING_PROJECT
   gcloud services enable containerregistry.googleapis.com --project $TESTING_PROJECT
+  gcloud services enable secretmanager.googleapis.com --project $TESTING_PROJECT
 
   if [[ ${IAM_OWNER} ]]
   echo "Giving project permission to owner..."
@@ -61,6 +62,22 @@ https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
     --member="${IAM_OWNER}" --role="roles/resourcemanager.projectIamAdmin"
   fi
   
+  echo "Setting up Cloud Run invoker access..."
+  gcloud iam service-accounts create test-runner-identity
+  RUNNER_EMAIL="test-runner-identity@${TESTING_PROJECT}.iam.gserviceaccount.com"
+
+  gcloud projects add-iam-policy-binding "${TESTING_PROJECT}" \
+    --member "serviceAccount:${RUNNER_EMAIL}" \
+    --role roles/run.invoker
+
+  gcloud secrets create locksmith-secret \
+    --replication-policy "automatic"
+
+  PROJECT_NUMBER=$(gcloud projects describe $TESTING_PROJECT --format 'value(projectNumber)')
+  gcloud secrets add-iam-policy-binding locksmith-secret \
+    --member "serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
+    --role roles/secretmanager.secretAccessor
+
   echo "Project setup complete"
 }
 
