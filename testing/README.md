@@ -152,9 +152,10 @@ These triggers are created using trigger configuration files.
 To manually trigger a Cloud Run (fully managed) build via CLI:
 
 ```sh
-SAMPLE=testing/cloudbuild-templates CLOUDSDK_BUILDS_CONFIG=cloud-run-template.cloudbuild.yaml \
+$SAMPLE=sample-name
 gcloud builds submit \
-  --substitutions "SHORT_SHA=manual,_SAMPLE_DIR=$SAMPLE,_SECRET_NAME=${SECRET_NAME},_RUNNER_IDENTITY=${SERVICE_ACCOUNT}@${TESTING_PROJECT}.iam.gserviceaccount.com"
+  --config "$SAMPLE/tests.cloudbuild.yaml" \
+  --substitutions "SHORT_SHA=manual,_SAMPLE_DIR=${SAMPLE},_SECRET_NAME=${SECRET_NAME},_RUNNER_IDENTITY=${SERVICE_ACCOUNT}@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com"
 ```
 
 We run from base directory of the repository for access to the common.sh script.
