@@ -91,7 +91,7 @@ This secret is populated by a separate key rotation process, such as:
 export SERVICE_ACCOUNT="test-runner-identity"
 gcloud iam services-accounts keys create "${SERVICE_ACCOUNT}-key.json" \
   --iam-account "${SERVICE_ACCOUNT}@${TESTING_PROJECT}.iam.gserviceaccount.com"
-gcloud secrets versions add locksmith-secret --data-file "${SERVICE_ACCOUNT}-key.json"
+gcloud secrets versions add ${SECRET_NAME} --data-file "${SERVICE_ACCOUNT}-key.json"
 rm $SERVICE_ACCOUNT-key.json
 ```
 
