@@ -38,7 +38,6 @@ steps:
     - "_RUNNER_IDENTITY=${_RUNNER_IDENTITY}"
     - "_SERVICE=${_SERVICE}"
 
-# If env is set VAR=VAL without the preceding hyphen in `env:` it concatenates the values.
 # This does not seem like expected behavior. For example:
 
 - id: 'Integration Tests'
