@@ -8,3 +8,6 @@ github:
 includedFiles:
 - helloworld-shell/**
 filename: helloworld-shell/tests.cloudbuild.yaml
+substitutions:
+  _RUNNER_IDENTITY: test-runner-identity@cloud-run-samples-test.iam.gserviceaccount.com
+  _SECRET_NAME: locksmith-secret
