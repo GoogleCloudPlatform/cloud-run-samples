@@ -28,7 +28,7 @@ steps:
   - '-c'
   - |
     set -e
-    . /workspace/testing/cloudbuild-templates/common.sh
+    source /workspace/testing/cloudbuild-templates/common.sh
     echo $(get_url) > _service_url
     echo "Cloud Run URL for ${_SERVICE}-$(cat _short_id) is $(cat _service_url)"
     echo $(get_idtoken) > _id_token
@@ -48,7 +48,7 @@ steps:
   - '-c'
   - |
     set -e
-    curl -si -H "Authorization: Bearer $(cat _id_token)" "$(cat _service_url)"
+    curl -si --fail --show-error -H "Authorization: Bearer $(cat _id_token)" "$(cat _service_url)"
 
 - id: 'Teardown'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
