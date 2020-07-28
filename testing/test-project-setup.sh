@@ -55,6 +55,7 @@ https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
   gcloud services enable secretmanager.googleapis.com --project $TESTING_PROJECT
 
   if [[ ${IAM_OWNER} ]]
+  then 
   echo "Giving project permission to owner..."
   gcloud projects add-iam-policy-binding ${TESTING_PROJECT} \
     --member="${IAM_OWNER}" --role="roles/owner"
