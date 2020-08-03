@@ -50,7 +50,7 @@ steps:
 
 - id: 'Integration Tests'
   # TODO: Update the following image name, entrypoint, and args to fit your testing needs
-  name: 'alpine:3'
+  name: 'gcr.io/cloud-builders/curl'
   entrypoint: '/bin/sh'
   dir: '${_SAMPLE_DIR}'
   args:
