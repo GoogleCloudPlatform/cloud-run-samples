@@ -1,13 +1,15 @@
-name: helloworld-pr
+createTime: '2020-05-29T20:27:39.708433796Z'
 description: pull-request
+filename: helloworld-shell/tests.cloudbuild.yaml
 github:
   name: cloud-run-samples
   owner: GoogleCloudPlatform
   pullRequest:
     branch: ^master$
+id: c6ba6276-de94-4471-9ce0-a16b4bd5ff8e
 includedFiles:
-- helloworld-shell/**
-filename: helloworld-shell/tests.cloudbuild.yaml
+- helloworld-shell/*
+name: helloworld-pr
 substitutions:
   _RUNNER_IDENTITY: test-runner-identity@cloud-run-samples-test.iam.gserviceaccount.com
   _SECRET_NAME: locksmith-secret
