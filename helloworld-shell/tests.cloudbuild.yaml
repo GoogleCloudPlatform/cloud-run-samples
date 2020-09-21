@@ -31,14 +31,28 @@ steps:
     . /workspace/testing/cloudbuild-templates/common.sh
     echo $(get_url) > _service_url
     echo "Cloud Run URL for ${_SERVICE}-$(cat _short_id) is $(cat _service_url)"
-    echo $(get_idtoken) > _id_token
+    # echo $(get_idtoken) > _id_token
   env:
     # Make substitutions available in shell script.
     - "_SECRET_NAME=${_SECRET_NAME}"
     - "_RUNNER_IDENTITY=${_RUNNER_IDENTITY}"
     - "_SERVICE=${_SERVICE}"
 
-# This does not seem like expected behavior. For example:
+- id: 'Create an Identity Token'
+  name: 'golang:1.15-buster'
+  entrypoint: '/bin/bash'
+  args:
+  - '-c'
+  - |
+    set -e
+    pushd testing/locksmith
+    echo $(go run . -target=$(cat _service_url)) > ../../_id_token
+    cat _id_token
+  env:
+    # Make substitutions available in shell script.
+    - "_SECRET_NAME=${_SECRET_NAME}"
+    - "_RUNNER_IDENTITY=${_RUNNER_IDENTITY}"
+    - "_SERVICE=${_SERVICE}"
 
 - id: 'Integration Tests'
   # TODO: Update the following image name, entrypoint, and args to fit your testing needs
