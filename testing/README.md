@@ -115,7 +115,8 @@ These triggers are created using trigger configuration files.
      name: cloud-run-samples
      owner: GoogleCloudPlatform
      pullRequest:
-       branch: ^master$
+       branch: ^main$
+       commentControl: COMMENTS_ENABLED_FOR_EXTERNAL_CONTRIBUTORS_ONLY
    includedFiles:
    - SAMPLE_DIR/**
    filename: SAMPLE_DIR/cloudbuild.yaml
