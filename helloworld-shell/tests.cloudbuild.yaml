@@ -46,7 +46,7 @@ steps:
   - |
     set -e
     pushd testing/locksmith
-    echo $(go run . -target=$(cat _service_url)) > ../../_id_token
+    echo $(go run . -target=$(cat ../../_service_url)) > ../../_id_token
     cat _id_token
   env:
     # Make substitutions available in shell script.
