@@ -25,7 +25,7 @@ steps:
   - --ingress-settings=internal-only
   - --entry-point=hello_world
 
-- id: Build "Allow" Function with Functions Frameowork
+- id: Build Allowed Function with Functions Frameowork
   name: gcr.io/cloud-builders/docker:latest
   args: ['build', '--tag=gcr.io/$PROJECT_ID/allow-${_SUFFIX}', '.']
 
@@ -47,17 +47,3 @@ steps:
   - --set-env-vars=URL=https://us-central1-$PROJECT_ID.cloudfunctions.net/restricted-${_SUFFIX}
   - --vpc-egress=all
   - --vpc-connector=samples-connector
-
-# - id: Deploy Get Function with VPC connector
-#   name: 'gcr.io/cloud-builders/gcloud'
-#   args:
-#   - functions
-#   - deploy
-#   - allow-${_SUFFIX}
-#   - --runtime=python38
-#   - --trigger-http
-#   - --no-allow-unauthenticated
-#   - --entry-point=get_hello_world
-#   - --set-env-vars=URL=https://us-central1-$PROJECT_ID.cloudfunctions.net/restricted-${_SUFFIX}
-#   - --egress-settings=all
-#   - --vpc-connector=samples-connector
