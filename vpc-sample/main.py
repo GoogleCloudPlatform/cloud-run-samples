@@ -14,28 +14,34 @@
 
 # This file holds functions for testing VPC ingress/egress with Cloud Functions
 
+# [START egress_hello_world]
 import os
 import urllib
 
-import google.auth.transport.requests
-import google.oauth2.id_token
-
 def get_hello_world(request):
-    # Makes an authenticated request to the hello_world function
     try:
         url = os.environ.get("URL")
         req = urllib.request.Request(url)
+        # [END egress_hello_world]
+
+        ## Auth is only required for internal testing
+        import google.auth.transport.requests
+        import google.oauth2.id_token
 
         auth_req = google.auth.transport.requests.Request()
         id_token = google.oauth2.id_token.fetch_id_token(auth_req, url)
-
         req.add_header("Authorization", f"Bearer {id_token}")
+
+        # [START egress_hello_world] 
         response = urllib.request.urlopen(req)
         return response.read()
 
     except Exception as e:
         print(e)
         return str(e)
+# [END egress_hello_world]
 
+# [START ingress_hello_world]
 def hello_world(request):
     return "Hello World!"
+# [END ingress_hello_world]
