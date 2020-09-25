@@ -18,6 +18,7 @@
 import os
 import urllib
 
+
 def get_hello_world(request):
     try:
         url = os.environ.get("URL")
@@ -32,7 +33,7 @@ def get_hello_world(request):
         id_token = google.oauth2.id_token.fetch_id_token(auth_req, url)
         req.add_header("Authorization", f"Bearer {id_token}")
 
-        # [START egress_hello_world] 
+        # [START egress_hello_world]
         response = urllib.request.urlopen(req)
         return response.read()
 

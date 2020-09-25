@@ -1,7 +1,7 @@
 steps:
-
 - id: Deploy Restricted Function
   name: 'gcr.io/cloud-builders/gcloud'
+  dir: '${_SAMPLE_DIR}'
   args:
   - functions
   - deploy
@@ -31,10 +31,11 @@ steps:
     gcloud alpha run deploy ${_SERVICE}-$(cat _short_id) \
       --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
       --no-allow-unauthenticated \
-      --platform managed
-      --set-env-vars=URL=https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-${SHORT_SHA}
-      --vpc-egress=all
-      --vpc-connector=samples-connector
+      --platform managed \
+      --set-env-vars=URL=https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-${SHORT_SHA} \
+      --vpc-egress=all \
+      --vpc-connector=samples-connector \
+      --region=${_SERVICE_REGION}
 
 - id: 'Get Cloud Run URL'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
@@ -43,6 +44,7 @@ steps:
   - '-c'
   - |
     set -e
+    gcloud config set run/region ${_SERVICE_REGION}
     . /workspace/testing/cloudbuild-templates/common.sh
     echo $(get_url) > _service_url
     echo "Cloud Run URL for ${_SERVICE}-$(cat _short_id) is $(cat _service_url)"
@@ -53,28 +55,33 @@ steps:
     - "_RUNNER_IDENTITY=${_RUNNER_IDENTITY}"
     - "_SERVICE=${_SERVICE}"
 
-# This does not seem like expected behavior. For example:
-
-- id: 'Integration Test 1: Access to Restricted Function is blocked outside network'
-  # TODO: Update the following image name, entrypoint, and args to fit your testing needs
+- id: 'Restricted function should return 403'
   name: 'gcr.io/cloud-builders/curl'
-  entrypoint: '/bin/sh'
+  entrypoint: '/bin/bash'
   args:
   - '-c'
   - |
     set -e
-    curl -si --fail --show-error -H "Authorization: Bearer $(cat _id_token)"  https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-${SHORT_SHA}
+    msg=$(curl -si --show-error -H "Authorization: Bearer $(cat _id_token)"  https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-${SHORT_SHA})
+  
+    if grep -q "403" <<< "$msg"; then
+    echo "Restricted Function Test: PASSED"
+    else echo $msg && exit 1
+    fi
 
-- id: 'Integration Test 2: Access to Restricted Function is allowed through VPC'
-  # TODO: Update the following image name, entrypoint, and args to fit your testing needs
+- id: 'Restricted Function should return Hello World through VPC connector'
   name: 'gcr.io/cloud-builders/curl'
-  entrypoint: '/bin/sh'
+  entrypoint: '/bin/bash'
   args:
   - '-c'
   - |
     set -e
-    curl -si --fail --show-error -H "Authorization: Bearer $(cat _id_token)" "$(cat _service_url)"
+    msg=$(curl -si --fail --show-error -H "Authorization: Bearer $(cat _id_token)" $(cat _service_url))
 
+    if grep -q "Hello World" <<< "$msg"; then
+    echo "VPC Function Test: PASSED"
+    else echo $msg && exit 1
+    fi
 
 - id: 'Teardown'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
@@ -85,6 +92,7 @@ steps:
     set -x
     gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
     gcloud --quiet run services delete ${_SERVICE}-$(cat _short_id) --region ${_SERVICE_REGION} --platform managed
+    gcloud --quiet functions delete restricted-${SHORT_SHA}
     set +x
     echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
 
@@ -93,7 +101,6 @@ options:
     - "CLOUDSDK_RUN_REGION=${_SERVICE_REGION}"
     - "GOOGLE_CLOUD_PROJECT=${PROJECT_ID}"
 
-# TODO: Update these User-defined substitutions
 substitutions:
   _SERVICE: vcp-sample
   _SAMPLE_DIR: vpc-sample
