@@ -102,7 +102,7 @@ options:
     - "GOOGLE_CLOUD_PROJECT=${PROJECT_ID}"
 
 substitutions:
-  _SERVICE: vcp-sample
+  _SERVICE: vpc-sample
   _SAMPLE_DIR: vpc-sample
   _SERVICE_REGION: us-central1
   _CLOUDSDK_VERSION: latest
