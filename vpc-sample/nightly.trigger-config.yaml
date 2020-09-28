@@ -1,7 +1,0 @@
-createTime: '2020-09-25T19:11:45.628174872Z'
-description: nightly
-id: effdb1f5-8952-42b5-ad7e-bfa6c6c5da45
-name: vpc-sample-nightly
-substitutions:
-  _RUNNER_IDENTITY: test-runner-identity@cloud-run-samples-test.iam.gserviceaccount.com
-  _SECRET_NAME: locksmith-secret
