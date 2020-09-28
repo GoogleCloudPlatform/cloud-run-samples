@@ -39,7 +39,6 @@ steps:
   - '-c'
   - |
     set -e
-   # gcloud config set run/region ${_SERVICE_REGION}
     . /workspace/testing/cloudbuild-templates/common.sh
     echo $(get_url) > _service_url
     echo "Cloud Run URL for ${_SERVICE}-$(cat _short_id) is $(cat _service_url)"
