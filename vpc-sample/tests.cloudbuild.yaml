@@ -69,7 +69,8 @@ steps:
     else echo $msg && exit 1
     fi
 
-- id: 'Restricted Function should return Hello World through VPC connector'
+# Cloud Run service should return "Hello World" from the ingress-restricted Cloud Function via the VPC Connector.
+- id: 'Testing: <-- Cloud Run <-- VPC Connector <-- Cloud Function'
   name: 'gcr.io/cloud-builders/curl'
   entrypoint: '/bin/bash'
   args:
