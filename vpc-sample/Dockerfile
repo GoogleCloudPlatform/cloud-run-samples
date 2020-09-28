@@ -11,4 +11,4 @@ COPY . .
 RUN pip install -r requirements.txt
 
 # Run the web service on container startup.
-CMD exec functions-framework --target=get_hello_world
+CMD ["functions-framework", "--target=get_hello_world"]
