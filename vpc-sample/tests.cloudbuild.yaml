@@ -15,7 +15,7 @@ steps:
 - id: 'Push Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
   args: ['push', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}']
-  waitFor: 'Build Allow Container Image'
+  waitFor: ['Build Allow Container Image']
 
 - id: 'Deploy to Cloud Run'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
@@ -32,7 +32,7 @@ steps:
       --vpc-egress=all \
       --vpc-connector=samples-connector \
       --region=${_SERVICE_REGION}
-  waitFor: 'Push Container Image'
+  waitFor: ['Push Container Image']
 
 - id: 'Get Cloud Run URL'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
@@ -51,7 +51,7 @@ steps:
     - "_RUNNER_IDENTITY=${_RUNNER_IDENTITY}"
     - "_SERVICE=${_SERVICE}"
     - "CLOUDSDK_RUN_REGION=${_SERVICE_REGION}"
-  waitFor: 'Deploy to Cloud Run'
+  waitFor: ['Deploy to Cloud Run']
 
 
 - id: 'Testing: <-- Cloud Run <-- VPC Connector <-- Cloud Function'
