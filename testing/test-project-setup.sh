@@ -63,6 +63,11 @@ https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
     --member="${IAM_OWNER}" --role="roles/resourcemanager.projectIamAdmin"
   fi
   
+  echo "Creating VPC Serverless Connector..."
+  gcloud compute networks vpc-access connectors create samples-connector \
+  --region=us-central1 --range=10.8.0.0/28
+
+
   echo "Setting up Cloud Run invoker access..."
   gcloud iam service-accounts create test-runner-identity
   RUNNER_EMAIL="test-runner-identity@${TESTING_PROJECT}.iam.gserviceaccount.com"
