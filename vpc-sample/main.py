@@ -18,22 +18,19 @@
 import os
 import urllib
 
+import google.auth.transport.requests
+import google.oauth2.id_token
+
 
 def get_hello_world(request):
     try:
         url = os.environ.get("URL")
         req = urllib.request.Request(url)
-        # [END run_egress_hello_world]
-
-        ## Auth is only required for internal testing
-        import google.auth.transport.requests
-        import google.oauth2.id_token
 
         auth_req = google.auth.transport.requests.Request()
         id_token = google.oauth2.id_token.fetch_id_token(auth_req, url)
         req.add_header("Authorization", f"Bearer {id_token}")
 
-        # [START run_egress_hello_world]
         response = urllib.request.urlopen(req)
         return response.read()
 

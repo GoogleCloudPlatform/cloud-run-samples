@@ -21,11 +21,11 @@ The `-ingress-settings=internal-only` will restrict access to the function to se
 
 From inside the vpc-sample directory:
 
-`gcloud builds submit --tag=gcr.io/${PROJECT_ID}/run_function . `
+`gcloud builds submit --tag=gcr.io/${PROJECT_ID}/restricted-function-caller . `
 
-`gcloud alpha run deploy run-function --image gcr.io/${PROJECT_ID}/run_function 
+`gcloud alpha run deploy run-function --image gcr.io/${PROJECT_ID}/restricted-function-caller 
 --no-allow-unauthenticated --platform managed 
---update-env-vars=URL=https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-function 
+--update-env-vars=URL=https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-function-caller 
 --vpc-egress=all --vpc-connector=serverless-connector --region=${_SERVICE_REGION}`
 
 The Cloud Run function sends a get request via the VPC connector to the network-restricted function.
