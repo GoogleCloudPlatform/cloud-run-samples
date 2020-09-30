@@ -53,6 +53,7 @@ https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
   gcloud services enable pubsub.googleapis.com --project $TESTING_PROJECT
   gcloud services enable containerregistry.googleapis.com --project $TESTING_PROJECT
   gcloud services enable secretmanager.googleapis.com --project $TESTING_PROJECT
+  gcloud services enable vpcaccess.googleapis.com --project $TESTING_PROJECT
 
   if [[ ${IAM_OWNER} ]]
   then 
