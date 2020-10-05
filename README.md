@@ -19,6 +19,7 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 | Identity Platform          | Cloud Run for Anthos + Istio + Identity Platform        | [GKE][identity_platform_gke]     |
 | Istio Authorization        | Cloud Run for Anthos + Istio Role-Based Access Control  | [GKE][istio_authorization]       |
 | Hello Broken               | "Broken" service for troubleshooting.                   | [Go][broken_go], [Node.js][broken_nodejs]            |
+| VPC sample                 | Sample showing egress & ingress settings with VPC       | [Python][vpc-sample]
 
 [hello_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/helloworld
 [hello_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/run/helloworld
@@ -59,6 +60,7 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 [istio_authorization]: istio-authorization
 [broken_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/hello-broken
 [broken_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/run/hello-broken
+[vpc-sample]: vpc-sample
 
 **Samples by Language**: [nodejs][nodejs], [golang][golang], [python][python], [java][java]
 
