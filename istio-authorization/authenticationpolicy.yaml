@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_gke_invoker_authenticationpolicy]
 # [START run_gke_invoker_authenticationpolicy]
 apiVersion: authentication.istio.io/v1alpha1
 kind: Policy
@@ -31,3 +32,4 @@ spec:
   originIsOptional: true # use authorization policy to allow or deny request
   principalBinding: USE_ORIGIN
 # [END run_gke_invoker_authenticationpolicy]
+# [END cloudrun_gke_invoker_authenticationpolicy]

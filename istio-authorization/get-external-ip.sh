@@ -16,6 +16,7 @@
 
 set -euf -o pipefail
 
+# [START cloudrun_gke_invoker_external_ip]
 # [START run_gke_invoker_external_ip]
 get_external_ip () {
     external_ip=$(kubectl -n gke-system get svc istio-ingress \
@@ -28,3 +29,4 @@ while [ -z "$external_ip" ]; do
 done
 echo "$external_ip"
 # [END run_gke_invoker_external_ip]
+# [END cloudrun_gke_invoker_external_ip]
