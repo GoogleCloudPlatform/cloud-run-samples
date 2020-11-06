@@ -51,7 +51,7 @@ If the code is different per platform, a sub-directory should be used:
 
 Samples that demonstrate integrations with Events for Cloud Run should be prefixed with `events-`: `events-sample-app`.
 
-The [`testing`](https://github.com/GoogleCloudPlatform/cloud-run-samples/tree/master/testing) directory contains resources for automated testing.
+The [`testing`](https://github.com/GoogleCloudPlatform/cloud-run-samples/tree/main/testing) directory contains resources for automated testing.
 
 ## New Samples
 
