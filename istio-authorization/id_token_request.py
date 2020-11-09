@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_gke_invoker_id_token_request]
 # [START run_gke_invoker_id_token_request]
 import os
 import sys
@@ -79,6 +80,7 @@ def request(method, url, target_audience=None, service_account_file=None,
     else:
         return resp.text
 # [END run_gke_invoker_id_token_request]
+# [END cloudrun_gke_invoker_id_token_request]
 
 
 if __name__ == "__main__":

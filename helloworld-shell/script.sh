@@ -13,9 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_helloworld_shell]
 # [START run_helloworld_shell]
 
 set -e
 echo "Hello ${NAME:-World}!"
 
 # [END run_helloworld_shell]
+# [END cloudrun_helloworld_shell]

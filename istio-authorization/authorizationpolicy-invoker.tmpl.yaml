@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_gke_invoker_authorizationpolicy_invoker]
 # [START run_gke_invoker_authorizationpolicy_invoker]
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -39,3 +40,4 @@ spec:
    matchLabels:
      istio: ingress-gke-system
 # [END run_gke_invoker_authorizationpolicy_invoker]
+# [END cloudrun_gke_invoker_authorizationpolicy_invoker]
