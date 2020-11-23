@@ -24,19 +24,19 @@ requireEnv() {
 requireEnv GCLOUD_REPORT_BUCKET
 
 # Prepare formatting: Default search term to include all services.
-local search=${1:-'.'}
-local limits='spec.template.spec.containers.resources.limits.flatten("", "", " ")'
-local format='table[box, title="Cloud Run Services"](name,status.url,metadata.annotations.[serving.knative.dev/creator],'${limits}')'
+search=${1:-'.'}
+limits='spec.template.spec.containers.resources.limits.flatten("", "", " ")'
+format='table[box, title="Cloud Run Services"](name,status.url,metadata.annotations.[serving.knative.dev/creator],'${limits}')'
 
 # Create a specific object name that will not be overridden in the future.
-local obj="gs://${GCLOUD_REPORT_BUCKET}/report-${search}-$(date +%s).txt"
+obj="gs://${GCLOUD_REPORT_BUCKET}/report-${search}-$(date +%s).txt"
 
 # Write a report containing the service name, service URL, service account or user that
 # deployed it, and any explicitly configured service "limits" such as CPU or Memory.
 gcloud run services list \
   --platform managed \
   --format "${format}" \
-  --filter "metadata.name~${search}" | gsutil -q cp -J - ${obj}
+  --filter "metadata.name~${search}" | gsutil -q cp -J - "${obj}"
 
 # /dev/stderr is sent to Cloud Logging.
 echo "gcloud-report: wrote to ${obj}" >&2
