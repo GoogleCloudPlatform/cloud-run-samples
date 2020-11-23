@@ -19,18 +19,19 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 | Identity Platform          | Cloud Run for Anthos + Istio + Identity Platform        | [GKE][identity_platform_gke]     |
 | Istio Authorization        | Cloud Run for Anthos + Istio Role-Based Access Control  | [GKE][istio_authorization]       |
 | Hello Broken               | "Broken" service for troubleshooting.                   | [Go][broken_go], [Node.js][broken_nodejs]            |
+| VPC sample                 | Sample showing egress & ingress settings with VPC       | [Python][vpc-sample]
 
-[hello_go]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-go
-[hello_nodejs]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-nodejs
-[hello_python]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-python
-[hello_java_spring]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-java-spring
+[hello_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/helloworld
+[hello_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/run/helloworld
+[hello_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/run/helloworld
+[hello_java_spring]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/master/run/helloworld
 [hello_java_spark]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-java-spark
 [hello_csharp]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-csharp
 [hello_php]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-php
-[hello_ruby]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-ruby
+[hello_ruby]: https://github.com/GoogleCloudPlatform/ruby-docs-samples/tree/master/run/helloworld
 [hello_kotlin]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-kotlin
 [hello_scala]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-scala
-[hello_shell]: https://github.com/knative/docs/tree/master/docs/serving/samples/hello-world/helloworld-shell
+[hello_shell]: helloworld-shell
 [manual_logging_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/logging-manual
 [manual_logging_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/run/logging-manual
 [manual_logging_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/run/logging-manual
@@ -59,6 +60,7 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 [istio_authorization]: istio-authorization
 [broken_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/hello-broken
 [broken_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/run/hello-broken
+[vpc-sample]: vpc-sample
 
 **Samples by Language**: [nodejs][nodejs], [golang][golang], [python][python], [java][java]
 
@@ -74,14 +76,14 @@ makes your Cloud Run service deployable with the push of a button. (It will open
 
 |        Sample             |                         Cloud Run Button                        |        Details from the Cloud Run Documentation                 | 
 | ------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- | 
-| Knative Hello World (Python) | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30">][run_button_hello] | -   |
+| Hello World (Shell) | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30">][run_button_hello] | -   |
 | Manual Logging (Node.js)  | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30">][run_button_manual_logging] |  [Logging guide][docs_logging] |
 | System Package (Go)       | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30">][run_button_system_package] | [Using system packages tutorial][docs_system_package] |
 | Pub/Sub Push (Go)         | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30">][run_button_pubsub]         | [Pub/Sub tutorial][docs_pubsub] |
 | Image Processing (Go)     | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30">][run_button_imageproc]         | [Image Processing tutorial][docs_imageproc] |
 | Hello Broken (Node.js)    | [<img src="https://storage.googleapis.com/cloudrun/button.svg" alt="Run on Google Cloud" height="30">][run_button_broken]         | Forthcoming |
 
-[run_button_hello]: https://deploy.cloud.run/?git_repo=https://github.com/knative/docs&dir=docs/serving/samples/hello-world/helloworld-python
+[run_button_hello]: https://deploy.cloud.run/?dir=helloworld-shell
 [run_button_manual_logging]: https://deploy.cloud.run/?git_repo=https://github.com/GoogleCloudPlatform/nodejs-docs-samples&dir=run/logging-manual
 [run_button_system_package]: https://deploy.cloud.run/?git_repo=https://github.com/GoogleCloudPlatform/golang-samples&dir=run/system_package
 [run_button_pubsub]: https://deploy.cloud.run/?git_repo=https://github.com/GoogleCloudPlatform/golang-samples&dir=run/pubsub

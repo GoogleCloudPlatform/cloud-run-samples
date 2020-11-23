@@ -15,6 +15,7 @@
 # https://istio.io/docs/reference/config/istio.authentication.v1alpha1/
 # https://firebase.google.com/docs/auth/admin/verify-id-tokens#verify_id_tokens_using_a_third-party_jwt_library
 
+# [START cloudrun_gke_auth_identityplatform_authenticationpolicy]
 # [START run_gke_auth_identityplatform_authenticationpolicy]
 apiVersion: authentication.istio.io/v1alpha1
 kind: Policy
@@ -40,3 +41,4 @@ spec:
         - prefix: /api/
   principalBinding: USE_ORIGIN
 # [END run_gke_auth_identityplatform_authenticationpolicy]
+# [END cloudrun_gke_auth_identityplatform_authenticationpolicy]

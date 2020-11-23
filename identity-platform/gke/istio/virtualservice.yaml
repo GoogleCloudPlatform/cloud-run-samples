@@ -14,6 +14,7 @@
 
 # https://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/
 
+# [START cloudrun_gke_auth_identityplatform_virtualservice]
 # [START run_gke_auth_identityplatform_virtualservice]
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -42,3 +43,4 @@ spec:
     - destination:
         host: cluster-local-gateway.gke-system.svc.cluster.local
 # [END run_gke_auth_identityplatform_virtualservice]
+# [END cloudrun_gke_auth_identityplatform_virtualservice]

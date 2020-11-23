@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// [START cloudrun_helloworld_server]
 // [START run_helloworld_server]
 
 // Sample helloworld-shell is a Cloud Run shell-script-as-a-service.
@@ -52,3 +53,4 @@ func scriptHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // [END run_helloworld_server]
+// [END cloudrun_helloworld_server]

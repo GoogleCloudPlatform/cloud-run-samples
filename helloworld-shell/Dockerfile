@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_helloworld_dockerfile]
 # [START run_helloworld_dockerfile]
 
 # Use the offical golang image to create a binary.
@@ -50,4 +51,5 @@ COPY script.sh ./
 # Run the web service on container startup.
 CMD ["/app/server"]
 
-# [END run_helloworld_dockerfile] 
+# [END run_helloworld_dockerfile]
+# [END cloudrun_helloworld_dockerfile]
