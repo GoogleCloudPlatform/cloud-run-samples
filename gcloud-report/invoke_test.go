@@ -19,6 +19,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 )
@@ -43,23 +44,23 @@ func TestScriptHanlderErrorsNoBucket(t *testing.T) {
 func TestService(t *testing.T) {
 	req, err := http.NewRequest("GET", "/", nil)
 	if err != nil {
-		t.Fatalf("http.NewRequest: %w", err)
+		t.Fatalf("http.NewRequest: %v", err)
 	}
 
-	res, err := http.Do(req)
+	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		t.Fatalf("http.Do: %w", err)
+		t.Fatalf("http.DefaultClient.Do: %v", err)
 	}
 	defer res.Body.Close()
 
 	out, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		t.Fatalf("ioutil.ReadAll: %w", err)
+		t.Fatalf("ioutil.ReadAll: %v", err)
 	}
 
-	want := fmt.Sprintf("Wrote the report to gs://%s/report-", os.Getenev("GCLOUD_REPORT_BUCKET"))
+	want := fmt.Sprintf("Wrote the report to gs://%s/report-", os.Getenv("GCLOUD_REPORT_BUCKET"))
 	if got := string(out); !strings.Contains(got, want) {
-		t.Errorf("want %q, got %q")
+		t.Errorf("got %q, want %q", got, want)
 	}
 }
 
@@ -70,39 +71,39 @@ func TestServiceSearch(t *testing.T) {
 	}{
 		{
 			// Test a valid name string can be used.
-			inupt: "name",
-			want:  fmt.Sprintf("Wrote the report to gs://%s/report-name-", os.Getenev("GCLOUD_REPORT_BUCKET")),
+			input: "name",
+			want:  fmt.Sprintf("Wrote the report to gs://%s/report-name-", os.Getenv("GCLOUD_REPORT_BUCKET")),
 		},
 		{
 			// Test that default value can be explicitly passed.
-			inupt: ".",
-			want:  fmt.Sprintf("Wrote the report to gs://%s/report-.-", os.Getenev("GCLOUD_REPORT_BUCKET")),
+			input: ".",
+			want:  fmt.Sprintf("Wrote the report to gs://%s/report-.-", os.Getenv("GCLOUD_REPORT_BUCKET")),
 		},
 		{
 			// Test that invalid characters are defaulted to wildcard.
-			inupt: ";",
-			want:  fmt.Sprintf("Wrote the report to gs://%s/report-.-", os.Getenev("GCLOUD_REPORT_BUCKET")),
+			input: ";",
+			want:  fmt.Sprintf("Wrote the report to gs://%s/report-.-", os.Getenv("GCLOUD_REPORT_BUCKET")),
 		},
 	}
 
 	for _, test := range tests {
 		req, err := http.NewRequest("GET", "/", nil)
 		if err != nil {
-			t.Fatalf("http.NewRequest: %w", err)
+			t.Fatalf("http.NewRequest: %v", err)
 		}
 		q := req.URL.Query()
 		q.Add("search", test.input)
 		req.URL.RawQuery = q.Encode()
 
-		res, err := http.Do(req)
+		res, err := http.DefaultClient.Do(req)
 		if err != nil {
-			t.Fatalf("http.Do: %w", err)
+			t.Fatalf("http.DefaultClient.Do: %v", err)
 		}
 		defer res.Body.Close()
 
 		out, err := ioutil.ReadAll(res.Body)
 		if err != nil {
-			t.Fatalf("ioutil.ReadAll: %w", err)
+			t.Fatalf("ioutil.ReadAll: %v", err)
 		}
 
 		if got := string(out); !strings.Contains(got, test.want) {

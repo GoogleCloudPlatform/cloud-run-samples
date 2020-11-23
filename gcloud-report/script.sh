@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +15,6 @@
 # limitations under the License.
 
 # [START cloudrun_report_script]
-
-#!/usr/bin/env bash
 set -eo pipefail
 
 # Check for required environment variables.
