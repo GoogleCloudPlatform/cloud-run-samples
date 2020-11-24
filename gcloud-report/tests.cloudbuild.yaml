@@ -26,7 +26,7 @@ steps:
     cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id # Generate a random 15 character alphanumeric string (lowercase only)
     gcloud run deploy ${_SERVICE}-$(cat _short_id) \
       --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
-      --update-env-vars GCLOUD_REPORT_BUCKET=${_BUCKET}
+      --update-env-vars GCLOUD_REPORT_BUCKET=${_BUCKET} \
       --no-allow-unauthenticated \
       --platform managed
 
