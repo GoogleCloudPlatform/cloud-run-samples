@@ -42,10 +42,7 @@ steps:
   name: 'golang:1.15'
   dir: '${_SAMPLE_DIR}'
   args:
-  - '-c'
-  - |
-    set -e
-    go test -v .
+  - go test -v .
   env:
     - "GCLOUD_REPORT_BUCKET=${_BUCKET}"
 
