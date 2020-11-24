@@ -56,7 +56,7 @@ steps:
     set -e
     out=$(curl -si --fail --show-error -H "Authorization: Bearer $(cat _id_token)" "$(cat _service_url)")
     echo "$out"
-    out=$(tail -1 $out)
+    out=$(echo $out | tail -1)
     obj=${#Wrote report to}
     echo "Downloading report ${obj} for local validation"
     gsutil cp $obj .
