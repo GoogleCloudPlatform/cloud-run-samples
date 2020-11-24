@@ -8,7 +8,7 @@ WORKDIR $APP_HOME
 COPY . ./
 
 # Install production dependencies.
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Run the web service on container startup.
 CMD ["functions-framework", "--target=get_hello_world"]

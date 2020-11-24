@@ -17,7 +17,7 @@
 FROM python:3.8
 ENV PORT=8080
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
-COPY . .
+COPY . ./
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 app:app
