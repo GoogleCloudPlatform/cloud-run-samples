@@ -25,15 +25,17 @@ import (
 )
 
 func TestScriptHanlderErrorsNoBucket(t *testing.T) {
+	original := os.Getenv("GCLOUD_REPORT_BUCKET")
 	os.Unsetenv("GCLOUD_REPORT_BUCKET")
+	defer os.Setenv("GCLOUD_REPORT_BUCKET", original)
 
 	req := httptest.NewRequest("GET", "/", nil)
 	rr := httptest.NewRecorder()
-	scriptHandler(rr, req)
+	logBytes := callHandler(scriptHandler, rr, req, t)
 
 	want := "gcloud-report: 'GCLOUD_REPORT_BUCKET' not found"
-	if got := rr.Body.String(); !strings.Contains(got, want) {
-		t.Errorf("body: got %q, want %q", got, want)
+	if got := string(logBytes); !strings.Contains(got, want) {
+		t.Errorf("logs: got %q, want %q", got, want)
 	}
 
 	if got, want := rr.Result().StatusCode, http.StatusInternalServerError; got != want {
@@ -41,73 +43,71 @@ func TestScriptHanlderErrorsNoBucket(t *testing.T) {
 	}
 }
 
-func TestService(t *testing.T) {
-	req, err := http.NewRequest("GET", "/", nil)
-	if err != nil {
-		t.Fatalf("http.NewRequest: %v", err)
-	}
-
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		t.Fatalf("http.DefaultClient.Do: %v", err)
-	}
-	defer res.Body.Close()
-
-	out, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		t.Fatalf("ioutil.ReadAll: %v", err)
-	}
-
-	want := fmt.Sprintf("Wrote the report to gs://%s/report-", os.Getenv("GCLOUD_REPORT_BUCKET"))
-	if got := string(out); !strings.Contains(got, want) {
-		t.Errorf("got %q, want %q", got, want)
-	}
-}
-
-func TestServiceSearch(t *testing.T) {
+func TestScriptHandler(t *testing.T) {
 	tests := []struct {
 		input string
 		want  string
 	}{
 		{
+			// Test empty search parameter can be used.
+			input: "",
+			want:  fmt.Sprintf("Wrote report to gs://%s/report-.-", os.Getenv("GCLOUD_REPORT_BUCKET")),
+		},
+		{
 			// Test a valid name string can be used.
 			input: "name",
-			want:  fmt.Sprintf("Wrote the report to gs://%s/report-name-", os.Getenv("GCLOUD_REPORT_BUCKET")),
+			want:  fmt.Sprintf("Wrote report to gs://%s/report-name-", os.Getenv("GCLOUD_REPORT_BUCKET")),
 		},
 		{
 			// Test that default value can be explicitly passed.
 			input: ".",
-			want:  fmt.Sprintf("Wrote the report to gs://%s/report-.-", os.Getenv("GCLOUD_REPORT_BUCKET")),
+			want:  fmt.Sprintf("Wrote report to gs://%s/report-.-", os.Getenv("GCLOUD_REPORT_BUCKET")),
 		},
 		{
 			// Test that invalid characters are defaulted to wildcard.
 			input: ";",
-			want:  fmt.Sprintf("Wrote the report to gs://%s/report-.-", os.Getenv("GCLOUD_REPORT_BUCKET")),
+			want:  fmt.Sprintf("Wrote report to gs://%s/report-.-", os.Getenv("GCLOUD_REPORT_BUCKET")),
 		},
 	}
 
 	for _, test := range tests {
-		req, err := http.NewRequest("GET", "/", nil)
-		if err != nil {
-			t.Fatalf("http.NewRequest: %v", err)
-		}
+		req := httptest.NewRequest("GET", "/", nil)
 		q := req.URL.Query()
 		q.Add("search", test.input)
 		req.URL.RawQuery = q.Encode()
+		rr := httptest.NewRecorder()
 
-		res, err := http.DefaultClient.Do(req)
-		if err != nil {
-			t.Fatalf("http.DefaultClient.Do: %v", err)
-		}
-		defer res.Body.Close()
+		scriptHandler(rr, req)
 
-		out, err := ioutil.ReadAll(res.Body)
-		if err != nil {
-			t.Fatalf("ioutil.ReadAll: %v", err)
-		}
-
-		if got := string(out); !strings.Contains(got, test.want) {
-			t.Errorf("%s: got %q, want %q", test.input, got, test.want)
+		if got := rr.Body.String(); !strings.Contains(got, test.want) {
+			t.Errorf("Search(%s): got %q, want %q", test.input, got, test.want)
 		}
 	}
+}
+
+// callHandler calls an HTTP handler with the provided request and returns the log output.
+func callHandler(h func(w http.ResponseWriter, r *http.Request), rr http.ResponseWriter, req *http.Request, t *testing.T) []byte {
+	t.Helper()
+
+	// Rewrite stdout and stderr to an io.ReadCloser.
+	// Allows capturing both golang and shell log output.
+	r, scriptWriter, _ := os.Pipe()
+	originalStderr := os.Stderr
+	originalStdout := os.Stdout
+	os.Stderr = scriptWriter
+	os.Stdout = scriptWriter
+	defer func() {
+		os.Stderr = originalStderr
+		os.Stdout = originalStdout
+	}()
+
+	h(rr, req)
+	scriptWriter.Close()
+
+	out, err := ioutil.ReadAll(r)
+	if err != nil {
+		t.Fatalf("ioutil.ReadAll: %v", err)
+	}
+
+	return out
 }
