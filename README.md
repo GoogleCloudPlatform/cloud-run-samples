@@ -6,8 +6,7 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 
 |          Sample            |                     Description                         |              Languages             |
 | -------------------------- | ------------------------------------------------------- | ---------------------------------- |
-| Hello World                | Hello World! A quickstart sample collection             | [Go][hello_go], [Node.js][hello_nodejs], [Python][hello_python],
-[Java][hello_java], [PHP][hello_php], [Ruby][hello_ruby], [Shell][hello_shell], [C++][hello_cpp] |
+| Hello World                | Hello World! A quickstart sample collection             | [Go][hello_go], [Node.js][hello_nodejs], [Python][hello_python], [Java][hello_java], [PHP][hello_php], [Ruby][hello_ruby], [Shell][hello_shell], [C++][hello_cpp] |
 | Knative Hello World        | Hello World! The Knative quickstart samples             | [Go][kn_hello_go], [Node.js][kn_hello_nodejs], [Python][kn_hello_python], [Java Spring Boot][kn_hello_java_spring], [Java Spark][kn_hello_java_spark], [C#][kn_hello_csharp], [PHP][kn_hello_php], [Ruby][kn_hello_ruby], [Kotlin][kn_hello_kotlin], [Scala][kn_hello_scala] |
 | Manual Logging             | Structured logging without client library               | [Go][manual_logging_go], [Node.js][manual_logging_nodejs], [Python][manual_logging_python], [Java][manual_logging_java]|
 | System Package             | Use system-installed binaries.                          | [Go][system_package_go], [Node.js][system_package_nodejs], [Java][system_package_java]                                 |
