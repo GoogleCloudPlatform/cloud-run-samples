@@ -37,7 +37,7 @@ steps:
   - |
     set -e
     . /workspace/testing/cloudbuild-templates/common.sh
-    echo $(get_url) > _service_url
+    echo $(get_url ${BUILD_ID}) > _service_url
     echo "Cloud Run URL for ${_SERVICE}-${BUILD_ID} is $(cat _service_url)"
     echo $(get_idtoken) > _id_token
   env:
