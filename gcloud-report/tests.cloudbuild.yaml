@@ -1,6 +1,6 @@
 steps:
 
-# TODO: container image with golang+gcloud
+# TODO(#67): Need golang+gcloud container.
 # - id: 'System & Unit Tests'
 #   name: 'golang:1.15'
 #   dir: '${_SAMPLE_DIR}'
