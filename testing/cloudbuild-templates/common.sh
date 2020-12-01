@@ -22,7 +22,9 @@
 
 # Cloud Run URLs are not deterministic.
 get_url() {
-    gcloud run services describe ${_SERVICE}-$(cat _short_id) \
+    bid=$(test "$1" && echo "$1" || cat _short_id)
+
+    gcloud run services describe ${_SERVICE}-${bid} \
         --format 'value(status.url)' \
         --platform managed
 }
