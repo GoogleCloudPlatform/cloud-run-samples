@@ -1,0 +1,14 @@
+# [START run_yaml_limits_memory]
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: SERVICE
+spec:
+  template:
+    spec:
+      containers:
+      - image: IMAGE
+        resources:
+          limits:
+            memory: SIZE
+# [END run_yaml_limits_memory]
