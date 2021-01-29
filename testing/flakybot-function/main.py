@@ -74,24 +74,24 @@ def get_elapsed_time(step):
     return start_time, elapsed
 
 
-def send_to_buildcop(event, context):
+def send_to_flakybot(event, context):
     try:
         data = base64.b64decode(event['data'])
         build_event = json.loads(data.decode("utf-8").strip())
 
         status = build_event.get("status")
 
-        # buildcop should only run on complete builds
+        # flakybot should only run on complete builds
         if (status in("SUCCESS", "FAILURE", "INTERNAL_ERROR", "TIMEOUT", "EXPIRED")
-            # buildcop should not run on Pull Requests
+            # flakybot should not run on Pull Requests
             and "_PR_NUMBER" not in build_event["substitutions"]):
 
             write_xml_file(build_event)
-            
+
             commit_sha = build_event["substitutions"]["COMMIT_SHA"]
             build_url = build_event.get("logUrl")
             out = subprocess.run(
-                ["./buildcop", "-repo=GoogleCloudPlatform/cloud-run-samples", 
+                ["./flakybot", "-repo=GoogleCloudPlatform/cloud-run-samples",
                 f"-commit_hash={commit_sha}", "-logs_dir=/tmp",
                 f"-build_url={build_url}"],
                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT).stdout
