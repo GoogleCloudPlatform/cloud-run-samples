@@ -13,17 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Get buildcop binary encoded for linux
-export GOOS=linux   
+# Get flakybot binary encoded for linux
+export GOOS=linux
 export GOARCH=amd64
 
-go get github.com/googleapis/repo-automation-bots/packages/buildcop
-cp $(go env GOPATH)/bin/linux_amd64/buildcop buildcop
+go get github.com/googleapis/repo-automation-bots/packages/flakybot
+cp $(go env GOPATH)/bin/linux_amd64/flakybot flakybot
 
 # Deploy function
-gcloud functions deploy buildcop-worker --region=us-central1 \
---trigger-topic=cloud-builds --runtime=python37 --entry-point=send_to_buildcop \
+gcloud functions deploy flakybot-worker --region=us-central1 \
+--trigger-topic=cloud-builds --runtime=python37 --entry-point=send_to_flakybot \
 --no-allow-unauthenticated
 
-# Remove binary from current directory 
-rm buildcop
+# Remove binary from current directory
+rm flakybot

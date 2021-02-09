@@ -79,9 +79,9 @@ github.com/google/renameio v0.1.0/go.mod h1:KWCgfxg9yswjAJkECMjeO8J8rahYeXnNhOm4
 github.com/googleapis/gax-go/v2 v2.0.4/go.mod h1:0Wqv26UfaUD9n4G6kQubkQ+KchISgw+vpHVxEJEs9eg=
 github.com/googleapis/gax-go/v2 v2.0.5 h1:sjZBwGj9Jlw33ImPtvFviGYvseOtDM7hkSKB7+Tv3SM=
 github.com/googleapis/gax-go/v2 v2.0.5/go.mod h1:DWXyrwAJ9X0FpwwEdw+IPEYBICEFu5mhpdKc/us6bOk=
-github.com/googleapis/repo-automation-bots/packages/buildcop v0.0.0-20200716174820-aef5c4576904/go.mod h1:k37+nyyd8a8mcl2aBWWXku6Vgzt5ke+DFldSHTykfMI=
-github.com/googleapis/repo-automation-bots/packages/buildcop v0.0.0-20200717205441-adc00ad3395a h1:837ayQDJspA5+U5PY9yUyjU0rN8IK7HmRaS6ie9TnhE=
-github.com/googleapis/repo-automation-bots/packages/buildcop v0.0.0-20200717205441-adc00ad3395a/go.mod h1:k37+nyyd8a8mcl2aBWWXku6Vgzt5ke+DFldSHTykfMI=
+github.com/googleapis/repo-automation-bots/packages/flakybot v0.0.0-20200716174820-aef5c4576904/go.mod h1:k37+nyyd8a8mcl2aBWWXku6Vgzt5ke+DFldSHTykfMI=
+github.com/googleapis/repo-automation-bots/packages/flakybot v0.0.0-20200717205441-adc00ad3395a h1:837ayQDJspA5+U5PY9yUyjU0rN8IK7HmRaS6ie9TnhE=
+github.com/googleapis/repo-automation-bots/packages/flakybot v0.0.0-20200717205441-adc00ad3395a/go.mod h1:k37+nyyd8a8mcl2aBWWXku6Vgzt5ke+DFldSHTykfMI=
 github.com/hashicorp/golang-lru v0.5.0/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/hashicorp/golang-lru v0.5.1/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
