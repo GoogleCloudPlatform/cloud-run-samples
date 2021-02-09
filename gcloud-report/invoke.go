@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// [START cloudrun_helloworld_server]
-// [START run_helloworld_server]
+// [START cloudrun_report_server]
 
-// Sample helloworld-shell is a Cloud Run shell-script-as-a-service.
+// Service gcloud-report is a Cloud Run shell-script-as-a-service.
 package main
 
 import (
@@ -23,6 +22,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"regexp"
 )
 
 func main() {
@@ -32,25 +32,33 @@ func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
-		log.Printf("Defaulting to port %s", port)
+		log.Printf("defaulting to port %s", port)
 	}
 
 	// Start HTTP server.
-	log.Printf("Listening on port %s", port)
+	log.Printf("listening on port %s", port)
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
 }
 
 func scriptHandler(w http.ResponseWriter, r *http.Request) {
-	cmd := exec.CommandContext(r.Context(), "/bin/sh", "script.sh")
+	search := r.URL.Query().Get("search")
+	re := regexp.MustCompile(`^[a-z]+[a-z0-9\-]*$`)
+	if !re.MatchString(search) {
+		log.Printf("invalid search criteria %q, using default", search)
+		search = "."
+	}
+
+	cmd := exec.CommandContext(r.Context(), "/bin/bash", "script.sh", search)
 	cmd.Stderr = os.Stderr
 	out, err := cmd.Output()
 	if err != nil {
-		w.WriteHeader(500)
+		log.Printf("Command.Output: %v", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 	w.Write(out)
 }
 
-// [END run_helloworld_server]
-// [END cloudrun_helloworld_server]
+// [END cloudrun_report_server]

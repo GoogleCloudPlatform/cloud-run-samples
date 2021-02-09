@@ -53,6 +53,7 @@ https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
   gcloud services enable pubsub.googleapis.com --project $TESTING_PROJECT
   gcloud services enable containerregistry.googleapis.com --project $TESTING_PROJECT
   gcloud services enable secretmanager.googleapis.com --project $TESTING_PROJECT
+  gcloud services enable vpcaccess.googleapis.com --project $TESTING_PROJECT
 
   if [[ ${IAM_OWNER} ]]
   then 
@@ -63,6 +64,11 @@ https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
     --member="${IAM_OWNER}" --role="roles/resourcemanager.projectIamAdmin"
   fi
   
+  echo "Creating VPC Serverless Connector..."
+  gcloud compute networks vpc-access connectors create samples-connector \
+  --region=us-central1 --range=10.8.0.0/28
+
+
   echo "Setting up Cloud Run invoker access..."
   gcloud iam service-accounts create test-runner-identity
   RUNNER_EMAIL="test-runner-identity@${TESTING_PROJECT}.iam.gserviceaccount.com"
@@ -78,6 +84,11 @@ https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
   gcloud secrets add-iam-policy-binding locksmith-secret \
     --member "serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
     --role roles/secretmanager.secretAccessor
+
+  echo "Creating Cloud Storage bucket for sample integration"
+  gsutil mb gs://${TESTING_PROJECT}
+  // Delete objects in this bucket after 3 days.
+  gsutil lifecycle set sample-storage.lifecycle.json gs://${TESTING_PROJECT}
 
   echo "Project setup complete"
 }

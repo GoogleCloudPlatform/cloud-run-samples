@@ -12,13 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_helloworld_dockerfile]
-# [START run_helloworld_dockerfile]
+# [START cloudrun_report_dockerfile]
 
-# Use the offical golang image to create a binary.
+# Use the official golang image to create a binary.
 # This is based on Debian and sets the GOPATH to /go.
 # https://hub.docker.com/_/golang
-FROM golang:1.14-buster as builder
+FROM golang:1.15-buster as builder
 
 # Create and change to the app directory.
 WORKDIR /app
@@ -35,21 +34,18 @@ COPY invoke.go ./
 # Build the binary.
 RUN go build -mod=readonly -v -o server
 
-# Use the official Debian slim image for a lean production container.
-# https://hub.docker.com/_/debian
+# Use a gcloud image based on debian:buster-slim for a lean production container.
 # https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
-FROM debian:buster-slim
-RUN set -x && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    --no-install-recommends \
-    ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+FROM gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+
+WORKDIR /app
 
 # Copy the binary to the production image from the builder stage.
 COPY --from=builder /app/server /app/server
-COPY script.sh ./
+COPY *.sh /app/
+RUN chmod +x /app/*.sh
 
 # Run the web service on container startup.
 CMD ["/app/server"]
 
-# [END run_helloworld_dockerfile]
-# [END cloudrun_helloworld_dockerfile]
+# [END cloudrun_report_dockerfile]

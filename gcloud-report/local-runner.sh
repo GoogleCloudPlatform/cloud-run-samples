@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,11 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_helloworld_shell]
-# [START run_helloworld_shell]
+##
+# local-runner.sh
+# Passthrough executor that ensures gcloud is properly authenticated and configured for use.
+# 
+# Usage:
+# /bin/bash local-runner.sh script.sh
+##
+set -eo pipefail
 
-set -e
-echo "Hello ${NAME:-World}!"
+requireEnv() {
+  test "${!1}" || (echo "local-runner: '$1' not found" >&2 && exit 1)
+}
 
-# [END run_helloworld_shell]
-# [END cloudrun_helloworld_shell]
+requireEnv GOOGLE_CLOUD_PROJECT
+requireEnv GOOGLE_APPLICATION_CREDENTIALS
+
+gcloud auth activate-service-account --key-file "${GOOGLE_APPLICATION_CREDENTIALS}"
+
+export CLOUDSDK_CORE_PROJECT="${GOOGLE_CLOUD_PROJECT}"
+
+"$@"
