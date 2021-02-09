@@ -1,4 +1,4 @@
-This function subscribes to the cloud-builds topic.  It parses the Cloud Build messages and compiles a junit_xml file, and sends the results to the [buildcop bot](https://github.com/googleapis/repo-automation-bots/tree/master/packages/buildcop).
+This function subscribes to the cloud-builds topic.  It parses the Cloud Build messages and compiles a junit_xml file, and sends the results to the [flakybot](https://github.com/googleapis/repo-automation-bots/tree/master/packages/flakybot).
 
 To deploy the function:
 
