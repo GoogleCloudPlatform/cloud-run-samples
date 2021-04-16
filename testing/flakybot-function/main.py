@@ -29,8 +29,6 @@ def write_xml_file(build_event):
 
     for x in range(len(steps)):
         step = steps[x]
-        output = outputs[x]
-
         status = step["status"]
         start_time, elapsed = get_elapsed_time(step)
 
@@ -75,26 +73,55 @@ def get_elapsed_time(step):
 
 
 def send_to_flakybot(event, context):
+    # Allow function framework to do all needed handling.
+    data = base64.b64decode(event['data'])
+    build_event = json.loads(data.decode("utf-8").strip())
+
     try:
-        data = base64.b64decode(event['data'])
-        build_event = json.loads(data.decode("utf-8").strip())
-
         status = build_event.get("status")
-
         # flakybot should only run on complete builds
         if (status in("SUCCESS", "FAILURE", "INTERNAL_ERROR", "TIMEOUT", "EXPIRED")
             # flakybot should not run on Pull Requests
             and "_PR_NUMBER" not in build_event["substitutions"]):
 
-            write_xml_file(build_event)
-
             commit_sha = build_event["substitutions"]["COMMIT_SHA"]
             build_url = build_event.get("logUrl")
+            build_id = build_event.get("id")
+            entry = dict(
+                severity="NOTICE",
+                message=f"Processing logs from build {build_id} ({status})...",
+                build_url=f"{build_url}",
+                build_status=f"{status}",
+                build_id=f"{build_id}",
+                commit_sha=f"{commit_sha}",
+            )
+            print(json.dumps(entry))
+
+            write_xml_file(build_event)
             out = subprocess.run(
                 ["./flakybot", "-repo=GoogleCloudPlatform/cloud-run-samples",
                 f"-commit_hash={commit_sha}", "-logs_dir=/tmp",
                 f"-build_url={build_url}"],
+                check=True, timeout=360,
                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT).stdout
-            print(out)
+
+            entry = dict(
+                severity="INFO",
+                message=out.decode('UTF-8'),
+                build_url=f"{build_url}",
+                build_status=f"{status}",
+                build_id=f"{build_id}",
+                commit_sha=f"{commit_sha}",
+            )
+            print(json.dumps(entry))
     except Exception as e:
-        print(e)
+        entry = dict(
+            severity="ERROR",
+            message=f"{e}",
+            build_url=f"{build_url}",
+            build_status=f"{status}",
+            build_id=f"{build_id}",
+            commit_sha=f"{commit_sha}",
+        )
+        print(json.dumps(entry))
+        return (e, 500)
