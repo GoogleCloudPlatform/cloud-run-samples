@@ -14,7 +14,7 @@
 
 # https://docs.docker.com/engine/reference/builder/
 
-FROM python:3.8
+FROM python:3.10
 ENV PORT=8080
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
