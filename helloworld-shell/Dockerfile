@@ -21,7 +21,7 @@
 FROM golang:1.14-buster as builder
 
 # Create and change to the app directory.
-WORKDIR /app
+WORKDIR /
 
 # Retrieve application dependencies.
 # This allows the container build to reuse cached dependencies.
