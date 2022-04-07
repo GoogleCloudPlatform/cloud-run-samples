@@ -21,7 +21,7 @@
 FROM golang:1.14-buster as builder
 
 # Create and change to the app directory.
-WORKDIR /
+WORKDIR /app
 
 # Retrieve application dependencies.
 # This allows the container build to reuse cached dependencies.
@@ -45,7 +45,7 @@ RUN set -x && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -
     rm -rf /var/lib/apt/lists/*
 
 # Create and change to the app directory.
-WORKDIR /app
+WORKDIR /
 
 # Copy the binary to the production image from the builder stage.
 COPY --from=builder /app/server /app/server
