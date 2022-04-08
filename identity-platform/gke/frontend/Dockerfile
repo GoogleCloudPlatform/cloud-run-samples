@@ -16,8 +16,7 @@
 
 FROM python:3.10
 ENV PORT=8080
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
 COPY . ./
+RUN pip install --no-cache-dir -r requirements.txt
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 app:app

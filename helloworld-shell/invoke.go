@@ -43,7 +43,7 @@ func main() {
 }
 
 func scriptHandler(w http.ResponseWriter, r *http.Request) {
-	cmd := exec.CommandContext(r.Context(), "/bin/sh", "script.sh")
+	cmd := exec.CommandContext(r.Context(), "/bin/bash", "script.sh")
 	cmd.Stderr = os.Stderr
 	out, err := cmd.Output()
 	if err != nil {
