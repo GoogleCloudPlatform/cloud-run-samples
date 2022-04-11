@@ -1,0 +1,16 @@
+steps:
+- id: 'Unit test'
+  name: 'gcr.io/cloud-builders/docker:latest'
+  dir: '${_SAMPLE_DIR}'
+  entrypoint: './tests/unit-test.sh'    
+- id: 'End to end test'
+  name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
+  dir: '${_SAMPLE_DIR}'
+  entrypoint: './tests/e2e-test.sh'
+  env: 
+    - 'PROJECT_ID=$PROJECT_ID'
+    - '_REGION=$_REGION'    
+substitutions:  
+  _REGION: 'us-central1'
+  _SAMPLE_DIR: 'jobs-shell'
+  _CLOUDSDK_VERSION: 'latest'
