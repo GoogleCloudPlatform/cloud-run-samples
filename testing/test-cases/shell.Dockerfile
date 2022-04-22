@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM node:17-slim
+FROM node:18-slim
 
 WORKDIR /usr/src/app
 
