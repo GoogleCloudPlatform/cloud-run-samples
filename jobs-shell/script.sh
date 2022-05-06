@@ -14,7 +14,14 @@
 # limitations under the License.
 
 # [START cloudrun_jobs_shell_script]
-set -euox pipefail
+set -euo pipefail
+
+# In production, consider printing commands as they are executed. 
+# This helps with debugging if things go wrong and you only 
+# have the logs.
+#
+# Add -x:
+# `set -euox pipefail`
 
 CLOUD_RUN_TASK_INDEX=${CLOUD_RUN_TASK_INDEX:=0}
 CLOUD_RUN_TASK_ATTEMPT=${CLOUD_RUN_TASK_ATTEMPT:=0}

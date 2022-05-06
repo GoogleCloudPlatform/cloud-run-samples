@@ -8,7 +8,7 @@
 export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
 ```
 
-* Use Cloud Build to build the container
+* Use Cloud Build to build the container:
 
 ```sh
 gcloud builds submit -t "gcr.io/${GOOGLE_CLOUD_PROJECT}/jobs-shell"
