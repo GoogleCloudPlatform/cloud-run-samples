@@ -16,7 +16,7 @@
 
 # Use the official Ubuntu image from Docker Hub as
 # a base image
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 # Execute next commands in the directory /workspace
 WORKDIR /workspace
