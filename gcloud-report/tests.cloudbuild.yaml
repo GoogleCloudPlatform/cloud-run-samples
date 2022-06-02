@@ -11,11 +11,11 @@ steps:
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
   dir: '${_SAMPLE_DIR}'
-  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}', '.'] # Tag docker image with git commit sha
+  args: ['build', '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}', '.'] # Tag docker image with git commit sha
 
 - id: 'Push Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
-  args: ['push', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}']
+  args: ['push', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}']
 
 - id: 'Deploy to Cloud Run'
   name: 'gcr.io/cloud-builders/gcloud-slim:$_CLOUDSDK_VERSION'
@@ -24,10 +24,9 @@ steps:
   - '-c'
   - |
     gcloud run deploy ${_SERVICE}-$BUILD_ID \
-      --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
+      --image '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}' \
       --update-env-vars GCLOUD_REPORT_BUCKET=${_BUCKET} \
-      --no-allow-unauthenticated \
-      --platform managed
+      --no-allow-unauthenticated
 
 - id: 'Get Cloud Run URL'
   name: 'gcr.io/cloud-builders/gcloud-slim:$_CLOUDSDK_VERSION'
@@ -69,23 +68,24 @@ steps:
   - '-c'
   - |
     set -x
-    gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
-    gcloud --quiet run services delete ${_SERVICE}-${BUILD_ID}--region ${_SERVICE_REGION} --platform managed
+    gcloud --quiet artifacts docker images delete '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}'
+    gcloud --quiet run services delete ${_SERVICE}-${BUILD_ID} --region ${_REGION} --platform managed
     set +x
     echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
 
 # Uncomment if skipping teardown to associate build with container image.
 # images:
-# - 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}'
+# - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}'
 
 options:
   env:
-    - "CLOUDSDK_RUN_REGION=${_SERVICE_REGION}"
+    - "CLOUDSDK_RUN_REGION=${_REGION}"
     - "GOOGLE_CLOUD_PROJECT=${PROJECT_ID}"
 
 # TODO: Update these User-defined substitutions
 substitutions:
   _SERVICE: gcloud-report
   _SAMPLE_DIR: gcloud-report
-  _SERVICE_REGION: us-central1
+  _REPO_NAME: samples  # Artifact Registry repo, "samples", was manually created
+  _REGION: us-central1
   _CLOUDSDK_VERSION: latest
