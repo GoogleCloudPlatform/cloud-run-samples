@@ -27,11 +27,9 @@ steps:
   args:
   - '-c'
   - |
-    get_url() {
-        gcloud run services describe ${_SERVICE}-$BUILD_ID --format 'value(status.url)' \
-          --platform gke --cluster ${_CLUSTER} --cluster-location ${_CLUSTER_LOCATION}
-    }
-    echo $(get_url) > _service_url
+    set -e
+    source /workspace/testing/cloudbuild-templates/common.sh
+    echo $(get_url ${BUILD_ID}) > _service_url
     echo "Cloud Run URL for ${_SERVICE}-$BUILD_ID is $(cat _service_url)"
 
 - id: 'Get Cloud Run External IP'
