@@ -23,10 +23,9 @@ steps:
   args:
   - '-c'
   - |
-    gcloud alpha run deploy ${_SERVICE}-$BUILD_ID \
+    gcloud run deploy ${_SERVICE}-$BUILD_ID \
       --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
       --no-allow-unauthenticated \
-      --platform managed \
       --update-env-vars=URL=https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-${SHORT_SHA} \
       --vpc-egress=all \
       --vpc-connector=samples-connector \
@@ -84,7 +83,7 @@ steps:
   - |
     set -x
     gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
-    gcloud --quiet run services delete ${_SERVICE}-$BUILD_ID --region ${_SERVICE_REGION} --platform managed
+    gcloud --quiet run services delete ${_SERVICE}-$BUILD_ID --region ${_SERVICE_REGION}
     gcloud --quiet functions delete restricted-${SHORT_SHA}
     set +x
     echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"

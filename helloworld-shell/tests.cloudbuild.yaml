@@ -17,8 +17,7 @@ steps:
   - |
     gcloud run deploy ${_SERVICE}-$BUILD_ID \
       --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
-      --no-allow-unauthenticated \
-      --platform managed
+      --no-allow-unauthenticated
 
 - id: 'Get Cloud Run URL'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
@@ -57,7 +56,7 @@ steps:
   - |
     set -x
     gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
-    gcloud --quiet run services delete ${_SERVICE}-$BUILD_ID --region ${_SERVICE_REGION} --platform managed
+    gcloud --quiet run services delete ${_SERVICE}-$BUILD_ID --region ${_SERVICE_REGION}
     set +x
     echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
 

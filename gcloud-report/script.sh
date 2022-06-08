@@ -41,7 +41,6 @@ obj="gs://${GCLOUD_REPORT_BUCKET}/report-${search}-$(date +%s).txt"
 # Write a report containing the service name, service URL, service account or user that
 # deployed it, and any explicitly configured service "limits" such as CPU or Memory.
 gcloud run services list \
-  --platform managed \
   --format "${format}" \
   --filter "metadata.name~${search}" | gsutil -q cp -J - "${obj}"
 
