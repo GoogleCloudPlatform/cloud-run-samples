@@ -69,7 +69,7 @@ steps:
   - |
     set -x
     gcloud --quiet artifacts docker images delete '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}'
-    gcloud --quiet run services delete ${_SERVICE}-${BUILD_ID} --region ${_REGION} --platform managed
+    gcloud --quiet run services delete ${_SERVICE}-${BUILD_ID} --region ${_REGION}
     set +x
     echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
 

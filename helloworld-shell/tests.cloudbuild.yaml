@@ -14,12 +14,10 @@ steps:
   entrypoint: /bin/bash
   args:
   - '-c'
-  - | # Cloud Run Service name must be less than 63 characters
-    cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id # Generate a random 15 character alphanumeric string (lowercase only)
-    gcloud run deploy ${_SERVICE}-$(cat _short_id) \
+  - |
+    gcloud run deploy ${_SERVICE}-$BUILD_ID \
       --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
-      --no-allow-unauthenticated \
-      --platform managed
+      --no-allow-unauthenticated
 
 - id: 'Get Cloud Run URL'
   name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
@@ -29,8 +27,8 @@ steps:
   - |
     set -e
     . /workspace/testing/cloudbuild-templates/common.sh
-    echo $(get_url) > _service_url
-    echo "Cloud Run URL for ${_SERVICE}-$(cat _short_id) is $(cat _service_url)"
+    echo $(get_url ${BUILD_ID}) > _service_url
+    echo "Cloud Run URL for ${_SERVICE}-$BUILD_ID is $(cat _service_url)"
     echo $(get_idtoken) > _id_token
   env:
     # Make substitutions available in shell script.
@@ -58,7 +56,7 @@ steps:
   - |
     set -x
     gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
-    gcloud --quiet run services delete ${_SERVICE}-$(cat _short_id) --region ${_SERVICE_REGION} --platform managed
+    gcloud --quiet run services delete ${_SERVICE}-$BUILD_ID --region ${_SERVICE_REGION}
     set +x
     echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
 

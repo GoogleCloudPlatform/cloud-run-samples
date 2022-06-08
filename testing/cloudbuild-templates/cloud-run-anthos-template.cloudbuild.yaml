@@ -14,9 +14,8 @@ steps:
   entrypoint: /bin/bash
   args:
   - -c
-  - | # Cloud Run Service name must be less than 63 characters
-    cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id # Generate a random 15 character alphanumeric string (lowercase only)
-    gcloud run deploy ${_SERVICE}-$(cat _short_id) \
+  - |
+    gcloud run deploy ${_SERVICE}-$BUILD_ID \
      --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
      --cluster ${_CLUSTER} \
      --cluster-location ${_CLUSTER_LOCATION} \
@@ -28,12 +27,10 @@ steps:
   args:
   - '-c'
   - |
-    get_url() {
-        gcloud run services describe ${_SERVICE}-$(cat _short_id) --format 'value(status.url)' \
-          --platform gke --cluster ${_CLUSTER} --cluster-location ${_CLUSTER_LOCATION}
-    }
-    echo $(get_url) > _service_url
-    echo "Cloud Run URL for ${_SERVICE}-$(cat _short_id) is $(cat _service_url)"
+    set -e
+    source /workspace/testing/cloudbuild-templates/common.sh
+    echo $(get_url ${BUILD_ID}) > _service_url
+    echo "Cloud Run URL for ${_SERVICE}-$BUILD_ID is $(cat _service_url)"
 
 - id: 'Get Cloud Run External IP'
   name: 'gcr.io/cloud-builders/kubectl'
@@ -66,7 +63,7 @@ steps:
   - |
     set -x
     gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
-    gcloud --quiet run services delete ${_SERVICE}-$(cat _short_id) --platform gke
+    gcloud --quiet run services delete ${_SERVICE}-$BUILD_ID --platform gke
     set +x
     echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
 

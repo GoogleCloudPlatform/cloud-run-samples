@@ -34,8 +34,8 @@ gcloud builds submit --tag=gcr.io/${PROJECT_ID}/restricted-function-caller .
 ```
 
 ```sh
-gcloud alpha run deploy run-function --image gcr.io/${PROJECT_ID}/restricted-function-caller \
---no-allow-unauthenticated --platform managed \
+gcloud run deploy run-function --image gcr.io/${PROJECT_ID}/restricted-function-caller \
+--no-allow-unauthenticated \
 --update-env-vars=URL=https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-function-caller \
 --vpc-egress=all --vpc-connector=serverless-connector --region=${_SERVICE_REGION}
 ```
