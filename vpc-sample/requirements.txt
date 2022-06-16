@@ -1,3 +1,3 @@
 google-auth==2.8.0
 requests==2.27.1
-functions-framework==3.0.0
+functions-framework==3.1.0
