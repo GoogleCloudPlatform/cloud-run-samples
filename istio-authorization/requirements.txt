@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-google-auth==2.8.0
+google-auth==2.9.0
 requests==2.28.1
