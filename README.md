@@ -16,7 +16,6 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 | Cloud SQL (Postgres)       | Use Postgres with Cloud Run                             | [Node.js][postgres_nodejs], [Python][postgres_python], [Java][postgres_java] |  
 | Global State               | Snippet: Using global state for in-memory caching       | [Go][global_state_go], [Nodejs][global_state_nodejs], [Python][global_state_python], [Java][global_state_java] |
 | Lazy Initialization        | Snippet: Lazy loading faster cold start                 | [Go][global_lazy_go], [Nodejs][global_lazy_nodejs], [Python][global_lazy_python], [Java][global_lazy_java] |
-| Identity Platform          | Cloud Run for Anthos + Istio + Identity Platform        | [GKE][identity_platform_gke]     |
 | Istio Authorization        | Cloud Run for Anthos + Istio Role-Based Access Control  | [GKE][istio_authorization]       |
 | Hello Broken               | "Broken" service for troubleshooting.                   | [Go][broken_go], [Node.js][broken_nodejs], [Java][broken_java], [Python][broken_python] |
 | End user authentication    | Integrate with Identity Platform to restrict access     | [Node.js][idp_sql_nodejs], [Java][idp_sql_java], [Python][idp_sql_python] |
@@ -76,7 +75,6 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 [global_lazy_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/blob/master/functions/tips/index.js#L55
 [global_lazy_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/functions/tips/main.py#L95
 [global_lazy_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/master/functions/concepts/lazy-fields
-[identity_platform_gke]: identity-platform/gke
 [istio_authorization]: istio-authorization
 [broken_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/hello-broken
 [broken_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/master/run/hello-broken
