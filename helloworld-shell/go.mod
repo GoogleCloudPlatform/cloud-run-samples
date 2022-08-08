@@ -1,3 +1,3 @@
 module github.com/GoogleCloudPlatform/cloud-run-samples/helloworld-shell
 
-go 1.14
+go 1.19
