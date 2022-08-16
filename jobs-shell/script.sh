@@ -14,6 +14,7 @@
 # limitations under the License.
 
 # [START cloudrun_jobs_shell_script]
+#!/bin/bash
 set -euo pipefail
 
 # In production, consider printing commands as they are executed. 
