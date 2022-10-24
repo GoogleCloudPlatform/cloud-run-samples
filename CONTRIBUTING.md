@@ -29,7 +29,7 @@ accept your pull requests.
 1. Ensure that your code adheres to the existing style in the sample to which
    you are contributing. Refer to the
    [Google Cloud Platform Samples Style Guide]
-   (https://github.com/GoogleCloudPlatform/Template/wiki/style.html) for the
+   (https://googlecloudplatform.github.io/samples-style-guide/) for the
    recommended coding standards for this organization.
 1. Ensure that your code has an appropriate set of unit tests which all pass.
 1. Submit a pull request.
