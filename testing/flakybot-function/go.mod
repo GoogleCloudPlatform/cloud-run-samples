@@ -1,6 +1,6 @@
 module github.com/GoogleCloudPlatform/cloud-run-samples/testing/flakybot-function
 
-go 1.14
+go 1.19
 
 require (
 	cloud.google.com/go v0.76.0 // indirect

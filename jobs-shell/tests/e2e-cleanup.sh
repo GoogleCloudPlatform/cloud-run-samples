@@ -1,4 +1,5 @@
-# Copyright 2019 Google LLC
+#!/bin/bash
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,13 +12,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+set -x
 
-# https://docs.docker.com/engine/reference/builder/
+gcloud config set run/region "${_REGION}"
+JOB_NAME="jobs-shell-${BUILD_ID}"
 
-FROM python:3.8
-ENV PORT=8080
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-WORKDIR /app
-COPY . ./
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 app:app
+gcloud alpha run jobs delete --quiet "${JOB_NAME}"

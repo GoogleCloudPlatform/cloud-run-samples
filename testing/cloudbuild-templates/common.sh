@@ -25,8 +25,7 @@ get_url() {
     bid=$(test "$1" && echo "$1" || cat _short_id)
 
     gcloud run services describe ${_SERVICE}-${bid} \
-        --format 'value(status.url)' \
-        --platform managed
+        --format 'value(status.url)'
 }
 
 # Cloud Build does not natively mint identity tokens.

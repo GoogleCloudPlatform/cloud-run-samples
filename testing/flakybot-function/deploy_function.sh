@@ -26,7 +26,7 @@ cp $(go env GOPATH)/bin/linux_amd64/flakybot flakybot
 gcloud functions deploy flakybot-worker \
   --region=us-central1 \
   --trigger-topic=cloud-builds \
-  --runtime=python37 \
+  --runtime=python38 \
   --entry-point=send_to_flakybot \
   --no-allow-unauthenticated
 

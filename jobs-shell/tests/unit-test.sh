@@ -1,4 +1,5 @@
-# Copyright 2019 Google LLC
+#!/bin/bash
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# https://docs.docker.com/engine/reference/builder/
+set -eux pipefail
 
-FROM python:3.8
-ENV PORT=8080
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-WORKDIR /app
-COPY . ./
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 app:app
+docker build -t test .
+
+if docker run -t test | grep -q 'Starting Task'; 
+then 
+  echo "Output matched"; 
+else
+  exit 1;
+fi

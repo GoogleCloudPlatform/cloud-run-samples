@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import Flask
+# [START cloudrun_jobs_shell_dockerfile]
 
+# Use the official Ubuntu image from Docker Hub as
+# a base image
+FROM ubuntu:22.04
 
-app = Flask(__name__, static_folder='', static_url_path='')
+# Execute next commands in the directory /workspace
+WORKDIR /workspace
 
+# Copy over the script to the /workspace directory
+COPY script.sh .
 
-@app.route('/')
-def root():
-    return app.send_static_file('index.html')
+# Just in case the script doesn't have the executable bit set
+RUN chmod +x ./script.sh
 
+# Run the script when starting the container
+CMD [ "./script.sh" ]
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# [END cloudrun_jobs_shell_dockerfile]
