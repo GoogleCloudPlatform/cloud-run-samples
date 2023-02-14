@@ -1,4 +1,4 @@
-// Package main checks to make sure the nfs volume has mounted properly
+// Package main checks to make sure cloud run volumes have mounted properly
 package main
 
 import (
@@ -14,7 +14,13 @@ func main() {
 	http.HandleFunc("/read", readDir)
 	http.HandleFunc("/ping", pingAddress)
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+		log.Printf("defaulting to port %s", port)
+	}
+
+	if err := http.ListenAndServe(port, nil); err != nil {
 		log.Fatal(err)
 	}
 }
