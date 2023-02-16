@@ -3,7 +3,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -12,7 +11,6 @@ import (
 func main() {
 	http.HandleFunc("/", healthCheck)
 	http.HandleFunc("/read", readDir)
-	http.HandleFunc("/ping", pingAddress)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -20,40 +18,14 @@ func main() {
 		log.Printf("defaulting to port %s", port)
 	}
 
-	if err := http.ListenAndServe(port, nil); err != nil {
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		log.Fatal(err)
 	}
 }
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(200)
-	fmt.Fprintf(w, "Servers?? Who needs 'em!")
-}
-
-func pingAddress(w http.ResponseWriter, r *http.Request) {
-	url := r.URL.Query().Get("url")
-
-	if url == "" {
-		fmt.Fprintf(w, "'url' query parameter not set")
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-
-	resp, err := http.Get(url)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, "GET request to %s yielded error: %v", url, err)
-		return
-	}
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, "error parsing response body: %v", err)
-		return
-	}
-	sb := string(body)
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "GET request to %s successful. Got response:\n %s", url, sb)
+	fmt.Fprintf(w, "Servers?? Who needs 'em!")
 }
 
 func readDir(w http.ResponseWriter, r *http.Request) {

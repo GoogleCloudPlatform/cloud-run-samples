@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -29,55 +29,7 @@ func TestHealthCheck(t *testing.T) {
 		healthCheck(w, req)
 		res := w.Result()
 		defer res.Body.Close()
-		data, err := ioutil.ReadAll(res.Body)
-		if err != nil {
-			t.Errorf("expected error to be nil got %v", err)
-		}
-		if string(data) != test.message {
-			t.Errorf("want '%s' got '%s'", test.message, string(data))
-		}
-		if res.StatusCode != test.statusCode {
-			t.Errorf("want '%d' got '%d'", test.statusCode, res.StatusCode)
-		}
-	}
-}
-
-// Tests that volume_checker can send an http request to a passed
-// URL, for the purpose of checking vpc connectivity.
-func TestAddressPing(t *testing.T) {
-	expected := "hello world"
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, expected)
-	}))
-	for _, test := range []struct {
-		endpoint   string
-		message    string
-		statusCode int
-	}{
-		// Tests that volume_checker can send a request to the passed url
-		{
-			endpoint:   "/ping",
-			message:    "'url' query parameter not set",
-			statusCode: 200,
-		},
-		{
-			endpoint:   "/ping?url=foo",
-			message:    "GET request to foo yielded error: Get \"foo\": unsupported protocol scheme \"\"",
-			statusCode: 500,
-		},
-		{
-			endpoint:   fmt.Sprintf("/ping?url=%s", server.URL),
-			message:    fmt.Sprintf("GET request to %s successful. Got response:\n hello world", server.URL),
-			statusCode: 200,
-		},
-	} {
-		req := httptest.NewRequest(http.MethodGet, test.endpoint, nil)
-		w := httptest.NewRecorder()
-		pingAddress(w, req)
-		res := w.Result()
-		defer res.Body.Close()
-		data, err := ioutil.ReadAll(res.Body)
+		data, err := io.ReadAll(res.Body)
 		if err != nil {
 			t.Errorf("expected error to be nil got %v", err)
 		}
@@ -128,7 +80,7 @@ func TestReadDir(t *testing.T) {
 		readDir(w, req)
 		res := w.Result()
 		defer res.Body.Close()
-		data, err := ioutil.ReadAll(res.Body)
+		data, err := io.ReadAll(res.Body)
 		if err != nil {
 			t.Errorf("expected error to be nil got %v", err)
 		}
