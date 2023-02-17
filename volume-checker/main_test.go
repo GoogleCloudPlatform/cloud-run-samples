@@ -20,7 +20,7 @@ func TestHealthCheck(t *testing.T) {
 	}{
 		{
 			endpoint:   "/",
-			message:    "Servers?? Who needs 'em!",
+			message:    "Hello World!",
 			statusCode: 200,
 		},
 	} {

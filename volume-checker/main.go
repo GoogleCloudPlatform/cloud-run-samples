@@ -25,7 +25,7 @@ func main() {
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Servers?? Who needs 'em!")
+	fmt.Fprintf(w, "Hello World!")
 }
 
 func readDir(w http.ResponseWriter, r *http.Request) {
