@@ -1,0 +1,22 @@
+steps:
+- id: 'Build Container Image'
+  name: 'gcr.io/cloud-builders/docker:latest'
+  dir: '${_SAMPLE_DIR}'
+  args: ['build', '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}', '.'] # Tag docker image with git commit sha
+
+- id: 'Push Container Image'
+  name: 'gcr.io/cloud-builders/docker:latest'
+  args: ['push', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}']
+
+options:
+  env:
+    - "CLOUDSDK_RUN_REGION=${_REGION}"
+    - "GOOGLE_CLOUD_PROJECT=${PROJECT_ID}"
+
+# TODO: Update these User-defined substitutions
+substitutions:
+  _SERVICE: volume-checker
+  _SAMPLE_DIR: volume-checker
+  _REPO_NAME: samples  # Artifact Registry repo, "samples", was manually created
+  _REGION: us-central1
+  _CLOUDSDK_VERSION: latest
