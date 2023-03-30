@@ -24,7 +24,7 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 | VPC Testing                | Egress and ingress settings with VPC                    | [Python][vpc_sample]                |
 | Markdown Preview           | 2 tier secure microservices for Markdown rendering      | [Go][markdown_preview_go], [Nodejs][markdown_preview_nodejs], [Python][markdown_preview_python], [Java][markdown_preview_java] |
 
-[kn_hello_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/helloworld
+[kn_hello_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run/helloworld
 [kn_hello_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run/helloworld
 [kn_hello_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/helloworld
 [kn_hello_java_spring]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run/helloworld
@@ -34,7 +34,7 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 [kn_hello_ruby]: https://github.com/GoogleCloudPlatform/ruby-docs-samples/tree/main/run/helloworld
 [kn_hello_kotlin]: https://github.com/knative/docs/tree/main/code-samples/serving/hello-world/helloworld-kotlin
 [kn_hello_scala]: https://github.com/knative/docs/tree/main/code-samples/serving/hello-world/helloworld-scala
-[hello_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/helloworld
+[hello_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run/helloworld
 [hello_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run/helloworld
 [hello_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/helloworld
 [hello_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run/helloworld
@@ -42,19 +42,19 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 [hello_ruby]: https://github.com/GoogleCloudPlatform/ruby-docs-samples/tree/main/run/helloworld
 [hello_cpp]: https://github.com/GoogleCloudPlatform/cpp-samples/tree/master/cloud-run-hello-world
 [hello_shell]: helloworld-shell
-[manual_logging_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/logging-manual
+[manual_logging_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run/logging-manual
 [manual_logging_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run/logging-manual
 [manual_logging_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/logging-manual
 [manual_logging_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run/logging-manual
-[system_package_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/system_package
+[system_package_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run/system_package
 [system_package_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run/system-package
 [system_package_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run/system-package
 [system_package_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/system-package
-[pubsub_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/pubsub
+[pubsub_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run/pubsub
 [pubsub_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run/pubsub
 [pubsub_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/pubsub
 [pubsub_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run/pubsub
-[imageproc_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/image-processing
+[imageproc_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run/image-processing
 [imageproc_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run/image-processing
 [imageproc_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/image-processing
 [imageproc_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run/image-processing
@@ -64,7 +64,7 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 [postgres_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/cloud-sql/postgres/knex
 [postgres_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/cloud-sql/postgres/sqlalchemy
 [postgres_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/cloud-sql/postgres/servlet
-[authentication_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/authentication
+[authentication_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run/authentication
 [authentication_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run/authentication
 [global_state_go]: https://github.com/GoogleCloudPlatform/golang-samples/blob/master/functions/tips/scope.go
 [global_state_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/functions/tips-scopes/main.py#L70
@@ -74,15 +74,15 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 [global_lazy_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/blob/main/functions/tips/scopeDemo/index.js#L55
 [global_lazy_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/functions/tips-lazy-globals/main.py#L95
 [global_lazy_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/functions/concepts/lazy-fields
-[broken_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/hello-broken
+[broken_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run/hello-broken
 [broken_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run/hello-broken
 [broken_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run/hello-broken
 [broken_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/hello-broken
 [idp_sql_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run/idp-sql
 [idp_sql_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/idp-sql
 [idp_sql_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run/idp-sql
-[grpc_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/grpc-ping
-[markdown_preview_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run/markdown-preview
+[grpc_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run/grpc-ping
+[markdown_preview_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run/markdown-preview
 [markdown_preview_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/markdown-preview
 [markdown_preview_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run/markdown-preview
 [markdown_preview_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run/markdown-preview
@@ -98,7 +98,7 @@ Or view a list of [all Cloud Run samples](https://cloud.google.com/run/docs/samp
 **Samples by Language**: [nodejs][nodejs], [golang][golang], [python][python], [java][java], [php][php], [ruby][ruby]
 
 [nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run#readme
-[golang]: https://github.com/GoogleCloudPlatform/golang-samples/tree/master/run#readme
+[golang]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run#readme
 [python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run#readme
 [java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run#readme
 [php]: https://github.com/GoogleCloudPlatform/php-docs-samples/tree/main/run#readme
