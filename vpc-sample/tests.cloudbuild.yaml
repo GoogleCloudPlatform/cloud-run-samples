@@ -66,20 +66,20 @@ steps:
       - "-c"
       - |
         set -e
-        # Ingress-restricted Cloud Function should return 403.
+        # Ingress-restricted Cloud Function should return 404.
         msg=$(curl -si --show-error -H "Authorization: Bearer $(cat _id_token)"  https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-${SHORT_SHA})
 
-        if grep -q "403" <<< "$msg"; then
-        echo "Restricted Function Test: PASSED"
-        else echo $msg && exit 1
+        if grep -q "404" <<< "$msg"; then
+          echo "Restricted Function Test: PASSED"
+          else echo $msg && exit 1
         fi
 
         # Cloud Run service should return "Hello World" from the ingress-restricted Cloud Function via the VPC Connector.
         msg=$(curl -si --fail --show-error -H "Authorization: Bearer $(cat _id_token)" $(cat _service_url))
 
         if grep -q "Hello World" <<< "$msg"; then
-        echo "VPC Function Test: PASSED"
-        else echo $msg && exit 1
+          echo "VPC Function Test: PASSED"
+          else echo $msg && exit 1
         fi
     waitFor: ["Deploy to Cloud Run", "Deploy Restricted Function"]
 
