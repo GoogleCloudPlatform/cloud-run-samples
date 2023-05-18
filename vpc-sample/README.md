@@ -12,7 +12,7 @@ From inside the vpc-sample directory:
 
 ```sh
 gcloud functions deploy restricted-function \
---runtime=python38 --trigger-http --no-allow-unauthenticated \
+--runtime=python311 --trigger-http --no-allow-unauthenticated \
 --ingress-settings=internal-only --entry-point=hello_world
 ```
 
