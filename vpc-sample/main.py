@@ -14,6 +14,7 @@
 
 # This file holds functions for testing VPC ingress/egress with Cloud Functions
 
+# [START cloudrun_egress_hello_world]
 # [START run_egress_hello_world]
 import os
 import urllib
@@ -38,6 +39,7 @@ def get_hello_world(request):
         print(e)
         return str(e)
 # [END run_egress_hello_world]
+# [END cloudrun_egress_hello_world]
 
 # [START functions_ingress_hello_world]
 def hello_world(request):
