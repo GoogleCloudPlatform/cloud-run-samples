@@ -45,21 +45,21 @@ From inside the `hello-nginx-sample` directory:
 gcloud run services replace service.yaml
 ```
 
-## Update container policy
-
-To allow un-authenticated access to containers.
-
-```bash
-gcloud run services set-iam-policy nginx policy.yaml
-```
-
 By default, the above command will deploy the following containers into a single service:
 
 * `nginx`: `serving` ingress container (entrypoint)
 * `hello`: `sidecar` container
 
+### Update container policy
+
+To allow un-authenticated access to containers.
+
+```bash
+gcloud run services set-iam-policy nginx-example policy.yaml
+```
+
 The Cloud Run Multi-container service will default access to port `8080`,
-where `nginx` container will be listenting, to only proxy over to `hello` container at port `8888`.
+where `nginx` container will be listening and proxy request over to `hello` container at port `8888`.
 
 ## Find out more:
 
