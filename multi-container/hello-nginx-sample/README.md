@@ -32,25 +32,9 @@ gcloud secrets create nginx_conf --replication-policy="automatic" --data-file=".
 **OR** 
 
 ### Console UI
+
 * Go to the [Secret Manager UI](https://console.cloud.google.com/security/secret-manager)
-* Select `+ Create Secret` and name it `nginx_config` with the following secret value:
-
-```conf
-server {
-    # Listen at port 8080
-    listen 8080; 
-    # Server at localhost
-    server_name _;
-    # Enables gzip compression to make our app faster
-    gzip on;
-
-    location / {
-        # Passes initial requests to port 8080 to `hello` container at port 8888
-        proxy_pass   http://127.0.0.1:8888;
-    }
-}
-```
-
+* Select `+ Create Secret` and name it `nginx_config` with the contents of `nginx.conf`
 * Click `Create Secret`
 
 ## Deploy the multi-container service
