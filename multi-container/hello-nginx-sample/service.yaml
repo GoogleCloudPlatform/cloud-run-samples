@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[START cloudrun_mc_hello_nginx]
+# [START cloudrun_mc_hello_sidecar]
 
 apiVersion: serving.knative.dev/v1
 kind: Service
@@ -27,7 +27,7 @@ spec:
         # Defines container startup order within multi-container service.
         # Below requires nginx container to spin up before hello container,
         # which depends on nginx.
-        # https://cloud.google.com/run/docs/configuring/containers#yaml_3
+        # https://cloud.google.com/run/docs/configuring/containers#container-ordering
         run.googleapis.com/container-dependencies: "{hello: [nginx]}"
     spec:
       containers:
@@ -75,4 +75,4 @@ spec:
           - key: latest
             path: default.conf
 
-[END cloudrun_mc_hello_nginx]
+# [END cloudrun_mc_hello_sidecar]
