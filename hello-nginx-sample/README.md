@@ -13,7 +13,7 @@ gcloud services enable secretmanager.googleapis.com run.googleapis.com
 
 ## Create new secret in Secret Manager
 
-* Going to the console https://console.cloud.google.com/security/secret-manager
+* Go to the [Secret Manager UI](https://console.cloud.google.com/security/secret-manager)
 * Select `+ Create Secret` and name it `nginx_config` with the following secret value:
 
 ```conf
