@@ -1,28 +1,25 @@
 steps:
 - id: 'e2e-test'
   waitFor: ['-']
-  name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
+  name: "gcr.io/cloud-builders/gcloud"
   dir: '${_SAMPLE_DIR}'
   script: |
     #!/bin/bash
     ./tests/e2e-test.sh || touch /workspace/e2e-failed
   env:
-    - 'PROJECT_ID=$PROJECT_ID'
     - '_REGION=$_REGION'    
-    - '_SECRET_NAME=$_SECRET_NAME'
     - '_SERVICE_NAME=$_SERVICE_NAME'
 - id: 'e2e-cleanup'
   waitFor: ['e2e-test']
-  name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
+  name: "gcr.io/cloud-builders/gcloud"
   dir: '${_SAMPLE_DIR}'
   entrypoint: './tests/e2e-cleanup.sh'
   env:
     - '_REGION=$_REGION'    
-    - '_SECRET_NAME=$_SECRET_NAME'
     - '_SERVICE_NAME=$_SERVICE_NAME'
 - id: 'report-status'
   waitFor: ['e2e-cleanup']
-  name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
+  name: "gcr.io/cloud-builders/gcloud"
   dir: '${_SAMPLE_DIR}'
   script: |
     #!/bin/bash
@@ -32,8 +29,6 @@ steps:
       exit 1
     fi 
 substitutions:  
-  _SECRET_NAME: 'nginx_conf'
   _SERVICE_NAME: 'nginx-example'
   _REGION: 'us-central1'
-  _SAMPLE_DIR: 'hello-nginx-sample'
-  _CLOUDSDK_VERSION: 'latest'
+  _SAMPLE_DIR: 'multi-container/hello-nginx-sample'

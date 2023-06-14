@@ -17,6 +17,17 @@ set -eux pipefail
 
 gcloud config set run/region "${_REGION}"
 
-gcloud secrets create "${_SECRET_NAME}" --replication-policy="automatic" --data-file="./nginx.conf"
+# Note that nginx_config secret has already been created within project
 
-gcloud run services replace service.yaml
+# Deploy multi-container service "nginx-example" that includes nginx proxy
+gcloud run services replace service.yaml --quiet
+
+sleep 10
+
+MC_URL="$(gcloud run services describe ${_SERVICE_NAME} --region ${_REGION} --format 'value(status.url)')"
+
+if [[ -z "${MC_URL}" ]]
+then
+  echo "No Cloud Run MC url found. Step e2e-test failed."
+  exit 1
+fi

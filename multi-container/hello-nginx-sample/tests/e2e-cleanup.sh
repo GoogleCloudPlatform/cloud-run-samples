@@ -12,10 +12,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 set -x
 
 gcloud config set run/region "${_REGION}"
 
-gcloud secrets delete "${_SECRET_NAME}"
-
-gcloud run services delete "${_SERVICE_NAME}"
+# Remove multi-container nginx-example service
+gcloud run services delete "${_SERVICE_NAME}" --quiet
