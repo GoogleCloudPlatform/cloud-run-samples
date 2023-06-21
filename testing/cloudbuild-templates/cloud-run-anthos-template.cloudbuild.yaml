@@ -3,7 +3,7 @@ steps:
 - id: 'Build Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
   dir: '${_SAMPLE_DIR}'
-  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}', '.'] # Tag docker image with git commit sha
+  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}', '.']  # Tag docker image with git commit sha
 
 - id: 'Push Container Image'
   name: 'gcr.io/cloud-builders/docker:latest'
