@@ -1,64 +1,63 @@
 steps:
+  - id: "Build Container Image"
+    name: "gcr.io/cloud-builders/docker:latest"
+    dir: "${_SAMPLE_DIR}"
+    args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}", "."]  # Tag docker image with git commit sha
 
-- id: 'Build Container Image'
-  name: 'gcr.io/cloud-builders/docker:latest'
-  dir: '${_SAMPLE_DIR}'
-  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}', '.'] # Tag docker image with git commit sha
+  - id: "Push Container Image"
+    name: "gcr.io/cloud-builders/docker:latest"
+    args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}"]
 
-- id: 'Push Container Image'
-  name: 'gcr.io/cloud-builders/docker:latest'
-  args: ['push', 'gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}']
+  - id: "Deploy to Cloud Run"
+    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    entrypoint: /bin/bash
+    args:
+      - "-c"
+      - |
+        gcloud run deploy ${_SERVICE}-$BUILD_ID \
+          --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
+          --no-allow-unauthenticated
 
-- id: 'Deploy to Cloud Run'
-  name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
-  entrypoint: /bin/bash
-  args:
-  - '-c'
-  - |
-    gcloud run deploy ${_SERVICE}-$BUILD_ID \
-      --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
-      --no-allow-unauthenticated
+  - id: "Get Cloud Run URL"
+    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    entrypoint: "/bin/bash"
+    args:
+      - "-c"
+      - |
+        set -e
+        . /workspace/testing/cloudbuild-templates/common.sh
+        echo $(get_url ${BUILD_ID}) > _service_url
+        echo "Cloud Run URL for ${_SERVICE}-$BUILD_ID is $(cat _service_url)"
+        echo $(get_idtoken) > _id_token
+    env:
+      # Make substitutions available in shell script.
+      - "_SECRET_NAME=${_SECRET_NAME}"
+      - "_RUNNER_IDENTITY=${_RUNNER_IDENTITY}"
+      - "_SERVICE=${_SERVICE}"
 
-- id: 'Get Cloud Run URL'
-  name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
-  entrypoint: '/bin/bash'
-  args:
-  - '-c'
-  - |
-    set -e
-    . /workspace/testing/cloudbuild-templates/common.sh
-    echo $(get_url ${BUILD_ID}) > _service_url
-    echo "Cloud Run URL for ${_SERVICE}-$BUILD_ID is $(cat _service_url)"
-    echo $(get_idtoken) > _id_token
-  env:
-    # Make substitutions available in shell script.
-    - "_SECRET_NAME=${_SECRET_NAME}"
-    - "_RUNNER_IDENTITY=${_RUNNER_IDENTITY}"
-    - "_SERVICE=${_SERVICE}"
+  # This does not seem like expected behavior. For example:
 
-# This does not seem like expected behavior. For example:
+  - id: "Integration Tests"
+    # TODO: Update the following image name, entrypoint, and args to fit your testing needs
+    name: "gcr.io/cloud-builders/curl"
+    entrypoint: "/bin/sh"
+    args:
+      - "-c"
+      - |
+        set -e
+        curl -si --fail --show-error -H "Authorization: Bearer $(cat _id_token)" "$(cat _service_url)"
 
-- id: 'Integration Tests'
-  # TODO: Update the following image name, entrypoint, and args to fit your testing needs
-  name: 'gcr.io/cloud-builders/curl'
-  entrypoint: '/bin/sh'
-  args:
-  - '-c'
-  - |
-    set -e
-    curl -si --fail --show-error -H "Authorization: Bearer $(cat _id_token)" "$(cat _service_url)"
-
-- id: 'Teardown'
-  name: 'gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION'
-  entrypoint: '/bin/bash'
-  args:
-  - '-c'
-  - |
-    set -x
-    gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
-    gcloud --quiet run services delete ${_SERVICE}-$BUILD_ID --region ${_SERVICE_REGION}
-    set +x
-    echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
+  - id: "Teardown"
+    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    entrypoint: "/bin/bash"
+    args:
+      - "-c"
+      - |
+        set -x
+        gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
+        gcloud --quiet run services delete ${_SERVICE}-$BUILD_ID --region ${_SERVICE_REGION}
+        set +x
+        echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
 
 # Uncomment if skipping teardown to associate build with container image.
 # images:

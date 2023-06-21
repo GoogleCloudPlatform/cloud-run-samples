@@ -1,12 +1,12 @@
 steps:
-- id: 'Lint Shell'
-  name: 'koalaman/shellcheck-alpine' # https://hub.docker.com/r/koalaman/shellcheck-alpine/
-  entrypoint: '/bin/sh'
-  args:
-  - -c
-  - | # Recursively find shell scripts (not in testing dir)
-    find . -name "*.sh" -not -path "./testing/*" \
-      -exec shellcheck -f gcc {} \; \
-      | tee /proc/1/fd/1 \
-      | grep -q "error"
-    if [[ $? -eq 0 ]] ; then exit 1 ; fi
+  - id: "Lint Shell"
+    name: "koalaman/shellcheck-alpine"  # https://hub.docker.com/r/koalaman/shellcheck-alpine/
+    entrypoint: "/bin/sh"
+    args:
+      - -c
+      - | # Recursively find shell scripts (not in testing dir)
+        find . -name "*.sh" -not -path "./testing/*" \
+          -exec shellcheck -f gcc {} \; \
+          | tee /proc/1/fd/1 \
+          | grep -q "error"
+        if [[ $? -eq 0 ]] ; then exit 1 ; fi
