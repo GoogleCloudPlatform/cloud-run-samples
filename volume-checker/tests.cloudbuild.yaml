@@ -1,12 +1,20 @@
 steps:
-- id: 'Build Container Image'
-  name: 'gcr.io/cloud-builders/docker:latest'
-  dir: '${_SAMPLE_DIR}'
-  args: ['build', '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}', '.'] # Tag docker image with git commit sha
+  - id: "Build Container Image"
+    name: "gcr.io/cloud-builders/docker:latest"
+    dir: "${_SAMPLE_DIR}"
+    args: [
+      "build",
+      "-t",
+      "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}",
+      ".",
+    ]  # Tag docker image with git commit sha
 
-- id: 'Push Container Image'
-  name: 'gcr.io/cloud-builders/docker:latest'
-  args: ['push', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}']
+  - id: "Push Container Image"
+    name: "gcr.io/cloud-builders/docker:latest"
+    args: [
+      "push",
+      "${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}",
+    ]
 
 options:
   env:

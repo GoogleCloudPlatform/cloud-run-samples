@@ -17,8 +17,8 @@ steps:
   - id: "Build Allow Container Image"
     name: "gcr.io/cloud-builders/docker:latest"
     dir: "${_SAMPLE_DIR}"
-    args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}", "."] # Tag docker image with git commit sha
-    waitFor: ["-"] # Run this step in parallel with Deploy Restricted Function
+    args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}", "."]  # Tag docker image with git commit sha
+    waitFor: ["-"]  # Run this step in parallel with Deploy Restricted Function
 
   - id: "Push Container Image"
     name: "gcr.io/cloud-builders/docker:latest"
