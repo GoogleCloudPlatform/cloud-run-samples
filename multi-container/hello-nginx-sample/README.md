@@ -1,15 +1,16 @@
 # Deploy simple nginx multi-container service
 
-A Google Cloud Project is required in order to run the sample. The project should have the following API's enabled:
+A Google Cloud Project is required in order to run the sample. 
+
+## Enable required APIs
+
+The project should have the following API's enabled:
 
 * Cloud Run
 * Secret Manager
 
-## Enable required APIs
-
 ```bash
 gcloud services enable secretmanager.googleapis.com run.googleapis.com
-```
 
 ## Add nginx server code in a secret with Secret Manager
 
