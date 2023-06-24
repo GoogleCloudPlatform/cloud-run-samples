@@ -12,7 +12,7 @@ The project should have the following API's enabled:
 ```bash
 gcloud services enable secretmanager.googleapis.com run.googleapis.com
 
-## Add nginx server code in a secret with Secret Manager
+## Add nginx server configuration to Secret Manager
 
 Utilizing [Secret Manager](https://cloud.google.com/secret-manager) to store and mount our [nginx](https://www.nginx.com/) server code.
 
