@@ -16,8 +16,8 @@ gcloud services enable secretmanager.googleapis.com run.googleapis.com
 Utilizing [Secret Manager](https://cloud.google.com/secret-manager) to store and mount our [nginx](https://www.nginx.com/) server code.
 
 In Kubernetes, while you are able to [mount different volume types](https://kubernetes.io/docs/concepts/storage/volumes/), 
-[Cloud Run](https://cloud.google.com/run/docs/reference/yaml/v1) currently provides just `secret` volume.
-Look for `nginx-conf-secret ` and `nginx_config` reference in `service.yaml`.
+[Cloud Run](https://cloud.google.com/run/docs/reference/yaml/v1) currently provides `secret` volume as a lightweight volume mount. If you need a full filesystem, see [Using network file systems](https://cloud.google.com/run/docs/using-network-file-systems).
+In [`service.yaml`](./service.yaml), look for `nginx-conf-secret` volume mount and `nginx_config` secret name references.
 
 Follow along either using the `gcloud` commands in your terminal or the Google Cloud Console site to add the `nginx_config` secret.
 
