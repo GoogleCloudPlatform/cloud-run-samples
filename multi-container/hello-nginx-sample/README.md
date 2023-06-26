@@ -14,7 +14,8 @@ gcloud services enable secretmanager.googleapis.com run.googleapis.com
 
 ## Add nginx server configuration to Secret Manager
 
-Utilize [Secret Manager](https://cloud.google.com/secret-manager) to store and mount the [nginx](https://www.nginx.com/) server configuration.
+Instead of packaging the [nginx](https://www.nginx.com/) config into the container image, the config will be mounted as a volume at runtime
+using [Secret Manager](https://cloud.google.com/secret-manager). This allows for separation of config from code.
 
 In Kubernetes, while you are able to [mount different volume types](https://kubernetes.io/docs/concepts/storage/volumes/), 
 [Cloud Run](https://cloud.google.com/run/docs/reference/yaml/v1) currently provides `secret` volume as a lightweight volume mount. If you need a full filesystem, see [Using network file systems](https://cloud.google.com/run/docs/using-network-file-systems).
@@ -40,9 +41,18 @@ gcloud secrets create nginx_conf --replication-policy="automatic" --data-file=".
 
 ## Deploy the multi-container service
 
-From inside the `hello-nginx-sample` directory:
+From inside the `hello-nginx-sample` directory, declare an environment variable `UNIQ_SERVICE_NAME` to 
+store your custom service name string. 
+
+Locally install `gettest-base` module to use `envsubstr`, which we are using for environment variable substitution.
 
 ```sh
+export UNIQ_SERVICE_NAME=<service-name>
+
+# Substituting UNIQ_SERVICE_NAME and storing into new file
+envsubstr < mc-service-template.yaml > service.yaml
+
+# Deploy your service
 gcloud run services replace service.yaml
 ```
 
@@ -51,16 +61,22 @@ By default, the above command will deploy the following containers into a single
 * `nginx`: `serving` ingress container (entrypoint)
 * `hello`: `sidecar` container
 
+The Cloud Run Multi-container service will default access to port `8080`,
+where `nginx` container will be listening and proxy request over to `hello` container at port `8888`.
+
 ### Update container policy
 
-To allow un-authenticated access to containers.
+To allow un-authenticated access to containers:
 
 ```bash
 gcloud run services set-iam-policy nginx-example policy.yaml
 ```
 
-The Cloud Run Multi-container service will default access to port `8080`,
-where `nginx` container will be listening and proxy request over to `hello` container at port `8888`.
+To have authorized access:
+
+```bash
+curl --header "Authorization: Bearer $(gcloud auth print-identity-token)" <cloud-run-mc-service-url>
+```
 
 ## Find out more:
 

@@ -1,0 +1,78 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# [START cloudrun_mc_hello_sidecar]
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: "${UNIQ_SERVICE_NAME}"
+  annotations:
+    # At this time, required to use Cloud Run multi-containers
+    run.googleapis.com/launch-stage: BETA
+spec:
+  template:
+    metadata:
+      annotations:
+        # Defines container startup order within multi-container service.
+        # Below requires nginx container to spin up before hello container,
+        # which depends on nginx.
+        # https://cloud.google.com/run/docs/configuring/containers#container-ordering
+        run.googleapis.com/container-dependencies: "{hello: [nginx]}"
+    spec:
+      containers:
+        # A) Serving ingress container "nginx" listening at PORT 8080
+        # Main entrypoint of multi-container service.
+        # Source is stored in nginx_config secret in Secret Manager.
+        # Any pings to this container will proxy over to hello container at PORT 8888.
+        # https://cloud.google.com/run/docs/container-contract#port
+        - image: nginx
+          name: nginx
+          ports:
+            - name: http1
+              containerPort: 8080
+          resources:
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          # Referencing declared volume below,
+          # Declaring volume to mount in current ingress container's filesystem
+          # https://cloud.google.com/run/docs/reference/rest/v2/Container#volumemount
+          volumeMounts:
+            - name: nginx-conf-secret
+              readOnly: true
+              mountPath: /etc/nginx/conf.d/
+
+        # B) Sidecar container "hello" listening at PORT 8888,
+        # which can only be accessed by serving ingress container
+        - image: us-docker.pkg.dev/cloudrun/container/hello
+          name: hello
+          env:
+            - name: PORT
+              value: "8888"
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+
+      # Named volume pointing to
+      # nginx_config secret in secret manager
+      volumes:
+        - name: nginx-conf-secret
+          secret:
+            secretName: nginx_config
+            items:
+              - key: latest
+                path: default.conf
+# [END cloudrun_mc_hello_sidecar]
