@@ -33,5 +33,4 @@ gcloud alpha run jobs create "${JOB_NAME}" \
 # execution fails, causing the entire script to fail
 gcloud alpha run jobs execute "${JOB_NAME}" \
   --format=json \
-  --wait
-
+  --wait 
