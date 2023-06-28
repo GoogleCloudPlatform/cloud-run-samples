@@ -19,8 +19,8 @@ steps:
     dir: "${_SAMPLE_DIR}"
     script: |
       #!/bin/bash
-      export UNIQ_SERVICE_NAME="${_SERVICE_NAME}-$BUILD_ID"
-      gcloud run services delete "${UNIQ_SERVICE_NAME}" --quiet --region "${_REGION}"
+      export MC_SERVICE_NAME="${_SERVICE_NAME}-$BUILD_ID"
+      gcloud run services delete "${MC_SERVICE_NAME}" --quiet --region "${_REGION}"
     env:
       - "BUILD_ID=$BUILD_ID"
       - "_REGION=$_REGION"

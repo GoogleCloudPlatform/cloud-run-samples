@@ -13,14 +13,19 @@
 # limitations under the License.
 
 # [START cloudrun_mc_hello_sidecar]
-
 apiVersion: serving.knative.dev/v1
 kind: Service
+# [START cloudrun_mc_hello_sidecar_step_metadata]
 metadata:
-  name: "${UNIQ_SERVICE_NAME}"
+  name: "${MC_SERVICE_NAME}"
+  labels:
+    cloud.googleapis.com/location: "${REGION}"
   annotations:
-    # At this time, required to use Cloud Run multi-containers
+    # Required to use Cloud Run multi-containers (preview feature)
     run.googleapis.com/launch-stage: BETA
+    run.googleapis.com/description: sample tutorial service
+    run.googleapis.com/ingress: all # will be externally available
+# [END cloudrun_mc_hello_sidecar_step_metadata]
 spec:
   template:
     metadata:
@@ -37,6 +42,7 @@ spec:
         # Source is stored in nginx_config secret in Secret Manager.
         # Any pings to this container will proxy over to hello container at PORT 8888.
         # https://cloud.google.com/run/docs/container-contract#port
+        # [START cloudrun_mc_hello_sidecar_step_serving]
         - image: nginx
           name: nginx
           ports:
@@ -53,9 +59,10 @@ spec:
             - name: nginx-conf-secret
               readOnly: true
               mountPath: /etc/nginx/conf.d/
-
+        # [END cloudrun_mc_hello_sidecar_step_serving]
         # B) Sidecar container "hello" listening at PORT 8888,
         # which can only be accessed by serving ingress container
+        # [START cloudrun_mc_hello_sidecar_step_sidecar]
         - image: us-docker.pkg.dev/cloudrun/container/hello
           name: hello
           env:
@@ -65,9 +72,10 @@ spec:
             limits:
               cpu: 1000m
               memory: 512Mi
-
+        # [END cloudrun_mc_hello_sidecar_step_sidecar]
       # Named volume pointing to
       # nginx_config secret in secret manager
+      # [START cloudrun_mc_hello_sidecar_step_secret]
       volumes:
         - name: nginx-conf-secret
           secret:
@@ -75,4 +83,5 @@ spec:
             items:
               - key: latest
                 path: default.conf
+      # [END cloudrun_mc_hello_sidecar_step_secret]
 # [END cloudrun_mc_hello_sidecar]

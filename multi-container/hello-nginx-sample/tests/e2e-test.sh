@@ -15,7 +15,10 @@
 
 set -eux pipefail
 
-export UNIQ_SERVICE_NAME="${_SERVICE_NAME}-$BUILD_ID"
+export MC_SERVICE_NAME="${_SERVICE_NAME}-$BUILD_ID"
+export REGION="${_REGION}"
+
+# Substituting the env vars declared above to template
 envsubst < ./mc-service-template.yaml > ./service.yaml
 
 gcloud config set run/region "${_REGION}"
@@ -24,14 +27,14 @@ gcloud config set run/region "${_REGION}"
 # Deploy multi-container service "nginx-example" that includes nginx proxy.
 gcloud run services replace service.yaml --quiet
 
-# Wait for service to deploy.
+# Wait till deployment completes
 sleep 10
 
 # Retrieve multi-containter service url.
-MC_URL=$(gcloud run services describe ${UNIQ_SERVICE_NAME} --region ${_REGION} --format 'value(status.url)')
+MC_URL=$(gcloud run services describe ${MC_SERVICE_NAME} --region ${_REGION} --format 'value(status.url)')
 
 # Retrieve service deployment status.
-MC_STATUS=$(gcloud run services describe ${UNIQ_SERVICE_NAME} --region ${_REGION} --format 'value(status.conditions[0].type)')
+MC_STATUS=$(gcloud run services describe ${MC_SERVICE_NAME} --region ${_REGION} --format 'value(status.conditions[0].type)')
 
 if [[ -z "${MC_URL}"  && "${MC_STATUS}" != "Ready" ]]
 then
@@ -40,7 +43,7 @@ then
 fi
 
 # Check Cloud Run MC logs for signs of successful request to hello container.
-MC_HELLO_LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${UNIQ_SERVICE_NAME} AND labels.container_name=hello" --limit 1 | grep -e 'Hello from Cloud Run')
+MC_HELLO_LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=hello" --limit 1 | grep -e 'Hello from Cloud Run')
 
 if [[ -z "${MC_HELLO_LOG}" ]]
 then

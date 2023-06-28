@@ -28,7 +28,13 @@ Follow along either using the `gcloud` commands in your terminal or the Google C
 The following creates a new secret in Secret Manager and adds value (new version) from local file `nginx.conf`.
 
 ```bash
-gcloud secrets create nginx_conf --replication-policy="automatic" --data-file="./nginx.conf"
+gcloud secrets create nginx_config --replication-policy="automatic" --data-file="./nginx.conf"
+```
+
+Grant your compute service account to have access to your newly created secret.
+
+```bash
+gcloud secrets add-iam-policy-binding nginx_conf --member='serviceAccount:<gcp-project-num>-compute@developer.gserviceaccount.com' --role='roles/secretmanager.secretAccessor'
 ```
 
 **OR** 
@@ -41,15 +47,17 @@ gcloud secrets create nginx_conf --replication-policy="automatic" --data-file=".
 
 ## Deploy the multi-container service
 
-From inside the `hello-nginx-sample` directory, declare an environment variable `UNIQ_SERVICE_NAME` to 
+From inside the `hello-nginx-sample` directory, declare an environment variable `MC_SERVICE_NAME` to 
 store your custom service name string. 
 
-Locally install `gettest-base` module to use `envsubstr`, which we are using for environment variable substitution.
+On your local machine, install `gettest-base` module to use `envsubstr`, 
+which will be used form  environment variable substitution in `mc-service-template.yaml`. 
 
 ```sh
-export UNIQ_SERVICE_NAME=<service-name>
+export MC_SERVICE_NAME=<service-name>
+export REGION = us-central-11
 
-# Substituting UNIQ_SERVICE_NAME and storing into new file
+# Substituting above env vars and storing into new file
 envsubstr < mc-service-template.yaml > service.yaml
 
 # Deploy your service
@@ -69,7 +77,9 @@ where `nginx` container will be listening and proxy request over to `hello` cont
 To allow un-authenticated access to containers:
 
 ```bash
-gcloud run services set-iam-policy nginx-example policy.yaml
+gcloud run services add-iam-policy-binding $MC_SERVICE_NAME \
+    --member="allUsers" \
+    --role="roles/run.invoker"
 ```
 
 To have authorized access:
