@@ -11,6 +11,7 @@ The project should have the following API's enabled:
 
 ```bash
 gcloud services enable secretmanager.googleapis.com run.googleapis.com
+```
 
 ## Add nginx server configuration to Secret Manager
 
