@@ -92,7 +92,7 @@ gcloud run services add-iam-policy-binding $MC_SERVICE_NAME \
     --role="roles/run.invoker"
 ```
 
-Visit the Cloud Run url or user curl to send a request:
+Visit the Cloud Run url or use curl to send a request:
 
 ```bash
 curl <cloud-run-mc-service-url>
