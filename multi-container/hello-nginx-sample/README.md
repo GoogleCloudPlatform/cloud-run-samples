@@ -36,7 +36,7 @@ Grant your compute service account to have access to your newly created secret.
 
 ```bash
 export PROJECT_NUMBER=$(gcloud projects describe $(gcloud config get-value project) --format='value(projectNumber)')
-gcloud secrets add-iam-policy-binding nginx_conf --member='serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com' --role='roles/secretmanager.secretAccessor'
+gcloud secrets add-iam-policy-binding nginx_config --member='serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com' --role='roles/secretmanager.secretAccessor'
 ```
 
 **OR** 
