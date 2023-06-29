@@ -74,7 +74,15 @@ By default, the above command will deploy the following containers into a single
 The Cloud Run Multi-container service will default access to port `8080`,
 where `nginx` container will be listening and proxy request over to `hello` container at port `8888`.
 
-### Update container policy
+## Try it out
+
+Use curl to send an authenticated request:
+
+```bash
+curl --header "Authorization: Bearer $(gcloud auth print-identity-token)" <cloud-run-mc-service-url>
+```
+
+### Allow unauthenticated requests
 
 To allow un-authenticated access to containers:
 
@@ -84,10 +92,10 @@ gcloud run services add-iam-policy-binding $MC_SERVICE_NAME \
     --role="roles/run.invoker"
 ```
 
-To have authorized access:
+Visit the Cloud Run url or user curl to send a request:
 
 ```bash
-curl --header "Authorization: Bearer $(gcloud auth print-identity-token)" <cloud-run-mc-service-url>
+curl <cloud-run-mc-service-url>
 ```
 
 ## Find out more:
