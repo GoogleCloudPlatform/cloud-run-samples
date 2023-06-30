@@ -52,15 +52,12 @@ gcloud secrets add-iam-policy-binding nginx_config --member=serviceAccount:$PROJ
 From inside the `hello-nginx-sample` directory, declare an environment variable `MC_SERVICE_NAME` to 
 store your custom service name string. 
 
-On your local machine, install `gettest-base` module to use `envsubstr`, 
-which will be used form  environment variable substitution in `mc-service-template.yaml`. 
-
 ```sh
 export MC_SERVICE_NAME=<service-name>
-export REGION = us-central-11
+export REGION = us-central1
 
-# Substituting above env vars and storing into new file
-envsubstr < mc-service-template.yaml > service.yaml
+# Substituting above env vars
+sed -i -e 's/MC_SERVICE_NAME/${MC_SERVICE_NAME}/g' -e 's/REGION/${REGION}/g' service.yaml
 
 # Deploy your service
 gcloud run services replace service.yaml

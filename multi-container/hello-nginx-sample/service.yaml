@@ -17,14 +17,15 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 # [START cloudrun_mc_hello_sidecar_step_metadata]
 metadata:
-  name: "${MC_SERVICE_NAME}"
+  name: "MC_SERVICE_NAME"
   labels:
-    cloud.googleapis.com/location: "${REGION}"
+    cloud.googleapis.com/location: "REGION"
   annotations:
     # Required to use Cloud Run multi-containers (preview feature)
     run.googleapis.com/launch-stage: BETA
     run.googleapis.com/description: sample tutorial service
-    run.googleapis.com/ingress: all # will be externally available
+    # Externally available
+    run.googleapis.com/ingress: all
 # [END cloudrun_mc_hello_sidecar_step_metadata]
 spec:
   template:

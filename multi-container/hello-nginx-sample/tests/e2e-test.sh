@@ -16,16 +16,13 @@
 set -eux pipefail
 
 export MC_SERVICE_NAME="${_SERVICE_NAME}-$BUILD_ID"
-export REGION="${_REGION}"
 
-# Substituting the env vars declared above to template
-envsubst < ./mc-service-template.yaml > ./service.yaml
-
-gcloud config set run/region "${_REGION}"
+# Substituting the env vars in cloud run yaml file
+sed -i -e 's/MC_SERVICE_NAME/${MC_SERVICE_NAME}/g' -e 's/REGION/${_REGION}/g' service.yaml
 
 # Note that nginx_config secret has already been created within project.
 # Deploy multi-container service "nginx-example" that includes nginx proxy.
-gcloud run services replace service.yaml --quiet
+gcloud run services replace service.yaml --region ${_REGION} --quiet
 
 # Wait till deployment completes
 sleep 10
