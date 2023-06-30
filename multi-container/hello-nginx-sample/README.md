@@ -57,7 +57,7 @@ export MC_SERVICE_NAME=<service-name>
 export REGION = us-central1
 
 # Substituting above env vars
-sed -i -e s/MC_SERVICE_NAME/${MC_SERVICE_NAME}/g -e s/REGION/${_REGION}/g service.yaml
+sed -i -e s/MC_SERVICE_NAME/${MC_SERVICE_NAME}/g -e s/REGION/${REGION}/g service.yaml
 
 # Deploy your service
 gcloud run services replace service.yaml
