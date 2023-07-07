@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_mc_hello_sidecar]
 apiVersion: serving.knative.dev/v1
 kind: Service
 # [START cloudrun_mc_hello_sidecar_step_metadata]
@@ -27,6 +26,7 @@ metadata:
     # Externally available
     run.googleapis.com/ingress: all
 # [END cloudrun_mc_hello_sidecar_step_metadata]
+# [START cloudrun_mc_hello_sidecar_step_deps]
 spec:
   template:
     metadata:
@@ -36,6 +36,7 @@ spec:
         # which depends on nginx.
         # https://cloud.google.com/run/docs/configuring/containers#container-ordering
         run.googleapis.com/container-dependencies: "{hello: [nginx]}"
+# [END cloudrun_mc_hello_sidecar_step_deps]
     spec:
       containers:
         # A) Serving ingress container "nginx" listening at PORT 8080
@@ -85,4 +86,3 @@ spec:
               - key: latest
                 path: default.conf
       # [END cloudrun_mc_hello_sidecar_step_secret]
-# [END cloudrun_mc_hello_sidecar]
