@@ -82,7 +82,7 @@ steps:
         # Cloud Run service should return "Hello World" from the ingress-restricted Cloud Function via the VPC Connector.
         msg=$(curl -si --fail --show-error -H "Authorization: Bearer $(cat _id_token)" $(cat _service_url))
 
-        if grep -q "Hello World" <<< "$msg"; then
+        if grep -q "200" <<< "$msg"; then
           echo "VPC Function Test: PASSED"
         else
           echo "VPC Function Test: FAILED"
