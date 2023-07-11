@@ -37,6 +37,7 @@ spec:
         # https://cloud.google.com/run/docs/configuring/containers#container-ordering
         run.googleapis.com/container-dependencies: "{hello: [nginx]}"
 # [END cloudrun_mc_hello_sidecar_step_deps]
+# [START cloudrun_mc_hello_sidecar_step_serving]
     spec:
       containers:
         # A) Serving ingress container "nginx" listening at PORT 8080
@@ -44,7 +45,6 @@ spec:
         # Source is stored in nginx_config secret in Secret Manager.
         # Any pings to this container will proxy over to hello container at PORT 8888.
         # https://cloud.google.com/run/docs/container-contract#port
-        # [START cloudrun_mc_hello_sidecar_step_serving]
         - image: nginx
           name: nginx
           ports:
