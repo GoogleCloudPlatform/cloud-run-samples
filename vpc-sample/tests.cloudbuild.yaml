@@ -1,44 +1,31 @@
 steps:
-  - id: Deploy Restricted Function
+  - id: "Deploy Restricted Service"
     name: "gcr.io/cloud-builders/gcloud"
-    dir: "${_SAMPLE_DIR}"
+    dir: "${_SAMPLE_DIR}/run-ingress"
+    entrypoint: /bin/bash
     args:
-      [
-        "functions",
-        "deploy",
-        "restricted-${SHORT_SHA}",
-        "--runtime=python311",
-        "--trigger-http",
-        "--no-allow-unauthenticated",
-        "--ingress-settings=internal-only",
-        "--entry-point=hello_world",
-      ]
+      - "-c"
+      - |
+        gcloud run deploy ${_SERVICE}-restricted-$BUILD_ID \
+          --source=. \ 
+          --ingress=internal
+          --no-allow-unauthenticated
 
-  - id: "Build Allow Container Image"
-    name: "gcr.io/cloud-builders/docker:latest"
-    dir: "${_SAMPLE_DIR}"
-    args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}", "."]  # Tag docker image with git commit sha
-    waitFor: ["-"]  # Run this step in parallel with Deploy Restricted Function
-
-  - id: "Push Container Image"
-    name: "gcr.io/cloud-builders/docker:latest"
-    args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}"]
-    waitFor: ["Build Allow Container Image"]
-
-  - id: "Deploy to Cloud Run"
+  - id: "Deploy Egress Cloud Run Service"
     name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    dir: "${_SAMPLE_DIR}/run-egress"
     entrypoint: /bin/bash
     args:
       - "-c"
       - |
         gcloud run deploy ${_SERVICE}-$BUILD_ID \
-          --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
+          --source=. \ 
           --no-allow-unauthenticated \
-          --update-env-vars=URL=https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-${SHORT_SHA} \
+          --update-env-vars=URL=$(gcloud run services describe ${_SERVICE}-restricted-$BUILD_ID --region ${_SERVICE_REGION} --format 'value(status.url)') \
           --vpc-egress=all \
           --vpc-connector=samples-connector \
           --region=${_SERVICE_REGION}
-    waitFor: ["Push Container Image"]
+    waitFor: ["Deploy Restricted Service"]
 
   - id: "Get Cloud Run URL"
     name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
@@ -59,36 +46,36 @@ steps:
       - "CLOUDSDK_RUN_REGION=${_SERVICE_REGION}"
     waitFor: ["Deploy to Cloud Run"]
 
-  - id: "Testing: <-- Cloud Run <-- VPC Connector <-- Cloud Function"
+  - id: "Testing: <-- Cloud Run <-- VPC Connector <-- Restricted Cloud Run"
     name: "gcr.io/cloud-builders/curl"
     entrypoint: "/bin/bash"
     args:
       - "-c"
       - |
         set -e
-        # Ingress-restricted Cloud Function should return 404.
-        msg=$(curl -si --show-error -H "Authorization: Bearer $(cat _id_token)"  https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-${SHORT_SHA})
+        # Ingress-restricted Cloud Run Service should return 404.
+        msg=$(curl -si --show-error -H "Authorization: Bearer $(cat _id_token)"  $(gcloud run services describe restricted-service-${SHORT_SHA} --region ${_SERVICE_REGION} --format 'value(status.url)')
 
         if grep -q "404" <<< "$msg"; then
-          echo "Restricted Function Test: PASSED"
+          echo "Restricted Service Test: PASSED"
         else
-          echo "Restricted Function Test: FAILED"
+          echo "Restricted Service Test: FAILED"
           echo $msg && exit 1
         fi
 
         # Attempt to reduce flakiness
         sleep 10
 
-        # Cloud Run service should return "Hello World" from the ingress-restricted Cloud Function via the VPC Connector.
+        # Cloud Run service should return "Hello World" from the ingress-restricted Cloud Run Service via the VPC Connector.
         msg=$(curl -si --fail --show-error -H "Authorization: Bearer $(cat _id_token)" $(cat _service_url))
 
         if grep -q "200" <<< "$msg"; then
-          echo "VPC Function Test: PASSED"
+          echo "VPC Service Test: PASSED"
         else
-          echo "VPC Function Test: FAILED"
+          echo "VPC Service Test: FAILED"
           echo $msg && exit 1
         fi
-    waitFor: ["Deploy to Cloud Run", "Deploy Restricted Function"]
+    waitFor: ["Deploy Egress Cloud Run Service", "Deploy Restricted Service"]
 
   - id: "Teardown"
     name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
@@ -97,12 +84,11 @@ steps:
       - "-c"
       - |
         set -x
-        gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
         gcloud --quiet run services delete ${_SERVICE}-$BUILD_ID --region ${_SERVICE_REGION}
-        gcloud --quiet functions delete restricted-${SHORT_SHA}
+        gcloud --quiet run services delete ${_SERVICE}-restricted-$BUILD_ID --region ${_SERVICE_REGION}
         set +x
         echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
-    waitFor: ["Testing: <-- Cloud Run <-- VPC Connector <-- Cloud Function"]
+    waitFor: ["Testing: <-- Cloud Run <-- VPC Connector <-- Restricted Cloud Run"]
 
 options:
   env:

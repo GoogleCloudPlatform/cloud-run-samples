@@ -2,3 +2,5 @@
 node_modules/
 vendor/
 .DS_Store
+__pycache__/
+*.py[cod]

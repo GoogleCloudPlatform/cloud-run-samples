@@ -13,16 +13,16 @@
 # limitations under the License.
 
 # This file holds functions for testing VPC ingress with Cloud Run
-from flask import Flask, request
+
+from flask import Flask
 
 app = Flask(__name__)
 
 # [START run_ingress_hello_world]
 @app.get("/")
 def hello():
-    print("-- hello ingress--")
     return f"Hello World!"
+# [END run_ingress_hello_world]
 
 if __name__ == "__main__":
     app.run(host="localhost", port=8080, debug=True)
-# [END run_ingress_hello_world]

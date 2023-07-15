@@ -25,9 +25,17 @@ gcloud services enable \
   run.googleapis.com
 ```
 
-## Deploy the restricted Cloud Run Service
+## Create Serverless VPC access connector
 
-From inside the `vpc-sample/ingress` directory:
+```sh
+gcloud compute networks vpc-access connectors create serverless-connector \
+    --region=${REGION} \
+    --range=10.8.0.0/28
+```
+
+## Deploy the restricted Cloud Run Service (ingress only)
+
+From inside the `vpc-sample/run-ingress` directory:
 
 ```sh
 gcloud run deploy restricted-service \
@@ -39,39 +47,22 @@ gcloud run deploy restricted-service \
 The `-ingress=internal` will restrict access to this Cloud Run services to other services inside the project.
 To call this service, deploy another Cloud Run service with the egress going through a VPC connector.
 
-## Create Serverless VPC access connector
 
-```sh
-gcloud compute networks vpc-access connectors create serverless-connector \
-    --region=${REGION} \
-    --range=10.8.0.0/28
-```
+## Deploy the Cloud Run service (egress) with a vpc connector
 
-## Build and Deploy the Cloud Run Function with a vpc connector
-
-From inside the `vpc-sample/egress` directory:
-
-```sh
-gcloud artifacts repositories create run-egress-repo \
-    --repository-format=docker \
-    --project=$PROJECT_ID \
-    --location=$REGION 
-
-gcloud builds submit --tag=$REGION-docker.pkg.dev/$PROJECT_ID/run-egress-repo/restricted-service-caller .
-```
+From inside the `vpc-sample/run-egress` directory:
 
 Replace the following before deploying:
 * `restricted-service-url`: Cloud Run URL provided to you when you deployed ingress service (i.e restricted-service-abc-uc.a.run.app)
 
 ```sh
 gcloud run deploy run-egress \
-    --image=$REGION-docker.pkg.dev/$PROJECT_ID/run-egress-repo/restricted-service-caller \
+    --source=. \
     --no-allow-unauthenticated \
-    --update-env-vars=URL=$INGRESS_SERVICE_URL \
+    --update-env-vars=URL=<restricted-service-url> \
     --vpc-egress=all \
-    --vpc-connector=serverless-connector \
+    --vpc-connector=serverless-connector
     --region=$REGION
-    --port 8081
 ```
 
 The Cloud Run sends a get request via the VPC connector to the network-restricted service.
