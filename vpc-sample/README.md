@@ -3,41 +3,75 @@
 A Google Cloud Project is required in order to run the sample. The project should have the following API's enabled:
 
 * Cloud Run
-* Cloud Functions
+* Artifact Registry
 * Serverless VPC Access API 
 
-## Deploy the Function 
+## Set your environment up
 
-From inside the vpc-sample directory:
+Declare required environment variables before proceeding.
 
 ```sh
-gcloud functions deploy restricted-function \
---runtime=python311 --trigger-http --no-allow-unauthenticated \
---ingress-settings=internal-only --entry-point=hello_world
+export PROJECT_ID=<project-id> # GCP project id
+export REGION=us-central1 # GCP service region
 ```
 
-The `-ingress-settings=internal-only` will restrict access to the function to services inside the project.  To call the function, deploy a service with the egress going through a VPC connector.
+Enable relevant Google Cloud APIs:
+
+```sh
+gcloud services enable \
+  vpcaccess.googleapis.com \
+  artifactregistry.googleapis.com \
+  cloudbuild.googleapis.com \
+  run.googleapis.com
+```
+
+## Deploy the restricted Cloud Run Service
+
+From inside the `vpc-sample/ingress` directory:
+
+```sh
+gcloud run deploy restricted-service \
+    --source=. \
+    --ingress=internal \
+    --no-allow-unauthenticated
+```
+
+The `-ingress=internal` will restrict access to this Cloud Run services to other services inside the project.
+To call this service, deploy another Cloud Run service with the egress going through a VPC connector.
 
 ## Create Serverless VPC access connector
 
 ```sh
 gcloud compute networks vpc-access connectors create serverless-connector \
---region=${_SERVICE_REGION} --range=10.8.0.0/28
+    --region=${REGION} \
+    --range=10.8.0.0/28
 ```
 
 ## Build and Deploy the Cloud Run Function with a vpc connector
 
-From inside the vpc-sample directory:
+From inside the `vpc-sample/egress` directory:
 
 ```sh
-gcloud builds submit --tag=gcr.io/${PROJECT_ID}/restricted-function-caller . 
+gcloud artifacts repositories create run-egress-repo \
+    --repository-format=docker \
+    --project=$PROJECT_ID \
+    --location=$REGION 
+
+gcloud builds submit --tag=$REGION-docker.pkg.dev/$PROJECT_ID/run-egress-repo/restricted-service-caller .
 ```
+
+Replace the following before deploying:
+* `restricted-service-url`: Cloud Run URL provided to you when you deployed ingress service (i.e restricted-service-abc-uc.a.run.app)
 
 ```sh
-gcloud run deploy run-function --image gcr.io/${PROJECT_ID}/restricted-function-caller \
---no-allow-unauthenticated \
---update-env-vars=URL=https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-function-caller \
---vpc-egress=all --vpc-connector=serverless-connector --region=${_SERVICE_REGION}
+gcloud run deploy run-egress \
+    --image=$REGION-docker.pkg.dev/$PROJECT_ID/run-egress-repo/restricted-service-caller \
+    --no-allow-unauthenticated \
+    --update-env-vars=URL=$INGRESS_SERVICE_URL \
+    --vpc-egress=all \
+    --vpc-connector=serverless-connector \
+    --region=$REGION
+    --port 8081
 ```
 
-The Cloud Run function sends a get request via the VPC connector to the network-restricted function.
+The Cloud Run sends a get request via the VPC connector to the network-restricted service.
