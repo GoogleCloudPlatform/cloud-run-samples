@@ -12,17 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This file holds functions for testing VPC ingress with Cloud Run
+# Use the official Python image.
+# https://hub.docker.com/_/python
+FROM python:3.11-slim
 
-from flask import Flask
+# Copy local code to the container image.
+ENV APP_HOME /app
+WORKDIR $APP_HOME
+COPY . ./
 
-app = Flask(__name__)
+# Install production dependencies.
+RUN pip install --no-cache-dir -r requirements.txt
 
-# [START run_ingress_hello_world]
-@app.get("/")
-def hello():
-    return f"Hello World!"
-# [END run_ingress_hello_world]
-
-if __name__ == "__main__":
-    app.run(host="localhost", port=8080, debug=True)
+# Run the web service on container startup.
+CMD ["functions-framework", "--target=get_hello_world"]

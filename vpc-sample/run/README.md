@@ -1,4 +1,4 @@
-# Using egress and ingress settings to restrict access to services 
+# Cloud Run: Using egress and ingress settings to restrict access to services 
 
 A Google Cloud Project is required in order to run the sample. The project should have the following API's enabled:
 

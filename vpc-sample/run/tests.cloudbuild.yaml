@@ -1,0 +1,110 @@
+steps:
+  - id: "Deploy Restricted Service"
+    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    dir: "${_SAMPLE_DIR}/run-ingress"
+    entrypoint: /bin/bash
+    args:
+      - "-c"
+      - |
+        gcloud run deploy ${_SERVICE}-restricted-$BUILD_ID \
+          --source=. \
+          --ingress=internal \
+          --no-allow-unauthenticated \
+          --quiet
+
+  - id: "Deploy Egress Cloud Run Service"
+    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    dir: "${_SAMPLE_DIR}/run-egress"
+    entrypoint: /bin/bash
+    args:
+      - "-c"
+      - |
+        gcloud run deploy ${_SERVICE}-$BUILD_ID \
+          --source=. \
+          --update-env-vars=URL=$(gcloud run services describe ${_SERVICE}-restricted-$BUILD_ID --region ${_SERVICE_REGION} --format 'value(status.url)') \
+          --no-allow-unauthenticated \
+          --vpc-egress=all \
+          --vpc-connector=samples-connector \
+          --region=${_SERVICE_REGION}
+    waitFor: ["Deploy Restricted Service"]
+
+  - id: "Get Cloud Run URL"
+    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    dir: "${_SAMPLE_DIR}"
+    entrypoint: "/bin/bash"
+    args:
+      - "-c"
+      - |
+        set -e
+        . /workspace/testing/cloudbuild-templates/common.sh
+        echo $(get_url ${BUILD_ID}) > _service_url
+        echo "Cloud Run URL for ${_SERVICE}-$BUILD_ID is $(cat _service_url)"
+        echo $(get_idtoken) > _id_token
+    env:
+      # Make substitutions available in shell script.
+      - "_SECRET_NAME=${_SECRET_NAME}"
+      - "_RUNNER_IDENTITY=${_RUNNER_IDENTITY}"
+      - "_SERVICE=${_SERVICE}"
+      - "CLOUDSDK_RUN_REGION=${_SERVICE_REGION}"
+    waitFor: ["Deploy Egress Cloud Run Service"]
+
+  - id: "Testing: <-- Cloud Run <-- VPC Connector <-- Restricted Cloud Run"
+    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    dir: "${_SAMPLE_DIR}"
+    entrypoint: "/bin/bash"
+    args:
+      - "-c"
+      - |
+        set -e
+        # Ingress-restricted Cloud Run Service should return 404.
+        msg=$(curl -si --show-error -H "Authorization: Bearer $(cat _id_token)"  $(gcloud run services describe ${_SERVICE}-restricted-$BUILD_ID --region ${_SERVICE_REGION} --format 'value(status.url)'))
+
+        if grep -q "404" <<< "$msg"; then
+          echo "Restricted Service Test: PASSED"
+        else
+          echo "Restricted Service Test: FAILED"
+          echo $msg && exit 1
+        fi
+
+        # Attempt to reduce flakiness
+        sleep 10
+
+        # Cloud Run service should return "Hello World" from the ingress-restricted Cloud Run Service via the VPC Connector.
+        msg=$(curl -si --fail --show-error -H "Authorization: Bearer $(cat _id_token)" $(cat _service_url))
+
+        if grep -q "200" <<< "$msg"; then
+          echo "VPC Service Test: PASSED"
+        else
+          echo "VPC Service Test: FAILED"
+          echo $msg && exit 1
+        fi
+    waitFor: ["Deploy Egress Cloud Run Service", "Deploy Restricted Service"]
+
+  - id: "Teardown"
+    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    dir: "${_SAMPLE_DIR}"
+    entrypoint: "/bin/bash"
+    args:
+      - "-c"
+      - |
+        set -x
+        gcloud --quiet run services delete ${_SERVICE}-$BUILD_ID --region ${_SERVICE_REGION}
+        gcloud --quiet run services delete ${_SERVICE}-restricted-$BUILD_ID --region ${_SERVICE_REGION}
+        gcloud --quiet artifacts docker tags delete "${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO_NAME}/${_SERVICE}-$BUILD_ID:latest"
+        gcloud --quiet artifacts docker tags delete "${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO_NAME}/${_SERVICE}-restricted-$BUILD_ID:latest"
+        set +x
+        echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
+    waitFor:
+      ["Testing: <-- Cloud Run <-- VPC Connector <-- Restricted Cloud Run"]
+
+options:
+  env:
+    - "CLOUDSDK_RUN_REGION=${_SERVICE_REGION}"
+    - "GOOGLE_CLOUD_PROJECT=${PROJECT_ID}"
+
+substitutions:
+  _SERVICE: vpc-sample-run
+  _SAMPLE_DIR: vpc-sample/run
+  _SERVICE_REGION: us-central1
+  _AR_REPO_NAME: cloud-run-source-deploy
+  _CLOUDSDK_VERSION: latest

@@ -14,8 +14,7 @@
 
 # This file holds functions for testing VPC egress with Cloud Run
 
-# [START cloudrun_egress_hello_world]
-# [START run_egress_hello_world]
+# [START cloudrun_egress_hello_world_2]
 import os
 import urllib
 import json
@@ -28,7 +27,6 @@ app = Flask(__name__)
 
 @app.get("/")
 def get_hello_world():
-    print(os.environ)
     try:
         url = os.environ.get("URL")
         req = urllib.request.Request(url)
@@ -43,8 +41,7 @@ def get_hello_world():
     except Exception as e:
         print(e)
         return str(e)
-# [END run_egress_hello_world]
 
 if __name__ == "__main__":
     app.run(host="localhost", port=8080, debug=True)
-# [END cloudrun_egress_hello_world]
+# [END cloudrun_egress_hello_world_2]
