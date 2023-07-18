@@ -65,4 +65,4 @@ gcloud run deploy run-egress \
     --region=$REGION
 ```
 
-The Cloud Run sends a get request via the VPC connector to the network-restricted service.
+This Cloud Run service sends a get request via the VPC connector to the network-restricted service.
