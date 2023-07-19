@@ -4,7 +4,8 @@ A Google Cloud Project is required in order to run the sample. The project shoul
 
 * Cloud Run
 * Artifact Registry
-* Serverless VPC Access API 
+* Serverless VPC Access
+* Cloud Build
 
 ## Set your environment up
 
