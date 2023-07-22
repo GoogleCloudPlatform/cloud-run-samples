@@ -1,0 +1,39 @@
+steps:
+  - id: "e2e-test"
+    waitFor: ["-"]
+    name: "gcr.io/cloud-builders/gcloud"
+    dir: "${_SAMPLE_DIR}"
+    script: |
+      #!/bin/bash
+      echo "Run e2e-test ..."
+      ./tests/e2e-test.sh || touch /workspace/e2e-failed
+    env:
+      - "BUILD_ID=$BUILD_ID"
+      - "_REGION=$_REGION"
+      - "_SERVICE_NAME=$_SERVICE_NAME"
+  - id: "e2e-cleanup"
+    waitFor: ["e2e-test"]
+    name: "gcr.io/cloud-builders/gcloud"
+    dir: "${_SAMPLE_DIR}"
+    script: |
+      #!/bin/bash
+      export MC_SERVICE_NAME="${_SERVICE_NAME}-$BUILD_ID"
+      gcloud run services delete "${MC_SERVICE_NAME}" --quiet --region "${_REGION}"
+    env:
+      - "BUILD_ID=$BUILD_ID"
+      - "_REGION=$_REGION"
+      - "_SERVICE_NAME=$_SERVICE_NAME"
+  - id: "report-status"
+    waitFor: ["e2e-cleanup"]
+    name: "gcr.io/cloud-builders/gcloud"
+    script: |
+      #!/bin/bash
+      if [[ -f /workspace/e2e-failed   ]]
+      then
+        echo "Step e2e-test failed"
+        exit 1
+      fi
+substitutions:
+  _SERVICE_NAME: "php-nginx-mc-example-testing"
+  _REGION: "us-central1"
+  _SAMPLE_DIR: "multi-container/hello-php-nginx-sample"
