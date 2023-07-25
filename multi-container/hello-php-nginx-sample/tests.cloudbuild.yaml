@@ -1,6 +1,18 @@
 steps:
-  - id: "e2e-test"
+  - id: "Build Container Images"
     waitFor: ["-"]
+    name: "gcr.io/cloud-builders/gcloud"
+    dir: "${_SAMPLE_DIR}"
+    script: |
+      #!/bin/bash
+      gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/nginx" ./nginx
+      gcloud builds submit --tag="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/php" ./php-app
+    env:
+      - "REGION=$_REGION"
+      - "REPO_NAME=$_REPO_NAME"
+      - "PROJECT_ID=$PROJECT_ID"
+  - id: "e2e-test"
+    waitFor: ["Build Container Images"]
     name: "gcr.io/cloud-builders/gcloud"
     dir: "${_SAMPLE_DIR}"
     script: |
@@ -9,22 +21,25 @@ steps:
       ./tests/e2e-test.sh || touch /workspace/e2e-failed
     env:
       - "BUILD_ID=$BUILD_ID"
-      - "_REGION=$_REGION"
-      - "_SERVICE_NAME=$_SERVICE_NAME"
-  - id: "e2e-cleanup"
-    waitFor: ["e2e-test"]
-    name: "gcr.io/cloud-builders/gcloud"
-    dir: "${_SAMPLE_DIR}"
-    script: |
-      #!/bin/bash
-      export MC_SERVICE_NAME="${_SERVICE_NAME}-$BUILD_ID"
-      gcloud run services delete "${MC_SERVICE_NAME}" --quiet --region "${_REGION}"
-    env:
-      - "BUILD_ID=$BUILD_ID"
-      - "_REGION=$_REGION"
-      - "_SERVICE_NAME=$_SERVICE_NAME"
+      - "REGION=$_REGION"
+      - "REPO_NAME=$_REPO_NAME"
+      - "PROJECT_ID=$PROJECT_ID"
+      - "SERVICE_NAME=$_SERVICE_NAME"
+      #  - id: "e2e-cleanup"
+      # waitFor: ["e2e-test"]
+      # name: "gcr.io/cloud-builders/gcloud"
+      # dir: "${_SAMPLE_DIR}"
+      # script: |
+      # !/bin/bash
+      # export MC_SERVICE_NAME="${SERVICE_NAME}-$BUILD_ID"
+      # gcloud run services delete "${MC_SERVICE_NAME}" --quiet --region "${REGION}"
+      # env:
+      # - "BUILD_ID=$BUILD_ID"
+      # - "REGION=$_REGION"
+      # - "PROJECT_ID=$PROJECT_ID"
+      # - "SERVICE_NAME=$_SERVICE_NAME"
   - id: "report-status"
-    waitFor: ["e2e-cleanup"]
+    # waitFor: ["e2e-cleanup"]
     name: "gcr.io/cloud-builders/gcloud"
     script: |
       #!/bin/bash
@@ -34,6 +49,7 @@ steps:
         exit 1
       fi
 substitutions:
-  _SERVICE_NAME: "php-nginx-mc-example-testing"
+  _REPO_NAME: "samples"
+  _SERVICE_NAME: "php-nginx-mc-testing"
   _REGION: "us-central1"
   _SAMPLE_DIR: "multi-container/hello-php-nginx-sample"
