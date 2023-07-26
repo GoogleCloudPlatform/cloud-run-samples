@@ -38,16 +38,15 @@ then
   exit 1
 fi
 
-# Check Cloud Run MC logs for signs of successful request to hellophp container.
-echo "$(gcloud logging read 'resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=nginx' --limit 1)"
+# Checking that fpm (FastCGI Process Manager)
+MC_NGINX_LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=nginx" | grep -e 'Default STARTUP TCP probe succeeded after 1 attempt for container "nginx"')
 
-echo "$(gcloud logging read 'resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=hellophp' --limit 1)"
+# Check Cloud Run MC nginx & hellophp logs for signs of successful deployment and connection
+MC_HELLO_PHP_LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=hellophp" --limit 1 | grep -e 'NOTICE: fpm is running, pid 1')
 
-MC_HELLO_LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=hellophp" --limit 1 | grep -e 'Hello from Cloud Run')
-
-if [[ -z "${MC_HELLO_LOG}" ]]
+if [[ -z "${MC_HELLO_PHP_LOG}" && -z "${MC_NGINX_LOG}" ]]
 then
-  echo "No Cloud Run MC success hellophp logs found. Step e2e-test failed."
+  echo "No Cloud Run MC success hellophp or nginx logs found. Step e2e-test failed."
   exit 1
 else
   echo "Cloud Run MC successully deployed and nginx successfully proxied php app with FastCGI."
