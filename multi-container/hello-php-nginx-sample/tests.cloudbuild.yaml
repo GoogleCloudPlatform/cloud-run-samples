@@ -25,21 +25,21 @@ steps:
       - "REPO_NAME=$_REPO_NAME"
       - "PROJECT_ID=$PROJECT_ID"
       - "SERVICE_NAME=$_SERVICE_NAME"
-      #  - id: "e2e-cleanup"
-      # waitFor: ["e2e-test"]
-      # name: "gcr.io/cloud-builders/gcloud"
-      # dir: "${_SAMPLE_DIR}"
-      # script: |
+  - id: "e2e-cleanup"
+    waitFor: ["e2e-test"]
+    name: "gcr.io/cloud-builders/gcloud"
+    dir: "${_SAMPLE_DIR}"
+    script: |
       # !/bin/bash
-      # export MC_SERVICE_NAME="${SERVICE_NAME}-$BUILD_ID"
-      # gcloud run services delete "${MC_SERVICE_NAME}" --quiet --region "${REGION}"
-      # env:
-      # - "BUILD_ID=$BUILD_ID"
-      # - "REGION=$_REGION"
-      # - "PROJECT_ID=$PROJECT_ID"
-      # - "SERVICE_NAME=$_SERVICE_NAME"
+      export MC_SERVICE_NAME="${SERVICE_NAME}-$BUILD_ID"
+      gcloud run services delete "${MC_SERVICE_NAME}" --quiet --region "${REGION}"
+    env:
+      - "BUILD_ID=$BUILD_ID"
+      - "REGION=$_REGION"
+      - "PROJECT_ID=$PROJECT_ID"
+      - "SERVICE_NAME=$_SERVICE_NAME"
   - id: "report-status"
-    # waitFor: ["e2e-cleanup"]
+    waitFor: ["e2e-cleanup"]
     name: "gcr.io/cloud-builders/gcloud"
     script: |
       #!/bin/bash
