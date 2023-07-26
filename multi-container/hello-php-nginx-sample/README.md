@@ -40,7 +40,10 @@ make build # build nginx & php images to Artifact Registry
 make deploy # deploys multi-container service with nginx/php containers
 ```
 
-### Execute manually
+Once deployed, the best place to start understanding how `nginx` is using [FastCGI](https://www.nginx.com/resources/wiki/start/topics/examples/fastcgiexample/) 
+is communicating with `hellophp` within the Cloud Run multi-container service context is to navigate and read through `./nginx/nginx.conf`.
+
+### Build & depoly manually
 
 The following is what is happening within the `Makefile` of this sample.
 
@@ -104,8 +107,8 @@ Visit the Cloud Run url or use curl to send a request:
 curl <cloud-run-mc-service-url>
 ```
 
+
 ## Find out more:
 
 * https://cloud.google.com/run/docs/deploying#sidecars
 * https://cloud.google.com/blog/products/serverless/cloud-run-now-supports-multi-container-deployments
-
