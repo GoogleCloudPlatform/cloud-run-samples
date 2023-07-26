@@ -42,7 +42,7 @@ fi
 MC_NGINX_LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=nginx" | grep -e 'Default STARTUP TCP probe succeeded after 1 attempt for container "nginx"')
 
 # Check Cloud Run MC nginx & hellophp logs for signs of successful deployment and connection
-MC_HELLO_PHP_LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=hellophp" --limit 1 | grep -e 'NOTICE: fpm is running, pid 1')
+MC_HELLO_PHP_LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=hellophp" | grep -e 'NOTICE: fpm is running, pid 1')
 
 if [[ -z "${MC_HELLO_PHP_LOG}" && -z "${MC_NGINX_LOG}" ]]
 then
