@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_mc_hello_php_nginx_mc]
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
@@ -52,3 +53,4 @@ spec:
             limits:
               cpu: 1000m
               memory: 512Mi
+# [END cloudrun_mc_hello_php_nginx_mc]
