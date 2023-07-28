@@ -78,7 +78,7 @@ gcloud run services replace service.yaml
 By default, the above command will deploy the following containers into a single service:
 
 * `nginx`: `serving` ingress container (entrypoint)
-* `hellophp`: `sidecar` container
+* `hellophp`: `application` container
 
 The Cloud Run Multi-container service will default access to port `8080`,
 where `nginx` container will be listening and proxy request over to `hellophp` container at port `9000`.
