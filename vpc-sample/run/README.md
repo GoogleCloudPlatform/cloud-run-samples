@@ -36,7 +36,7 @@ gcloud compute networks vpc-access connectors create serverless-connector \
 
 ## Deploy the restricted Cloud Run Service (ingress only)
 
-From inside the `vpc-sample/run-ingress` directory:
+From inside the `vpc-sample/run/run-ingress` directory:
 
 ```sh
 gcloud run deploy restricted-service \
@@ -51,7 +51,7 @@ To call this service, deploy another Cloud Run service with the egress going thr
 
 ## Deploy the Cloud Run service (egress) with a vpc connector
 
-From inside the `vpc-sample/run-egress` directory:
+From inside the `vpc-sample/run/run-egress` directory:
 
 Replace the following before deploying:
 * `restricted-service-url`: Cloud Run URL provided to you when you deployed ingress service (i.e restricted-service-abc-uc.a.run.app)
