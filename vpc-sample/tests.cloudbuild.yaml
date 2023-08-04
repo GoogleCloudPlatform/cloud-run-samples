@@ -17,12 +17,12 @@ steps:
   - id: "Build Allow Container Image"
     name: "gcr.io/cloud-builders/docker:latest"
     dir: "${_SAMPLE_DIR}"
-    args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}", "."]  # Tag docker image with git commit sha
+    args: ["build", "-t", "${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}", "."]  # Tag docker image with git commit sha
     waitFor: ["-"]  # Run this step in parallel with Deploy Restricted Function
 
   - id: "Push Container Image"
     name: "gcr.io/cloud-builders/docker:latest"
-    args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}"]
+    args: ["push", "${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA}"]
     waitFor: ["Build Allow Container Image"]
 
   - id: "Deploy to Cloud Run"
@@ -32,7 +32,7 @@ steps:
       - "-c"
       - |
         gcloud run deploy ${_SERVICE}-$BUILD_ID \
-          --image gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA} \
+          --image ${_SERVICE_REGION}-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_SERVICE}:${SHORT_SHA} \
           --no-allow-unauthenticated \
           --update-env-vars=URL=https://${_SERVICE_REGION}-$PROJECT_ID.cloudfunctions.net/restricted-${SHORT_SHA} \
           --vpc-egress=all \
@@ -97,7 +97,6 @@ steps:
       - "-c"
       - |
         set -x
-        gcloud --quiet container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${SHORT_SHA}
         gcloud --quiet run services delete ${_SERVICE}-$BUILD_ID --region ${_SERVICE_REGION}
         gcloud --quiet functions delete restricted-${SHORT_SHA}
         set +x
@@ -113,4 +112,5 @@ substitutions:
   _SERVICE: vpc-sample
   _SAMPLE_DIR: vpc-sample
   _SERVICE_REGION: us-central1
+  _REPO_NAME: samples  # Artifact Registry repo, "samples", was manually created
   _CLOUDSDK_VERSION: latest
