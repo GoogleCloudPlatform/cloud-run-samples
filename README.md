@@ -23,6 +23,7 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 | gcloud as a service        | Use `gcloud` and `gsutil` in a service                  | [Go][gcloud_report]                 |
 | VPC Testing                | Egress and ingress settings with VPC                    | [Python][vpc_sample]                |
 | Multi-container Hello Nginx                | Multi-containers with nginx                    | [YAML][multicontainer_hello_nginx_sample]                |
+| Open Policy Agent Multi-container          | Open Policy Agent Multi-container                          | [YAML][multicontainer_open_policy_agent_sample]                |
 | Markdown Preview           | 2 tier secure microservices for Markdown rendering      | [Go][markdown_preview_go], [Nodejs][markdown_preview_nodejs], [Python][markdown_preview_python], [Java][markdown_preview_java] |
 
 [kn_hello_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run/helloworld
@@ -90,6 +91,7 @@ This repository contains sample applications used in [Cloud Run](https://cloud.g
 [vpc_sample]: vpc-sample
 [gcloud_report]: gcloud-report
 [multicontainer_hello_nginx_sample]: multi-container/hello-nginx-sample
+[multicontainer_open_policy_agent_sample]: multi-container/open-policy-agent-sample
 [idtoken_request_go]: https://github.com/GoogleCloudPlatform/golang-samples/blob/master/functions/security/idtoken.go
 [idtoken_request_nodejs]: https://github.com/googleapis/google-auth-library-nodejs/blob/master/samples/idtokens-serverless.js
 [idtoken_request_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/auth/service-to-service/auth.py
