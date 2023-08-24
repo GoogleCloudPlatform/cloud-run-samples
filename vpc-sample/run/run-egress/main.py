@@ -43,5 +43,5 @@ def get_hello_world():
         return str(e)
 
 if __name__ == "__main__":
-    app.run(host="localhost", port=8080, debug=True)
+    app.run(host="localhost", port=8080)
 # [END cloudrun_egress_hello_world_2]

@@ -25,4 +25,4 @@ def hello():
 # [END cloudrun_ingress_hello_world]
 
 if __name__ == "__main__":
-    app.run(host="localhost", port=8080, debug=True)
+    app.run(host="localhost", port=8080)
