@@ -1,6 +1,10 @@
 steps:
-  - id: "e2e-test"
+  - id: "build-container"
     waitFor: ["-"]
+    name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/docker/opa-sample-test', '-f', 'Dockerfile.nginx', '.' ]
+  - id: "e2e-test"
+    waitFor: ["build-container"]
     name: "gcr.io/cloud-builders/gcloud"
     dir: "${_SAMPLE_DIR}"
     script: |
@@ -11,6 +15,8 @@ steps:
       - "BUILD_ID=$BUILD_ID"
       - "_REGION=$_REGION"
       - "_SERVICE_NAME=$_SERVICE_NAME"
+      - "PROJECT_ID=$PROJECT_ID"
+      - "IMAGE_NAME=opa-sample-test"
   - id: "e2e-cleanup"
     waitFor: ["e2e-test"]
     name: "gcr.io/cloud-builders/gcloud"
