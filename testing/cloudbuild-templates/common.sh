@@ -58,6 +58,7 @@ get_idtoken() {
         break
       fi
       let retries--;
+      sleep 3
     done
     # Switch to the original account.
     gcloud config set account ${account}
