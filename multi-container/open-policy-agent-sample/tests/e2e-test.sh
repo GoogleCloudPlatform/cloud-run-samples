@@ -22,7 +22,7 @@ sed -i -e s/SERVICE_NAME/${SERVICE_NAME}/g -e s/REGION/${_REGION}/g opa-service.
 
 # Note that nginx_config secret has already been created within project.
 # Deploy multi-container service "nginx-example" that includes nginx proxy.
-gcloud run services replace service.yaml --region ${_REGION} --quiet
+gcloud run services replace opa-service.yaml --region ${_REGION} --quiet
 
 # Wait till deployment completes
 sleep 10
