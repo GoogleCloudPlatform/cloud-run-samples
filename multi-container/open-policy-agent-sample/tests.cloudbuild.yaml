@@ -34,6 +34,6 @@ steps:
         exit 1
       fi
 substitutions:
-  _SERVICE_NAME: "open-policy-agent-sample-testing"
+  _SERVICE_NAME: "opa-sample-testing"
   _REGION: "us-central1"
   _SAMPLE_DIR: "multi-container/open-policy-agent-sample"
