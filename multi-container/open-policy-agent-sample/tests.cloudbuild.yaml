@@ -2,7 +2,7 @@ steps:
   - id: "build-container"
     waitFor: ["-"]
     name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/docker/opa-sample-test', '-f', 'Dockerfile.nginx', '.' ]
+    args: [ 'build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/docker/opa-sample-test', '-f', 'multi-container/open-policy-agent-sample/Dockerfile.nginx', 'multi-container/open-policy-agent-sample' ]
   - id: "e2e-test"
     waitFor: ["build-container"]
     name: "gcr.io/cloud-builders/gcloud"
