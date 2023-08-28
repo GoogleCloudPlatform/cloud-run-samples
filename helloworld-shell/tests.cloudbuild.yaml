@@ -29,6 +29,7 @@ steps:
         echo $(get_url ${BUILD_ID}) > _service_url
         echo "Cloud Run URL for ${_SERVICE}-$BUILD_ID is $(cat _service_url)"
         echo $(get_idtoken) > _id_token
+        if [[ -z $(cat _id_token) ]]; then exit 1; fi
     env:
       # Make substitutions available in shell script.
       - "_SECRET_NAME=${_SECRET_NAME}"
