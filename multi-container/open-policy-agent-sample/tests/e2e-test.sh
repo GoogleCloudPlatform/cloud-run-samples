@@ -20,8 +20,6 @@ export SERVICE_NAME="${_SERVICE_NAME}-$BUILD_ID"
 # Substituting the env vars in cloud run yaml file
 sed -i -e s/SERVICE_NAME/${SERVICE_NAME}/g -e s/REGION/${_REGION}/g -e s/\<PROJECT_ID\>/${PROJECT_ID}/g -e s/\<IMAGE_NAME\>/${IMAGE_NAME}/g opa-service.yaml
 
-cat opa-service.yaml
-
 # Note that nginx_config secret has already been created within project.
 # Deploy multi-container service "nginx-example" that includes nginx proxy.
 gcloud run services replace opa-service.yaml --region ${_REGION} --quiet

@@ -2,6 +2,7 @@ apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   annotations:
+    run.googleapis.com/launch-stage: BETA
   name: "SERVICE_NAME"
   labels:
     cloud.googleapis.com/location: "REGION"
