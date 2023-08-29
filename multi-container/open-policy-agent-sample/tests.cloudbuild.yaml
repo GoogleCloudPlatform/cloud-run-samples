@@ -1,8 +1,70 @@
 steps:
-  - id: "build-container"
+  - id: "create-example-rego"
     waitFor: ["-"]
+    name: "gcr.io/cloud-builders/gcloud"
+    volumes:
+    - name: "opafiles"
+      path: "/opafiles"
+    script: |
+      #!/bin/bash
+      cat <<EOF >> /opafiles/example.rego
+      package httpapi.authz
+
+      # bob is alice's manager, and betty is charlie's.
+      subordinates := {"alice": [], "charlie": [], "bob": ["alice"], "betty": ["charlie"]}
+      
+      default allow := false
+      
+      # Allow users to get their own salaries.
+      allow {
+          input.method == "GET"
+          input.path == ["finance", "salary", input.user]
+      }
+      
+      # Allow managers to get their subordinates' salaries.
+      allow {
+          some username
+          input.method == "GET"
+          input.path = ["finance", "salary", username]
+          subordinates[input.user][_] == username
+      }
+      EOF
+  - id: "show-files"
+    waitFor: ["create-example-rego"]
+    name: "gcr.io/cloud-builders/gcloud"
+    volumes:
+    - name: "opafiles"
+      path: "/opafiles"
+    script: |
+      #!/bin/bash
+      cat /opafiles/example.rego
+
+  - id: "build-opa-bundle"
+    waitFor: ["create-example-rego"]
+    name: "openpolicyagent/opa:0.50.0"
+    dir: "/opafiles"
+    volumes:
+    - name: "opafiles"
+      path: "/opafiles"
+    args: ['build', 'example.rego']
+
+  - id: "copy-build-results"
+    waitFor: ["build-opa-bundle"]
+    name: "gcr.io/cloud-builders/gcloud"
+    dir: "${_SAMPLE_DIR}"
+    volumes:
+    - name: "opafiles"
+      path: "/opafiles"
+    script: |
+      #!/bin/bash
+      cp /opafiles/bundle.tar.gz /workspace
+
+  - id: "build-container"
+    waitFor: ["copy-build-results"]
     name: 'gcr.io/cloud-builders/docker'
+    dir: "${_SAMPLE_DIR}"
     args: [ 'build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/docker/opa-sample-test', '-f', 'multi-container/open-policy-agent-sample/Dockerfile.nginx', 'multi-container/open-policy-agent-sample' ]
+
   - id: "e2e-test"
     waitFor: ["build-container"]
     name: "gcr.io/cloud-builders/gcloud"
@@ -17,6 +79,7 @@ steps:
       - "_SERVICE_NAME=$_SERVICE_NAME"
       - "PROJECT_ID=$PROJECT_ID"
       - "IMAGE_NAME=opa-sample-test"
+
   - id: "e2e-cleanup"
     waitFor: ["e2e-test"]
     name: "gcr.io/cloud-builders/gcloud"
@@ -29,6 +92,7 @@ steps:
       - "BUILD_ID=$BUILD_ID"
       - "_REGION=$_REGION"
       - "_SERVICE_NAME=$_SERVICE_NAME"
+
   - id: "report-status"
     waitFor: ["e2e-cleanup"]
     name: "gcr.io/cloud-builders/gcloud"

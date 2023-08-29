@@ -4,7 +4,7 @@ In this tutorial, we will use the [same example](http://openpolicyagent.org/docs
 
 We'll end up with a deployment like this:
 
-![deployment diagram](./deployment_diagram.png)
+![deployment diagram](cloud-run-opa-deployment-diagram.png)
 
 The goal is to use a simple HTTP web server that accepts any HTTP GET request that you issue and echoes the OPA decision back as text. OPA will fetch policy bundles from a simple bundle server. OPA, the bundle server, and the web server will be run as containers in Cloud Run. In a production environment, you likely will have a different bundle server, but it's convenient to package it together here.
 
