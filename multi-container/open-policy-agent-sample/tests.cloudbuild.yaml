@@ -1,13 +1,10 @@
 steps:
   - id: "create-example-rego"
     waitFor: ["-"]
-    name: "gcr.io/cloud-builders/gcloud"
-    volumes:
-    - name: "opafiles"
-      path: "/opafiles"
+    name: 'gcr.io/gcp-runtimes/ubuntu_18_0_4'
     script: |
       #!/bin/bash
-      cat <<EOF >> /opafiles/example.rego
+      cat <<EOF >> /workspace/example.rego
       package httpapi.authz
 
       # bob is alice's manager, and betty is charlie's.
@@ -29,44 +26,15 @@ steps:
           subordinates[input.user][_] == username
       }
       EOF
-  - id: "show-files"
-    waitFor: ["create-example-rego"]
-    name: "gcr.io/cloud-builders/gcloud"
-    volumes:
-    - name: "opafiles"
-      path: "/opafiles"
-    script: |
-      #!/bin/bash
-      cat /opafiles/example.rego
+      cat /workspace/example.rego
 
-  - id: "build-opa-bundle"
-    waitFor: ["create-example-rego"]
-    name: "openpolicyagent/opa:0.50.0"
-    dir: "/opafiles"
-    volumes:
-    - name: "opafiles"
-      path: "/opafiles"
-    args: ['build', 'example.rego']
-
-  - id: "copy-build-results"
-    waitFor: ["build-opa-bundle"]
-    name: "gcr.io/cloud-builders/gcloud"
-    dir: "${_SAMPLE_DIR}"
-    volumes:
-    - name: "opafiles"
-      path: "/opafiles"
-    script: |
-      #!/bin/bash
-      cp /opafiles/bundle.tar.gz /workspace
-
-  - id: "build-container"
-    waitFor: ["copy-build-results"]
-    name: 'gcr.io/cloud-builders/docker'
-    dir: "${_SAMPLE_DIR}"
-    args: [ 'build', '-t', '$LOCATION-docker.pkg.dev/$PROJECT_ID/docker/opa-sample-test', '-f', 'multi-container/open-policy-agent-sample/Dockerfile.nginx', 'multi-container/open-policy-agent-sample' ]
+      #get opa binary and build
+      curl -L -o opa https://openpolicyagent.org/downloads/v0.55.0/opa_linux_amd64_static
+      chmod a+x ./opa
+      ./opa build /workspace/example.rego -o /workspace/bundle.tar.gz 
 
   - id: "e2e-test"
-    waitFor: ["build-container"]
+    waitFor: ["create-example-rego"]
     name: "gcr.io/cloud-builders/gcloud"
     dir: "${_SAMPLE_DIR}"
     script: |
@@ -92,6 +60,7 @@ steps:
       - "BUILD_ID=$BUILD_ID"
       - "_REGION=$_REGION"
       - "_SERVICE_NAME=$_SERVICE_NAME"
+      - "IMAGE_NAME=opa-bundle"
 
   - id: "report-status"
     waitFor: ["e2e-cleanup"]
