@@ -1,10 +1,11 @@
 steps:
-  - id: "create-example-rego"
+  - id: "create-example-opa-bundle"
     waitFor: ["-"]
     name: 'gcr.io/gcp-runtimes/ubuntu_18_0_4'
+    dir: "${_SAMPLE_DIR}"
     script: |
       #!/bin/bash
-      cat <<EOF >> /workspace/example.rego
+      cat <<EOF >> example.rego
       package httpapi.authz
 
       # bob is alice's manager, and betty is charlie's.
@@ -26,15 +27,26 @@ steps:
           subordinates[input.user][_] == username
       }
       EOF
-      cat /workspace/example.rego
+      cat example.rego
 
       #get opa binary and build
       curl -L -o opa https://openpolicyagent.org/downloads/v0.55.0/opa_linux_amd64_static
       chmod a+x ./opa
-      ./opa build /workspace/example.rego -o /workspace/bundle.tar.gz 
+      ./opa build example.rego -o bundle.tar.gz 
+
+  - id: "build-bundle-server"
+    waitFor: ["create-example-opa-bundle"]
+    name: 'gcr.io/cloud-builders/docker'
+    dir: "${_SAMPLE_DIR}"
+    args: ['build', '-f', 'Dockerfile.nginx', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/docker/opa-sample-test', '.']
+
+  - id: "push-bundle-server"
+    waitFor: ["build-bundle-server"]
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/docker/opa-sample-test']
 
   - id: "e2e-test"
-    waitFor: ["create-example-rego"]
+    waitFor: ["push-bundle-server"]
     name: "gcr.io/cloud-builders/gcloud"
     dir: "${_SAMPLE_DIR}"
     script: |
