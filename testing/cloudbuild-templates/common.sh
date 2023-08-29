@@ -51,7 +51,15 @@ get_idtoken() {
     # Capture the current authenticated account.
     account=$(gcloud config get-value account)
     gcloud auth activate-service-account ${_RUNNER_IDENTITY} --key-file _sa_key.json --project ${GOOGLE_CLOUD_PROJECT}
-    gcloud auth print-identity-token --audiences "$(cat _service_url)"
+    retries=3
+    while ! gcloud auth print-identity-token --audiences "$(cat _service_url)"
+    do
+      if [ $retries -eq 1 ]; then 
+        break
+      fi
+      let retries--;
+      sleep 3
+    done
     # Switch to the original account.
     gcloud config set account ${account}
     set +x
