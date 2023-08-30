@@ -30,7 +30,7 @@ Note: We assume Google Cloud Artifact Registry in this tutorial but any registry
 
 # 2. Update opa-service.yml
 
-Read through [Step 2](https://www.openpolicyagent.org/docs/latest/http-api-authorization/#2-bootstrap-the-tutorial-environment-using-docker-compose) in the original tutorial, but instead of creating a `docker-compose.yml` file and using `docker-compose` to create the service, we're instead going to use `opa-service.yaml` to deploy three containers to a single cloud run deployment.
+Read through [Step 2](https://www.openpolicyagent.org/docs/latest/http-api-authorization/#2-bootstrap-the-tutorial-environment-using-docker-compose) in the original tutorial, but instead of creating a `docker-compose.yml` file and using `docker-compose` to create the service, we're instead going to use `opa-service.yaml` [reference docs](https://cloud.google.com/run/docs/reference/yaml/v1) to deploy three containers to a single cloud run deployment.
 
 * Update the bundle server image path ([line 39](./opa-service.yml#39)) to the path of your custom image above.
 * use gcloud to deploy:

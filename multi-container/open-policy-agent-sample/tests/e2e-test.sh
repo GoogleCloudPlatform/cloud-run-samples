@@ -39,10 +39,13 @@ then
   exit 1
 fi
 
+#allow all users
+gcloud run services add-iam-policy-binding ${SERVICE_NAME} --member=allUsers --role roles/run.invoker --region ${_REGION} 
+
 # check that it's responding at all
 RESULT=`curl ${URL}`
 
-if [[ $RESULT != *"Your client does not have permission to get URL"* ]]; then
+if [[ $RESULT != *"Error: user Anonymous is not authorized to GET url /"* ]]; then
   echo "No Cloud Run opa sample found deployed. Step e2e-test failed."
   exit 1
 fi
@@ -50,7 +53,7 @@ fi
 
 RESULT=`curl --user alice:password ${URL}/finance/salary/alice`
 echo $RESULT
-if [[ $RESULT != *"Error: user Anonymous is not authorized to GET url /"* ]]; then
+if [[ $RESULT != *"Success: user alice is authorized"* ]]; then
   echo "opa not functioning properly. Step e2e-test failed."
   exit 1
 fi
