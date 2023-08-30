@@ -42,11 +42,18 @@ fi
 # check that it's responding at all
 RESULT=`curl ${URL}`
 
-if [[ "Error: user Anonymous is not authorized to GET url /" != "${RESULT}" ]]
-then
-  echo "No Cloud Run opa sample success hello logs found. Step e2e-test failed."
+if [[ $RESULT != *"Your client does not have permission to get URL"* ]]; then
+  echo "No Cloud Run opa sample found deployed. Step e2e-test failed."
   exit 1
-else
-  echo "Cloud Run opa sample successully deployed and nginx successfully proxied request."
-  exit 0
 fi
+
+
+RESULT=`curl --user alice:password ${URL}/finance/salary/alice`
+echo $RESULT
+if [[ $RESULT != *"Error: user Anonymous is not authorized to GET url /"* ]]; then
+  echo "opa not functioning properly. Step e2e-test failed."
+  exit 1
+fi
+
+echo "Cloud Run opa sample successully deployed and nginx successfully proxied request."
+exit 0
