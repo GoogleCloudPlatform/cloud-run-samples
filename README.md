@@ -92,8 +92,6 @@ For all Cloud Run code samples, see the [Cloud Run sample browser](https://cloud
 [idtoken_request_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/auth/service-to-service/auth.py
 [idtoken_request_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run/authentication
 
-Or view a list of [all Cloud Run samples](https://cloud.google.com/run/docs/samples).
-
 **Samples by Language**: [nodejs][nodejs], [golang][golang], [python][python], [java][java], [php][php], [ruby][ruby]
 
 [nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run#readme
