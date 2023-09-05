@@ -9,7 +9,7 @@ For all Cloud Run code samples, see the [Cloud Run sample browser](https://cloud
 |          Sample            |                     Description                         |              Languages             |
 | -------------------------- | ------------------------------------------------------- | ---------------------------------- |
 | Hello World service        | Hello World! A quickstart sample collection             | [Go][hello_go], [Node.js][hello_nodejs], [Python][hello_python], [Java][hello_java], [PHP][hello_php], [Ruby][hello_ruby], [Shell][hello_shell], [C++][hello_cpp] |
-| Hello World job            | Job quickstart samples                                  | [Go][job_go], [Node.js][job_nodejs], [Python][job_python], [Java][job_java_spring], [Shell][job_shell] |
+| Hello World job            | Job quickstart samples                                  | [Go][job_go], [Node.js][job_nodejs], [Python][job_python], [Java][job_java], [Shell][job_shell] |
 | Manual Logging             | Structured logging without client library               | [Go][manual_logging_go], [Node.js][manual_logging_nodejs], [Python][manual_logging_python], [Java][manual_logging_java]|
 | System Package             | Use system-installed binaries.                          | [Go][system_package_go], [Node.js][system_package_nodejs], [Java][system_package_java], [Python][system_package_python]|
 | Pub/Sub Push               | Handle messages from a push subscription                | [Go][pubsub_go], [Node.js][pubsub_nodejs], [Python][pubsub_python], [Java][pubsub_java] |
