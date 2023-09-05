@@ -31,7 +31,7 @@ For all Cloud Run code samples, see the [Cloud Run sample browser](https://cloud
 [job_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run/jobs
 [job_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/jobs
 [job_java]: https://github.com/GoogleCloudPlatform/java-docs-samples/tree/main/run/jobs
-[job_shell]: helloworld-shell
+[job_shell]: jobs-shell
 [hello_go]: https://github.com/GoogleCloudPlatform/golang-samples/tree/main/run/helloworld
 [hello_nodejs]: https://github.com/GoogleCloudPlatform/nodejs-docs-samples/tree/main/run/helloworld
 [hello_python]: https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/helloworld
