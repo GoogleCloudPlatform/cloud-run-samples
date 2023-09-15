@@ -46,7 +46,7 @@ steps:
       - "-c"
       - |
         set -e
-        curl -si --fail --show-error -H "Authorization: Bearer $(cat _id_token)" "$(cat _service_url)"
+        ./testing/cloudbuild-templates/retry.sh "curl -si --fail --show-error -H 'Authorization: Bearer $(cat _id_token)' '$(cat _service_url)'"
 
   - id: "Teardown"
     name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
