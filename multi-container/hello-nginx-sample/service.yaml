@@ -32,10 +32,10 @@ spec:
     metadata:
       annotations:
         # Defines container startup order within multi-container service.
-        # Below requires nginx container to spin up before hello container,
-        # which depends on nginx.
+        # Below requires hello container to spin up before nginx container,
+        # which depends on the hello container.
         # https://cloud.google.com/run/docs/configuring/containers#container-ordering
-        run.googleapis.com/container-dependencies: "{hello: [nginx]}"
+        run.googleapis.com/container-dependencies: "{nginx: [hello]}"
 # [END cloudrun_mc_hello_sidecar_step_deps]
 # [START cloudrun_mc_hello_sidecar_step_serving]
     spec:
@@ -48,8 +48,8 @@ spec:
         - image: nginx
           name: nginx
           ports:
-            - name: http1
-              containerPort: 8080
+          - name: http1
+            containerPort: 8080
           resources:
             limits:
               cpu: 500m
@@ -58,9 +58,15 @@ spec:
           # Declaring volume to mount in current ingress container's filesystem
           # https://cloud.google.com/run/docs/reference/rest/v2/Container#volumemount
           volumeMounts:
-            - name: nginx-conf-secret
-              readOnly: true
-              mountPath: /etc/nginx/conf.d/
+          - name: nginx-conf-secret
+            readOnly: true
+            mountPath: /etc/nginx/conf.d/
+          startupProbe:
+            timeoutSeconds: 240
+            periodSeconds: 240
+            failureThreshold: 1
+            tcpSocket:
+              port: 8080
         # [END cloudrun_mc_hello_sidecar_step_serving]
         # B) Sidecar container "hello" listening at PORT 8888,
         # which can only be accessed by serving ingress container
@@ -68,8 +74,8 @@ spec:
         - image: us-docker.pkg.dev/cloudrun/container/hello
           name: hello
           env:
-            - name: PORT
-              value: "8888"
+          - name: PORT
+            value: "8888"
           resources:
             limits:
               cpu: 1000m
@@ -79,10 +85,10 @@ spec:
       # nginx_config secret in secret manager
       # [START cloudrun_mc_hello_sidecar_step_secret]
       volumes:
-        - name: nginx-conf-secret
-          secret:
-            secretName: nginx_config
-            items:
-              - key: latest
-                path: default.conf
+      - name: nginx-conf-secret
+        secret:
+          secretName: nginx_config
+          items:
+            - key: latest
+              path: default.conf
       # [END cloudrun_mc_hello_sidecar_step_secret]
