@@ -1,0 +1,5 @@
+path:
+  pullrequest: true
+  labelprefix: "asset: "
+  paths:
+    volume-checker: "tool"
