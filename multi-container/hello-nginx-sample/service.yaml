@@ -32,12 +32,12 @@ spec:
     metadata:
       annotations:
         # Defines container startup order within multi-container service.
-        # Below requires nginx container to spin up before hello container,
-        # which depends on nginx.
+        # Below requires hello container to spin up before nginx container,
+        # which depends on the hello container.
         # https://cloud.google.com/run/docs/configuring/containers#container-ordering
-        run.googleapis.com/container-dependencies: "{hello: [nginx]}"
-# [END cloudrun_mc_hello_sidecar_step_deps]
-# [START cloudrun_mc_hello_sidecar_step_serving]
+        run.googleapis.com/container-dependencies: "{nginx: [hello]}"
+    # [END cloudrun_mc_hello_sidecar_step_deps]
+    # [START cloudrun_mc_hello_sidecar_step_serving]
     spec:
       containers:
         # A) Serving ingress container "nginx" listening at PORT 8080
@@ -61,6 +61,12 @@ spec:
             - name: nginx-conf-secret
               readOnly: true
               mountPath: /etc/nginx/conf.d/
+          startupProbe:
+            timeoutSeconds: 240
+            periodSeconds: 240
+            failureThreshold: 1
+            tcpSocket:
+              port: 8080
         # [END cloudrun_mc_hello_sidecar_step_serving]
         # B) Sidecar container "hello" listening at PORT 8888,
         # which can only be accessed by serving ingress container
