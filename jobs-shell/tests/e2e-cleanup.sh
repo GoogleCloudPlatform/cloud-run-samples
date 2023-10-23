@@ -17,4 +17,4 @@ set -x
 gcloud config set run/region "${_REGION}"
 JOB_NAME="jobs-shell-${BUILD_ID}"
 
-gcloud alpha run jobs delete --quiet "${JOB_NAME}"
+gcloud run jobs delete --quiet "${JOB_NAME}"
