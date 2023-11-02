@@ -25,7 +25,7 @@ docker run --rm -e FAIL_RATE=0.9 -e SLEEP_MS=1000 gcr.io/${GOOGLE_CLOUD_PROJECT}
 
 ## Create a job
 ```
-gcloud alpha run jobs create jobs-shell \
+gcloud run jobs create jobs-shell \
   --set-env-vars FAIL_RATE=0.4,SLEEP_MS=5000 \
   --max-retries 10 \
   --tasks 5 \
@@ -34,5 +34,5 @@ gcloud alpha run jobs create jobs-shell \
 
 ## Execute the job
 ```
-gcloud alpha run jobs execute jobs-shell --wait
+gcloud run jobs execute jobs-shell --wait
 ```

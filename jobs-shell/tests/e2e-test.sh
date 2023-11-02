@@ -23,7 +23,7 @@ JOB_NAME="jobs-shell-${BUILD_ID}"
 
 gcloud builds submit -t "gcr.io/${PROJECT_ID}/jobs-shell:${SHORT_SHA}"
 
-gcloud alpha run jobs create "${JOB_NAME}" \
+gcloud run jobs create "${JOB_NAME}" \
   --set-env-vars FAIL_RATE=0,SLEEP_MS=10 \
   --max-retries 2 \
   --tasks 5 \
@@ -31,6 +31,6 @@ gcloud alpha run jobs create "${JOB_NAME}" \
 
 # Because of --wait, the command will fail if the 
 # execution fails, causing the entire script to fail
-gcloud alpha run jobs execute "${JOB_NAME}" \
+gcloud run jobs execute "${JOB_NAME}" \
   --format=json \
   --wait 
