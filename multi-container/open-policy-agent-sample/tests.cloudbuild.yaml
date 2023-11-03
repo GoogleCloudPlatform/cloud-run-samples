@@ -38,12 +38,12 @@ steps:
     waitFor: ["create-example-opa-bundle"]
     name: 'gcr.io/cloud-builders/docker'
     dir: "${_SAMPLE_DIR}"
-    args: ['build', '-f', 'Dockerfile.nginx', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/docker/opa-sample-test', '.']
+    args: ['build', '-f', 'Dockerfile.nginx', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/opa-sample-test', '.']
 
   - id: "push-bundle-server"
     waitFor: ["build-bundle-server"]
     name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/docker/opa-sample-test']
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/opa-sample-test']
 
   - id: "e2e-test"
     waitFor: ["push-bundle-server"]
@@ -68,8 +68,8 @@ steps:
       #!/bin/bash
       export MC_SERVICE_NAME="${_SERVICE_NAME}-$BUILD_ID"
       gcloud run services delete "${MC_SERVICE_NAME}" --quiet --region "${_REGION}"
-      echo gcloud artifacts docker images delete us-central1-docker.pkg.dev/${PROJECT_ID}/docker/opa-sample-test --quiet --project ${PROJECT_ID}
-      gcloud artifacts docker images delete us-central1-docker.pkg.dev/${PROJECT_ID}/docker/opa-sample-test --quiet --project ${PROJECT_ID}
+      echo gcloud artifacts docker images delete us-central1-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/opa-sample-test --quiet --project ${PROJECT_ID}
+      gcloud artifacts docker images delete us-central1-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/opa-sample-test --quiet --project ${PROJECT_ID}
     env:
       - "BUILD_ID=$BUILD_ID"
       - "_REGION=$_REGION"
@@ -91,3 +91,4 @@ substitutions:
   _SERVICE_NAME: "opa-sample-testing"
   _REGION: "us-central1"
   _SAMPLE_DIR: "multi-container/open-policy-agent-sample"
+  _REPO_NAME: samples
