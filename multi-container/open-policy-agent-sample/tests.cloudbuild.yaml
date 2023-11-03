@@ -1,7 +1,7 @@
 steps:
   - id: "create-example-opa-bundle"
     waitFor: ["-"]
-    name: 'gcr.io/gcp-runtimes/ubuntu_18_0_4'
+    name: "gcr.io/gcp-runtimes/ubuntu_18_0_4"
     dir: "${_SAMPLE_DIR}"
     script: |
       #!/bin/bash
@@ -10,15 +10,15 @@ steps:
 
       # bob is alice's manager, and betty is charlie's.
       subordinates := {"alice": [], "charlie": [], "bob": ["alice"], "betty": ["charlie"]}
-      
+
       default allow := false
-      
+
       # Allow users to get their own salaries.
       allow {
           input.method == "GET"
           input.path == ["finance", "salary", input.user]
       }
-      
+
       # Allow managers to get their subordinates' salaries.
       allow {
           some username
@@ -32,18 +32,30 @@ steps:
       #get opa binary and build
       curl -L -o opa https://openpolicyagent.org/downloads/v0.55.0/opa_linux_amd64_static
       chmod a+x ./opa
-      ./opa build example.rego -o bundle.tar.gz 
+      ./opa build example.rego -o bundle.tar.gz
 
   - id: "build-bundle-server"
     waitFor: ["create-example-opa-bundle"]
-    name: 'gcr.io/cloud-builders/docker'
+    name: "gcr.io/cloud-builders/docker"
     dir: "${_SAMPLE_DIR}"
-    args: ['build', '-f', 'Dockerfile.nginx', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/opa-sample-test', '.']
+    args:
+      [
+        "build",
+        "-f",
+        "Dockerfile.nginx",
+        "-t",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/opa-sample-test",
+        ".",
+      ]
 
   - id: "push-bundle-server"
     waitFor: ["build-bundle-server"]
-    name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/opa-sample-test']
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/opa-sample-test",
+      ]
 
   - id: "e2e-test"
     waitFor: ["push-bundle-server"]
