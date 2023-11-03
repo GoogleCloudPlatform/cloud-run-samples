@@ -18,6 +18,8 @@ set -eux pipefail
 export SERVICE_NAME="${_SERVICE_NAME}-$BUILD_ID"
 
 # Substituting the env vars in cloud run yaml file
+apt-get update -qq
+apt-get install -y gettext-base
 envsubst < opa-service.yaml > opa-service-config.yaml
 
 # Note that nginx_config secret has already been created within project.
