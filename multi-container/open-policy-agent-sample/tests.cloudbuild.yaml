@@ -1,0 +1,93 @@
+steps:
+  - id: "create-example-opa-bundle"
+    waitFor: ["-"]
+    name: 'gcr.io/gcp-runtimes/ubuntu_18_0_4'
+    dir: "${_SAMPLE_DIR}"
+    script: |
+      #!/bin/bash
+      cat <<EOF >> example.rego
+      package httpapi.authz
+
+      # bob is alice's manager, and betty is charlie's.
+      subordinates := {"alice": [], "charlie": [], "bob": ["alice"], "betty": ["charlie"]}
+      
+      default allow := false
+      
+      # Allow users to get their own salaries.
+      allow {
+          input.method == "GET"
+          input.path == ["finance", "salary", input.user]
+      }
+      
+      # Allow managers to get their subordinates' salaries.
+      allow {
+          some username
+          input.method == "GET"
+          input.path = ["finance", "salary", username]
+          subordinates[input.user][_] == username
+      }
+      EOF
+      cat example.rego
+
+      #get opa binary and build
+      curl -L -o opa https://openpolicyagent.org/downloads/v0.55.0/opa_linux_amd64_static
+      chmod a+x ./opa
+      ./opa build example.rego -o bundle.tar.gz 
+
+  - id: "build-bundle-server"
+    waitFor: ["create-example-opa-bundle"]
+    name: 'gcr.io/cloud-builders/docker'
+    dir: "${_SAMPLE_DIR}"
+    args: ['build', '-f', 'Dockerfile.nginx', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/docker/opa-sample-test', '.']
+
+  - id: "push-bundle-server"
+    waitFor: ["build-bundle-server"]
+    name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/docker/opa-sample-test']
+
+  - id: "e2e-test"
+    waitFor: ["push-bundle-server"]
+    name: "gcr.io/cloud-builders/gcloud"
+    dir: "${_SAMPLE_DIR}"
+    script: |
+      #!/bin/bash
+      echo "Run e2e-test ..."
+      ./tests/e2e-test.sh || touch /workspace/e2e-failed
+    env:
+      - "BUILD_ID=$BUILD_ID"
+      - "_REGION=$_REGION"
+      - "_SERVICE_NAME=$_SERVICE_NAME"
+      - "PROJECT_ID=$PROJECT_ID"
+      - "IMAGE_NAME=opa-sample-test"
+
+  - id: "e2e-cleanup"
+    waitFor: ["e2e-test"]
+    name: "gcr.io/cloud-builders/gcloud"
+    dir: "${_SAMPLE_DIR}"
+    script: |
+      #!/bin/bash
+      export MC_SERVICE_NAME="${_SERVICE_NAME}-$BUILD_ID"
+      gcloud run services delete "${MC_SERVICE_NAME}" --quiet --region "${_REGION}"
+      echo gcloud artifacts docker images delete us-central1-docker.pkg.dev/${PROJECT_ID}/docker/opa-sample-test --quiet --project ${PROJECT_ID}
+      gcloud artifacts docker images delete us-central1-docker.pkg.dev/${PROJECT_ID}/docker/opa-sample-test --quiet --project ${PROJECT_ID}
+    env:
+      - "BUILD_ID=$BUILD_ID"
+      - "_REGION=$_REGION"
+      - "_SERVICE_NAME=$_SERVICE_NAME"
+      - "IMAGE_NAME=opa-bundle"
+      - "PROJECT_ID=$PROJECT_ID"
+
+  - id: "report-status"
+    waitFor: ["e2e-cleanup"]
+    name: "gcr.io/cloud-builders/gcloud"
+    script: |
+      #!/bin/bash
+      if [[ -f /workspace/e2e-failed   ]]
+      then
+        echo "Step e2e-test failed"
+        exit 1
+      fi
+substitutions:
+  _SERVICE_NAME: "opa-sample-testing"
+  _REGION: "us-central1"
+  _SAMPLE_DIR: "multi-container/open-policy-agent-sample"
