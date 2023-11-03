@@ -39,7 +39,7 @@ spec:
         startupProbe:
           tcpSocket:
             port: 8181
-      - image: "us-central1-docker.pkg.dev/<PROJECT_ID>/docker/<IMAGE_NAME>"
+      - image: "us-central1-docker.pkg.dev/<PROJECT_ID>/containers/<IMAGE_NAME>"
         name: bundle-server
         env: 
         - name: "NGINX_PORT"

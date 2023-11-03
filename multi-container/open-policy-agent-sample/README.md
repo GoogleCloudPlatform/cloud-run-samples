@@ -18,22 +18,27 @@ The goal is to use a simple HTTP web server that accepts any HTTP GET request th
 # 1. Create and push a custom bundle server image
 
 * Follow [Step 1](https://www.openpolicyagent.org/docs/latest/http-api-authorization/#1-create-a-policy-bundle) in the original tutorial, resulting in creating two files called `example.rego` and `bundle.tar.gz`.
-* Create a custom bundle server with [Dockerfile.nginx](./Dockerfile.nginx) and [nginx.conf.template](./nginx.conf.template) with the following command:
+* Create a custom bundle server with [Dockerfile.nginx](./Dockerfile.nginx) and [nginx.conf.template](./nginx.conf.template) with the following commands:
 
 ```bash
-docker build -f Dockerfile.nginx -t us-central1-docker.pkg.dev/<CLOUD_PROJECT>/docker/<IMAGE_NAME> .  
 
-docker push us-central1-docker.pkg.dev/<CLOUD_PROJECT>/docker/<IMAGE_NAME>
+gcloud artifacts repositories create containers \
+    --repository-format=docker \
+    --location=us-central1
+
+docker build -f Dockerfile.nginx -t us-central1-docker.pkg.dev/<CLOUD_PROJECT>/containers/<IMAGE_NAME> .  
+
+docker push us-central1-docker.pkg.dev/<CLOUD_PROJECT>/containers/<IMAGE_NAME>
 ```
 
 Note: We assume Google Cloud Artifact Registry in this tutorial but any registry accessible to Cloud Run will work
 
 # 2. Update opa-service.yml
 
-Read through [Step 2](https://www.openpolicyagent.org/docs/latest/http-api-authorization/#2-bootstrap-the-tutorial-environment-using-docker-compose) in the original tutorial, but instead of creating a `docker-compose.yml` file and using `docker-compose` to create the service, we're instead going to use `opa-service.yaml` [reference docs](https://cloud.google.com/run/docs/reference/yaml/v1) to deploy three containers to a single cloud run deployment.
+Read through [Step 2](https://www.openpolicyagent.org/docs/latest/http-api-authorization/#2-bootstrap-the-tutorial-environment-using-docker-compose) in the original tutorial, but instead of creating a `docker-compose.yml` file and using `docker-compose` to create the service, we're instead going to use `opa-service.yaml` ([reference docs](https://cloud.google.com/run/docs/reference/yaml/v1)) to deploy three containers to a single cloud run deployment.
 
-* Update the bundle server image path ([line 39](./opa-service.yml#39)) to the path of your custom image above.
-* use gcloud to deploy:
+* Update the `PROJECT_ID`, `SERVER_NAME`, `REGION`, and `IMAGE_NAME` in [opa-service.yml](./opa-service.yml). 
+* Deploy the service:
 
 ```bash
 gcloud beta run services replace opa-service.yaml
@@ -43,7 +48,7 @@ gcloud beta run services replace opa-service.yaml
 
 Follow [steps 3-5](https://www.openpolicyagent.org/docs/latest/http-api-authorization/#3-check-that-alice-can-see-her-own-salary) in the original tutorial to verify the policies with one small change:
   
-  any time you see `localhost:5000` replace it with the Cloud Run URL. For e.g.
+  any time you see `curl localhost:5000` replace it with the Cloud Run URL. For e.g.
 
 ```bash
 curl --user alice:password <CLOUD_RUN_URL>/finance/salary/alice
