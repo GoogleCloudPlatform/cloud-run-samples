@@ -22,13 +22,13 @@ The goal is to use a simple HTTP web server that accepts any HTTP GET request th
 
 ```bash
 
-gcloud artifacts repositories create containers \
+gcloud artifacts repositories create <REPO_NAME> \
     --repository-format=docker \
     --location=us-central1
 
-docker build -f Dockerfile.nginx -t us-central1-docker.pkg.dev/<CLOUD_PROJECT>/containers/<IMAGE_NAME> .  
+docker build -f Dockerfile.nginx -t us-central1-docker.pkg.dev/<PROJECT_ID>/<REPO_NAME>/<IMAGE_NAME> .  
 
-docker push us-central1-docker.pkg.dev/<CLOUD_PROJECT>/containers/<IMAGE_NAME>
+docker push us-central1-docker.pkg.dev/<PROJECT_ID>/<REPO_NAME>/<IMAGE_NAME>
 ```
 
 Note: We assume Google Cloud Artifact Registry in this tutorial but any registry accessible to Cloud Run will work
@@ -37,7 +37,7 @@ Note: We assume Google Cloud Artifact Registry in this tutorial but any registry
 
 Read through [Step 2](https://www.openpolicyagent.org/docs/latest/http-api-authorization/#2-bootstrap-the-tutorial-environment-using-docker-compose) in the original tutorial, but instead of creating a `docker-compose.yml` file and using `docker-compose` to create the service, we're instead going to use `opa-service.yaml` ([reference docs](https://cloud.google.com/run/docs/reference/yaml/v1)) to deploy three containers to a single cloud run deployment.
 
-* Update the `PROJECT_ID`, `SERVER_NAME`, `REGION`, and `IMAGE_NAME` in [opa-service.yml](./opa-service.yml). 
+* Update all the variables (e.g. `$PROJECT_ID`) in [opa-service.yml](./opa-service.yml). 
 * Deploy the service:
 
 ```bash

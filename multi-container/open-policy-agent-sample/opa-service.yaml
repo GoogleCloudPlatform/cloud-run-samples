@@ -3,9 +3,9 @@ kind: Service
 metadata:
   annotations:
     run.googleapis.com/launch-stage: BETA
-  name: "SERVICE_NAME"
+  name: "${SERVICE_NAME}"
   labels:
-    cloud.googleapis.com/location: "REGION"
+    cloud.googleapis.com/location: "${_REGION}"
 spec:
   template:
     metadata:
@@ -39,7 +39,7 @@ spec:
           startupProbe:
             tcpSocket:
               port: 8181
-        - image: "us-central1-docker.pkg.dev/<PROJECT_ID>/containers/<IMAGE_NAME>"
+        - image: "us-central1-docker.pkg.dev/${PROJECT_ID}/${_REPO_NAME}/${_IMAGE_NAME}"
           name: bundle-server
           env:
             - name: "NGINX_PORT"
