@@ -80,6 +80,12 @@ spec:
             limits:
               cpu: 1000m
               memory: 512Mi
+          startupProbe:
+            timeoutSeconds: 240
+            periodSeconds: 240
+            failureThreshold: 1
+            tcpSocket:
+              port: 8888
         # [END cloudrun_mc_hello_sidecar_step_sidecar]
       # Named volume pointing to
       # nginx_config secret in secret manager
