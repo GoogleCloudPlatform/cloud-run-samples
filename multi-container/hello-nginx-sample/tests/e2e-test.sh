@@ -40,11 +40,7 @@ then
 fi
 
 # Check Cloud Run MC logs for signs of successful request to hello container.
-MC_HELLO_LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=hello" --limit 1 | grep -e 'Hello from Cloud Run')
-
-export LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=hello" --limit 1)
-
-echo $LOG
+MC_HELLO_LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=hello" --limit 2 | grep -e 'Hello from Cloud Run')
 
 if [[ -z "${MC_HELLO_LOG}" ]]
 then
