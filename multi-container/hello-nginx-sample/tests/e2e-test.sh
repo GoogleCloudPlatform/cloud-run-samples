@@ -42,6 +42,10 @@ fi
 # Check Cloud Run MC logs for signs of successful request to hello container.
 MC_HELLO_LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=hello" --limit 1 | grep -e 'Hello from Cloud Run')
 
+export LOG=$(gcloud logging read "resource.type=cloud_run_revision AND resource.labels.service_name=${MC_SERVICE_NAME} AND labels.container_name=hello" --limit 1)
+
+echo $LOG
+
 if [[ -z "${MC_HELLO_LOG}" ]]
 then
   echo "No Cloud Run MC success hello logs found. Step e2e-test failed."
