@@ -1,0 +1,49 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+    run.googleapis.com/launch-stage: BETA
+  name: "SERVICE_NAME"
+  labels:
+    cloud.googleapis.com/location: "REGION"
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/container-dependencies: '{"opa":["bundle-server"], "api-server":["opa"] }'
+    spec:
+      containers:
+      - image: "openpolicyagent/demo-restful-api:0.3"
+        name: api-server
+        env:
+        - name: "OPA_ADDR"
+          value: "http://localhost:8181" #opa agent
+        - name: "POLICY_PATH"
+          value: "/v1/data/httpapi/authz"
+        startupProbe:
+          tcpSocket:
+            port: 5000
+        ports:
+        - containerPort: 5000
+      - image: "openpolicyagent/opa:0.55.0"
+        name: opa
+        command:
+        - "opa"
+        - "run"
+        - "--server"
+        - "--log-format=json-pretty"
+        - "--set=decision_logs.console=true"
+        - "--set=services.nginx.url=http://localhost:8888" #bundle_server
+        - "--set=bundles.nginx.service=nginx"
+        - "--set=bundles.nginx.resource=bundles/bundle.tar.gz"
+        startupProbe:
+          tcpSocket:
+            port: 8181
+      - image: "us-central1-docker.pkg.dev/<PROJECT_ID>/docker/<IMAGE_NAME>"
+        name: bundle-server
+        env: 
+        - name: "NGINX_PORT"
+          value: "8888"
+        startupProbe:
+          tcpSocket:
+            port: 8888
