@@ -1,0 +1,5 @@
+FROM nginx:1.20.0-alpine
+
+RUN mkdir /etc/nginx/templates && mkdir /usr/share/nginx/html/bundles
+COPY nginx.conf.template /etc/nginx/templates
+COPY bundle.tar.gz /usr/share/nginx/html/bundles
