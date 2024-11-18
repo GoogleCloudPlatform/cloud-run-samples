@@ -5,7 +5,7 @@ steps:
     entrypoint: "./tests/unit-test.sh"
   - id: "e2e-test"
     waitFor: ["-"]
-    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     dir: "${_SAMPLE_DIR}"
     script: |
       #!/bin/bash
@@ -17,7 +17,7 @@ steps:
       - "_REGION=$_REGION"
   - id: "e2e-cleanup"
     waitFor: ["e2e-test"]
-    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     dir: "${_SAMPLE_DIR}"
     entrypoint: "./tests/e2e-cleanup.sh"
     env:
@@ -26,7 +26,7 @@ steps:
       - "_REGION=$_REGION"
   - id: "report-status"
     waitFor: ["e2e-cleanup"]
-    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     dir: "${_SAMPLE_DIR}"
     script: |
       #!/bin/bash

@@ -25,7 +25,7 @@ steps:
     ]
 
   - id: "Deploy to Cloud Run"
-    name: "gcr.io/cloud-builders/gcloud-slim:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     entrypoint: /bin/bash
     args:
       - "-c"
@@ -36,7 +36,7 @@ steps:
           --no-allow-unauthenticated
 
   - id: "Get Cloud Run URL"
-    name: "gcr.io/cloud-builders/gcloud-slim:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     entrypoint: "/bin/bash"
     args:
       - "-c"
@@ -53,7 +53,7 @@ steps:
       - "_SERVICE=${_SERVICE}"
 
   - id: "End-to-End Tests"
-    name: "gcr.io/cloud-builders/gcloud-slim:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     entrypoint: "/bin/sh"
     args:
       - "-c"
@@ -69,7 +69,7 @@ steps:
       - "GCLOUD_REPORT_BUCKET=${_BUCKET}"
 
   - id: "Teardown"
-    name: "gcr.io/cloud-builders/gcloud-slim:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     entrypoint: "/bin/bash"
     args:
       - "-c"

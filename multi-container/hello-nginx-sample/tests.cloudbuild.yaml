@@ -1,7 +1,7 @@
 steps:
   - id: "e2e-test"
     waitFor: ["-"]
-    name: "gcr.io/cloud-builders/gcloud"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     dir: "${_SAMPLE_DIR}"
     script: |
       #!/bin/bash
@@ -13,7 +13,7 @@ steps:
       - "_SERVICE_NAME=$_SERVICE_NAME"
   - id: "e2e-cleanup"
     waitFor: ["e2e-test"]
-    name: "gcr.io/cloud-builders/gcloud"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     dir: "${_SAMPLE_DIR}"
     script: |
       #!/bin/bash
@@ -25,7 +25,7 @@ steps:
       - "_SERVICE_NAME=$_SERVICE_NAME"
   - id: "report-status"
     waitFor: ["e2e-cleanup"]
-    name: "gcr.io/cloud-builders/gcloud"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     script: |
       #!/bin/bash
       if [[ -f /workspace/e2e-failed   ]]
