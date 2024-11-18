@@ -20,7 +20,7 @@ SHORT_SHA="${SHORT_SHA:-latest}"
 gcloud config set run/region "${_REGION}"
 
 JOB_NAME="jobs-shell-${BUILD_ID}"
-AR_REPO_NAME=us-central1-docker-pkg.dev/${PROJECT_ID}/samples/jobs-shell
+AR_REPO_NAME=${_AR_REPO_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO_NAME}/jobs-shell
 
 gcloud builds submit -t "${AR_REPO_NAME}:${SHORT_SHA}"
 

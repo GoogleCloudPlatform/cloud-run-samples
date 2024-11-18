@@ -15,6 +15,8 @@ steps:
       - "SHORT_SHA=$SHORT_SHA"
       - "PROJECT_ID=$PROJECT_ID"
       - "_REGION=$_REGION"
+      - "_AR_REPO_REGION=$_AR_REPO_REGION"
+      - "_AR_REPO_NAME=$_AR_REPO_NAME"
   - id: "e2e-cleanup"
     waitFor: ["e2e-test"]
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
@@ -37,5 +39,7 @@ steps:
       fi
 substitutions:
   _REGION: "europe-west9"
+  _AR_REPO_REGION: "us-central1"
+  _AR_REPO_NAME: "samples"
   _SAMPLE_DIR: "jobs-shell"
   _CLOUDSDK_VERSION: "latest"
