@@ -20,15 +20,14 @@ SHORT_SHA="${SHORT_SHA:-latest}"
 gcloud config set run/region "${_REGION}"
 
 JOB_NAME="jobs-shell-${BUILD_ID}"
-AR_REPO_NAME=${_AR_REPO_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO_NAME}/jobs-shell
 
-gcloud builds submit -t "${AR_REPO_NAME}:${SHORT_SHA}"
+gcloud builds submit -t "${_IMAGE_NAME}"
 
 gcloud run jobs create "${JOB_NAME}" \
   --set-env-vars FAIL_RATE=0,SLEEP_MS=10 \
   --max-retries 2 \
   --tasks 5 \
-  --image "${AR_REPO_NAME}/jobs-shell:${SHORT_SHA}"
+  --image "${_IMAGE_NAME}"
 
 # Because of --wait, the command will fail if the
 # execution fails, causing the entire script to fail
