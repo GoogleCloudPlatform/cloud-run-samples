@@ -1,6 +1,7 @@
 steps:
   - id: Deploy Restricted Function
-    name: "gcr.io/cloud-builders/gcloud"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
     dir: "${_SAMPLE_DIR}"
     args:
       [
@@ -26,7 +27,7 @@ steps:
     waitFor: ["Build Allow Container Image"]
 
   - id: "Deploy to Cloud Run"
-    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     entrypoint: /bin/bash
     args:
       - "-c"
@@ -41,7 +42,7 @@ steps:
     waitFor: ["Push Container Image"]
 
   - id: "Get Cloud Run URL"
-    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     entrypoint: "/bin/bash"
     args:
       - "-c"
@@ -91,7 +92,7 @@ steps:
     waitFor: ["Deploy to Cloud Run", "Deploy Restricted Function"]
 
   - id: "Teardown"
-    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     entrypoint: "/bin/bash"
     args:
       - "-c"
