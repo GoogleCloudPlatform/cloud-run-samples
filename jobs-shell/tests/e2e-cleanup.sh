@@ -18,3 +18,5 @@ gcloud config set run/region "${_REGION}"
 JOB_NAME="jobs-shell-${BUILD_ID}"
 
 gcloud run jobs delete --quiet "${JOB_NAME}"
+
+gcloud artifacts docker images delete $_IMAGE_NAME

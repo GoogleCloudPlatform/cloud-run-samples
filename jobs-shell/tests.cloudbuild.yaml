@@ -5,7 +5,7 @@ steps:
     entrypoint: "./tests/unit-test.sh"
   - id: "e2e-test"
     waitFor: ["-"]
-    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     dir: "${_SAMPLE_DIR}"
     script: |
       #!/bin/bash
@@ -15,18 +15,20 @@ steps:
       - "SHORT_SHA=$SHORT_SHA"
       - "PROJECT_ID=$PROJECT_ID"
       - "_REGION=$_REGION"
+      - "_IMAGE_NAME=$_IMAGE_NAME"
   - id: "e2e-cleanup"
     waitFor: ["e2e-test"]
-    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     dir: "${_SAMPLE_DIR}"
     entrypoint: "./tests/e2e-cleanup.sh"
     env:
       - "BUILD_ID=$BUILD_ID"
       - "PROJECT_ID=$PROJECT_ID"
       - "_REGION=$_REGION"
+      - "_IMAGE_NAME=$_IMAGE_NAME"
   - id: "report-status"
     waitFor: ["e2e-cleanup"]
-    name: "gcr.io/cloud-builders/gcloud:$_CLOUDSDK_VERSION"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION"
     dir: "${_SAMPLE_DIR}"
     script: |
       #!/bin/bash
@@ -37,5 +39,10 @@ steps:
       fi
 substitutions:
   _REGION: "europe-west9"
+  _AR_REPO_REGION: "us-central1"
+  _AR_REPO_NAME: "samples"
+  _IMAGE_NAME: "${_AR_REPO_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO_NAME}/jobs-shell:${SHORT_SHA}"
   _SAMPLE_DIR: "jobs-shell"
   _CLOUDSDK_VERSION: "latest"
+options:
+  dynamicSubstitutions: true
