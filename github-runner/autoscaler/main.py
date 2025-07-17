@@ -217,6 +217,7 @@ def github_webhook_handler(request: Request):
 
    # 3. Handle Scaling Logic
 
+# [START run_github_worker_pool_scaling_logic]
 
    current_instance_count = get_current_worker_pool_instance_count()
 
@@ -252,3 +253,4 @@ def github_webhook_handler(request: Request):
 
 
    return ("OK", 200)
+# [END run_github_worker_pool_scaling_logic]

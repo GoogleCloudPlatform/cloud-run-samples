@@ -16,7 +16,7 @@ RUNNER_PREFIX="cloud-run-worker"
 RUNNER_SUFFIX=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 5 | head -n 1)
 RUNNER_NAME="${RUNNER_PREFIX}-${RUNNER_SUFFIX}"
 
-
+# [START run_github_worker_pool_start]
 # Configure the current runner instance with URL, token and name.
 mkdir /home/docker/actions-runner && cd /home/docker/actions-runner
 echo ${GH_REPOSITORY_URL}
@@ -37,3 +37,5 @@ trap 'cleanup; exit 143' TERM
 
 # Run the runner.
 ./run.sh & wait $!
+
+# [END run_github_worker_pool_start]
