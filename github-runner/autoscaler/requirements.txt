@@ -5,3 +5,5 @@ google-auth
 google-auth-oauthlib
 google-api-python-client
 PyGithub
+
+# TODO(glasnt): requirements need cleanup
