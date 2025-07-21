@@ -70,7 +70,7 @@ def _call_cloudrun_api(method, url=CLOUDRUN_URI, payload=None):
     # Make Call
     try:
         response = auth_req.session.request(method, url, headers=headers, json=payload)
-        response.raise_for_status()
+        response.raise_for_status() # TODO(glasnt) this may not correctly escalate issues
 
         return response.status_code, response.json()
 
