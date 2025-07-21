@@ -3,7 +3,7 @@
 
 
 # [START run_github_worker_pool_dockerfile]
-FROM ghcr.io/actions/actions-runner:2.322.0
+FROM ghcr.io/actions/actions-runner:2.326.0
 
 # Add scripts with right permissions.
 USER root
