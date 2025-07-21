@@ -37,7 +37,7 @@ LOCATION = _get_region()
 
 # --- Configuration ---
 # Worker Pool Name setup in tutorial  ("WORKER_POOL_NAME")
-CLOUD_RUN_WORKER_POOL_NAME = os.environ.get("CLOUD_RUN_WORKER_POOL_NAME")
+CLOUD_RUN_WORKER_POOL_NAME = os.environ.get("WORKER_POOL_NAME")
 
 ## GitHub specific config
 GITHUB_REPO = os.environ.get("GITHUB_REPO")
@@ -124,7 +124,7 @@ def update_runner_vm_instance_count(instance_count: int):
             f"Successfully updated Cloud Run worker pool. Status Code: {response.status_code}"
         )
         print("Response JSON:")
-        print(json.dumps(response.json(), indent=2))
+        print(response.json())
 
     except requests.exceptions.RequestException as e:
         print(f"Error updating Cloud Run worker pool: {e}")
@@ -174,6 +174,10 @@ def github_webhook_handler(request: Request):
     """
     HTTP Cloud Function that handles GitHub workflow_job events for autoscaling.
     """
+    # 0. Log invocation.
+    event_type = request.headers.get("X-GitHub-Event")
+    print(f"Received event type '{event_type}'")
+
     # 1. Validate Webhook Signature (IMPORTANT FOR PRODUCTION)
     # You need to implement this with your GitHub Webhook Secret.
     # This is commented out in your original code, but critical for security.
@@ -183,9 +187,8 @@ def github_webhook_handler(request: Request):
     #     return ("Invalid signature", 403)
 
     # 2. Parse Event
-    event_type = request.headers.get("X-GitHub-Event")
     if event_type != "workflow_job":
-        print(f"Received event type '{event_type}', ignoring.")
+        print(f"Ignoring event type '{event_type}'")
         return ("OK", 200)
 
     try:
@@ -204,7 +207,7 @@ def github_webhook_handler(request: Request):
     job_status = job.get("status")  # 'queued', 'in_progress', 'completed'
     print(
         f"Received workflow_job event: Job ID {job_id}, Name '{job_name}', "
-        "Status '{job_status}', Action '{action}'"
+        f"Status '{job_status}', Action '{action}'"
     )
 
     # 3. Handle Scaling Logic
@@ -223,13 +226,13 @@ def github_webhook_handler(request: Request):
             new_instance_count = current_instance_count + 1
             print(
                 f"Job '{job_name}' is queued. Scaling up from "
-                "{current_instance_count} to {new_instance_count} runners."
+                f"{current_instance_count} to {new_instance_count} runners."
             )
             create_runner_vm(new_instance_count)
         else:
             print(
                 f"Job '{job_name}' is queued, but max runners ({MAX_RUNNERS}) "
-                "reached. Current runners: {current_instance_count}."
+                f"reached. Current runners: {current_instance_count}."
             )
 
     # Scale Down: If a job is completed, find the corresponding runner and consider terminating it
@@ -241,18 +244,17 @@ def github_webhook_handler(request: Request):
             new_instance_count = current_instance_count - 1
             print(
                 f"Job '{job_name}' completed. Scaling down "
-                "from {current_instance_count} to {new_instance_count} runners."
+                f"from {current_instance_count} to {new_instance_count} runners."
             )
             delete_runner_vm(new_instance_count)
         else:
             print(
-                f"Job '{job_name}' completed, but "
-                "no runners are currently active to scale down."
+                f"Job '{job_name}' completed, but no runners are currently active to scale down."
             )
     else:
         print(
             f"Workflow job event for '{job_name}' with action '{action}' and "
-            "status '{job_status}' did not trigger a scaling action."
+            f"status '{job_status}' did not trigger a scaling action."
         )
     return ("OK", 200)
 
