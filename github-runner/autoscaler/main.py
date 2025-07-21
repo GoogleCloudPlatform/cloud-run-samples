@@ -26,7 +26,8 @@ from flask import Request
 
 def _get_region():
     req = requests.get(
-        "http://metadata.google.internal/computeMetadata/v1/instance/region"
+        "http://metadata.google.internal/computeMetadata/v1/instance/region",
+        headers={"Metadata-Flavor": "Google"},
     )
     return req.text.split("/")[-1]
 
