@@ -25,21 +25,24 @@ from flask import Request
 from google.auth.transport.requests import Request as GoogleRequest
 
 
-CREDENTIALS, PROJECT_ID = google.auth.default()
 # --- Configuration (Mandatory values) ---
 CLOUD_RUN_WORKER_POOL_NAME = os.environ["WORKER_POOL_NAME"]
 CLOUD_RUN_WORKER_POOL_LOCATION = os.environ["WORKER_POOL_LOCATION"]
 GITHUB_REPO = os.environ["GITHUB_REPO"]
 GITHUB_WEBHOOK_SECRET = os.environ["WEBHOOK_SECRET"]
 
-# Cloud Run API for checking/updating
-CLOUDRUN_URI = f"https://run.googleapis.com/v2/projects/{PROJECT_ID}/locations/{CLOUD_RUN_WORKER_POOL_LOCATION}/workerPools/{CLOUD_RUN_WORKER_POOL_NAME}"
 
 ## Autoscaling parameters
 # Max number of concurrent runners
 MAX_RUNNERS = int(os.getenv("MAX_RUNNERS", 5))
 # How long to wait before scaling down idle runners
 IDLE_TIMEOUT_MINUTES = int(os.getenv("IDLE_TIMEOUT_MINUTES", 15))
+
+# Values for API authentication
+CREDENTIALS, PROJECT_ID = google.auth.default()
+
+# Cloud Run API for checking/updating
+CLOUDRUN_URI = f"https://run.googleapis.com/v2/projects/{PROJECT_ID}/locations/{CLOUD_RUN_WORKER_POOL_LOCATION}/workerPools/{CLOUD_RUN_WORKER_POOL_NAME}"
 
 
 def _call_cloudrun_api(method, url=CLOUDRUN_URI, payload=None):
