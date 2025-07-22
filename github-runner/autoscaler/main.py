@@ -47,7 +47,7 @@ CLOUDRUN_URI = f"https://run.googleapis.com/v2/projects/{PROJECT_ID}/locations/{
 
 def _call_cloudrun_api(method, url=CLOUDRUN_URI, payload=None):
     # TODO: this method should be replaced with google-cloud-run SDK
-    # when functionality available
+    # when functionality available. It may not correctly handle 409 issues.
 
     # Get Authenticated URL
     scoped_credentials = CREDENTIALS.with_scopes(
@@ -69,15 +69,19 @@ def _call_cloudrun_api(method, url=CLOUDRUN_URI, payload=None):
 
     # Make Call
     try:
+
         response = auth_req.session.request(method, url, headers=headers, json=payload)
-        response.raise_for_status() # TODO(glasnt) this may not correctly escalate issues
+        response.raise_for_status()
 
         return response.status_code, response.json()
 
-    except requests.exceptions.RequestException as e:
+    except requests.exceptions.HTTPError as e:
+        print(f"Error: {e}")
         if response:
+            print(f"API Error: {response.status_code} - {response.text}")
             raise ValueError(f"API Error: {response.status_code} - {response.text}")
         else:
+            print(f"No response to return. {method} {url}")
             raise ValueError(f"API Error: {e}")
 
 
