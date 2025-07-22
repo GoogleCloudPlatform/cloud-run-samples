@@ -18,7 +18,7 @@ FROM ghcr.io/actions/actions-runner:2.326.0
 
 # Add scripts with right permissions.
 USER root
-ADD start.sh start.sh
+COPY start.sh start.sh
 RUN chmod +x start.sh
 
 # Add start entrypoint with right permissions.
