@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-# [START run_github_worker_pool_dockerfile]
+# [START cloudrun_github_worker_pool_dockerfile]
 FROM ghcr.io/actions/actions-runner:2.327.1
 
 # Add scripts with right permissions.
@@ -24,4 +24,4 @@ RUN chmod +x start.sh
 # Add start entrypoint with right permissions.
 USER runner
 ENTRYPOINT ["./start.sh"]
-# [END run_github_worker_pool_dockerfile]
+# [END cloudrun_github_worker_pool_dockerfile]

@@ -210,7 +210,7 @@ def github_webhook_handler(request: Request):
     )
 
     # 3. Handle Scaling Logic
-    # [START run_github_worker_pool_scaling_logic]
+    # [START clourun_github_worker_pool_scaling_logic]
     try:
         current_instance_count = get_current_worker_pool_instance_count()
     except ValueError as e:
@@ -261,5 +261,5 @@ def github_webhook_handler(request: Request):
             f"Workflow job event for '{job_name}' with action '{action}' and "
             f"status '{job_status}' did not trigger a scaling action."
         )
-    # [END run_github_worker_pool_scaling_logic]
+    # [END cloudrun_github_worker_pool_scaling_logic]
     return ("OK", 200)
