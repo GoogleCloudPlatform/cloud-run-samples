@@ -35,8 +35,6 @@ GITHUB_WEBHOOK_SECRET = os.environ["WEBHOOK_SECRET"]
 ## Autoscaling parameters
 # Max number of concurrent runners
 MAX_RUNNERS = int(os.getenv("MAX_RUNNERS", 5))
-# How long to wait before scaling down idle runners
-IDLE_TIMEOUT_MINUTES = int(os.getenv("IDLE_TIMEOUT_MINUTES", 15))
 
 # Values for API authentication
 CREDENTIALS, PROJECT_ID = google.auth.default()
