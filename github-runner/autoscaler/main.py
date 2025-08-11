@@ -30,6 +30,7 @@ CLOUD_RUN_WORKER_POOL_NAME = os.environ["WORKER_POOL_NAME"]
 CLOUD_RUN_WORKER_POOL_LOCATION = os.environ["WORKER_POOL_LOCATION"]
 GITHUB_REPO = os.environ["GITHUB_REPO"]
 GITHUB_WEBHOOK_SECRET = os.environ["WEBHOOK_SECRET"]
+GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 
 
 ## Autoscaling parameters
@@ -41,6 +42,24 @@ CREDENTIALS, PROJECT_ID = google.auth.default()
 
 # Cloud Run API for checking/updating
 CLOUDRUN_URI = f"https://run.googleapis.com/v2/projects/{PROJECT_ID}/locations/{CLOUD_RUN_WORKER_POOL_LOCATION}/workerPools/{CLOUD_RUN_WORKER_POOL_NAME}"
+
+# GitHub URI for checking active actions
+GITHUB_URI = f"https://api.github.com/repos/{GITHUB_REPO}/actions/runs"
+
+
+def _call_github_api(querystring={}, endpoint=GITHUB_URI):
+
+    response = requests.get(
+        endpoint,
+        params=querystring,
+        headers={"authorization": f"bearer {GITHUB_TOKEN}"},
+    )
+
+    run_data = response.json()["workflow_runs"]
+
+    print(f"Retrieved data about {len(run_data)} runs ({querystring})")
+
+    return run_data
 
 
 def _call_cloudrun_api(method, url=CLOUDRUN_URI, payload=None):
@@ -67,7 +86,6 @@ def _call_cloudrun_api(method, url=CLOUDRUN_URI, payload=None):
 
     # Make Call
     try:
-
         response = auth_req.session.request(method, url, headers=headers, json=payload)
         response.raise_for_status()
 
@@ -81,6 +99,17 @@ def _call_cloudrun_api(method, url=CLOUDRUN_URI, payload=None):
         else:
             print(f"No response to return. {method} {url}")
             raise ValueError(f"API Error: {e}")
+
+
+def get_current_actions():
+    """
+    Returns the number of queued and in_progress actions pending a GitHub runner
+    """
+
+    queued = _call_github_api(querystring={"status": "queued"})
+    in_progress = _call_github_api(querystring={"status": "in_progress"})
+
+    return len(queued), len(in_progress)
 
 
 def get_current_worker_pool_instance_count():
@@ -195,37 +224,42 @@ def github_webhook_handler(request: Request):
             new_instance_count = current_instance_count + 1
             try:
                 update_runner_instance_count(new_instance_count)
-                print(f"Successfully scaled up to {new_instance_count} instances")
+                print(f"Successfully scaled up to {new_instance_count} instances.")
             except ValueError as e:
                 return f"Error scaling up instances: {e}", 500
         else:
             print(f"Max runners ({MAX_RUNNERS}) reached.")
 
-    # Scale Down: If a job is completed, find the corresponding runner and consider terminating it
+    # Scale Down: If a job is completed, check to see if there are any more pending
+    # or in progress jobs and scale accordingly.
     elif action == "completed" and job_status == "completed":
         print(f"Job '{job_name}' completed.")
 
-        # TODO(developer): You might want more sophisticated logic here to
-        # determine which runner to shut down, especially if you have multiple
-        # runners and want to only shut down idle ones. For simplicity, this
-        # example scales down by one, ensuring it doesn't go below zero.
+        current_queued_actions, current_running_actions = get_current_actions()
+        current_actions = current_queued_actions + current_running_actions
 
-        if current_instance_count > 0:
-            new_instance_count = current_instance_count - 1
-            try:
-                update_runner_instance_count(new_instance_count)
-                print(f"Successfully scaled down to {new_instance_count} instances")
-            except ValueError as e:
-                return f"Error scaling down instances: {e}", 500
+        if current_queued_actions >= 1:
+            print(
+                f"GitHub says {current_queued_actions} are still pending."
+                f"Won't change scaling ({current_instance_count})."
+            )
+        elif current_queued_actions == 0 and current_running_actions >= 1:
+            print(
+                f"GitHub says no queued actions, but {current_running_actions} running actions."
+                f"Won't change scaling ({current_instance_count})."
+            )
+        elif current_actions == 0:
+            print(f"GitHub says no pending actions. Scaling to zero.")
+            update_runner_instance_count(0)
+            print(f"Successfully scaled down to zero.")
         else:
-            print(f"No runners are currently active to scale down.")
-
+            print(
+                f"Detected an unhandled state: {current_queued_actions=}, {current_running_actions=}"
+            )
     else:
         print(
             f"Workflow job event for '{job_name}' with action '{action}' and "
             f"status '{job_status}' did not trigger a scaling action."
         )
+    # [END run_github_worker_pool_scaling_logic]
     return ("OK", 200)
-
-
-# [END run_github_worker_pool_scaling_logic]
