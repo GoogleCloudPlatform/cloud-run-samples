@@ -28,12 +28,12 @@ RUNNER_NAME="${RUNNER_PREFIX}-${RUNNER_SUFFIX}"
 # Configure the current runner instance with URL, token and name.
 mkdir /home/docker/actions-runner && cd /home/docker/actions-runner
 echo "GitHub Repo: ${GITHUB_REPO_URL} for ${RUNNER_PREFIX}-${RUNNER_SUFFIX}"
-./config.sh  --unattended --ephemeral --url ${GITHUB_REPO_URL} --pat ${GH_TOKEN} --name ${RUNNER_NAME}
+./config.sh --unattended --url ${GITHUB_REPO_URL} --pat ${GH_TOKEN} --name ${RUNNER_NAME}
 
 # Function to cleanup and remove runner from Github.
 cleanup() {
    echo "Removing runner..."
-   ./config.sh  remove --unattended --ephemeral --pat ${GH_TOKEN}
+   ./config.sh remove --unattended --pat ${GH_TOKEN}
 }
 
 # Trap signals.
