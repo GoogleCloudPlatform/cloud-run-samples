@@ -210,7 +210,7 @@ def github_webhook_handler(request: Request):
     )
 
     # 3. Handle Scaling Logic
-    # [START clourun_github_worker_pool_scaling_logic]
+    # [START cloudrun_github_worker_pool_scaling_logic]
     try:
         current_instance_count = get_current_worker_pool_instance_count()
     except ValueError as e:
