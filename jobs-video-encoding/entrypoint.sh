@@ -1,7 +1,4 @@
 #!/bin/bash
-
-# entrypoint.sh
-
 set -e
 
 # Debug: Check NVIDIA driver and CUDA version
@@ -17,42 +14,25 @@ OUTPUT_FILE=$2
 shift 2
 FFMPEG_ARGS=("$@")
 
-# Get bucket names from environment variables
-SOURCE_BUCKET=${SOURCE_BUCKET:-transcode-preprocessing-bucket}
-TARGET_BUCKET=${TARGET_BUCKET:-transcode-postprocessing-bucket}
+# Build paths based on mounted contains
+INPUT_PATH=/inputs/$INPUT_FILE
+OUTPUT_PATH=/outputs/$OUTPUT_FILE
 
 # Define local processing directory
 WORK_DIR="/tmp/transcode"
+
+# Build local transcoding paths
 LOCAL_INPUT="${WORK_DIR}/${INPUT_FILE}"
 LOCAL_OUTPUT="${WORK_DIR}/${OUTPUT_FILE}"
 
+# Copy mounted file into local temp for processing
+cp $INPUT_PATH $LOCAL_INPUT
+
 echo "==============================================="
 echo "Starting transcode job"
-echo "Source: gs://${SOURCE_BUCKET}/${INPUT_FILE}"
-echo "Target: gs://${TARGET_BUCKET}/${OUTPUT_FILE}"
+echo "Source: ${INPUT_PATH}"
+echo "Target: ${OUTPUT_PATH}"
 echo "==============================================="
-
-# Step 1: Download the input file from GCS
-echo ""
-echo "Step 1: Downloading input file from GCS..."
-echo "Command: gsutil -m cp gs://${SOURCE_BUCKET}/${INPUT_FILE} ${LOCAL_INPUT}"
-DOWNLOAD_START=$(date +%s.%N)
-gsutil -m cp "gs://${SOURCE_BUCKET}/${INPUT_FILE}" "${LOCAL_INPUT}"
-if [ $? -ne 0 ]; then
-    echo "ERROR: Failed to download input file from GCS"
-    exit 1
-fi
-DOWNLOAD_END=$(date +%s.%N)
-DOWNLOAD_TIME=$(echo "$DOWNLOAD_END - $DOWNLOAD_START" | bc)
-echo "Download complete in ${DOWNLOAD_TIME} seconds. File size: $(du -h ${LOCAL_INPUT} | cut -f1)"
-
-# Step 2: Verify the input file and extract video information
-echo ""
-echo "Step 2: Verifying input file and extracting video information..."
-if [ ! -f "${LOCAL_INPUT}" ]; then
-    echo "ERROR: Input file not found at ${LOCAL_INPUT}"
-    exit 1
-fi
 
 # Extract video information using ffprobe
 VIDEO_INFO=$(ffprobe -v error -select_streams v:0 -show_entries stream=width,height,r_frame_rate,nb_frames,duration -of json "${LOCAL_INPUT}")
@@ -152,36 +132,17 @@ if [ $? -ne 0 ]; then
     echo "WARNING: Output file may be corrupted"
 fi
 
-# Step 5: Upload the output file to GCS
+# Step 5: Copy the output file mounted path
 echo ""
-echo "Step 5: Uploading output file to GCS..."
-echo "Command: gsutil -m cp ${LOCAL_OUTPUT} gs://${TARGET_BUCKET}/${OUTPUT_FILE}"
-UPLOAD_START=$(date +%s.%N)
-gsutil -m cp "${LOCAL_OUTPUT}" "gs://${TARGET_BUCKET}/${OUTPUT_FILE}"
-UPLOAD_EXIT_CODE=$?
-UPLOAD_END=$(date +%s.%N)
-UPLOAD_TIME=$(echo "$UPLOAD_END - $UPLOAD_START" | bc)
-
-if [ $UPLOAD_EXIT_CODE -ne 0 ]; then
-    echo "ERROR: Failed to upload output file to GCS"
-    # Clean up local files
-    rm -f "${LOCAL_INPUT}" "${LOCAL_OUTPUT}"
-    exit $UPLOAD_EXIT_CODE
-fi
-echo "Upload complete in ${UPLOAD_TIME} seconds"
-
-# Step 6: Clean up local files
-echo ""
-echo "Step 6: Cleaning up local files..."
-rm -f "${LOCAL_INPUT}" "${LOCAL_OUTPUT}"
-echo "Cleanup complete"
+echo "Step 5: Copying output file to GCS mounted path..."
+cp $LOCAL_OUTPUT $OUTPUT_PATH
 
 echo ""
 echo "==============================================="
 echo "TRANSCODE JOB SUMMARY"
 echo "==============================================="
-echo "Input: gs://${SOURCE_BUCKET}/${INPUT_FILE}"
-echo "Output: gs://${TARGET_BUCKET}/${OUTPUT_FILE}"
+echo "Input: $INPUT_PATH"
+echo "Output: $OUTPUT_PATH"
 echo "Download time: ${DOWNLOAD_TIME} seconds"
 echo "TRANSCODE TIME: ${TRANSCODE_DURATION} seconds"
 echo "Upload time: ${UPLOAD_TIME} seconds"
