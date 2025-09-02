@@ -26,7 +26,7 @@ LOCAL_INPUT="${WORK_DIR}/${INPUT_FILE}"
 LOCAL_OUTPUT="${WORK_DIR}/${OUTPUT_FILE}"
 
 # Copy mounted file into local temp for processing
-cp $INPUT_PATH $LOCAL_INPUT
+cp "$INPUT_PATH" "$LOCAL_INPUT"
 
 echo "==============================================="
 echo "Starting transcode job"
@@ -67,7 +67,7 @@ echo "  Duration: ${DURATION} seconds"
 # Step 3: Run FFmpeg transcoding
 echo ""
 echo "Step 3: Starting FFmpeg transcoding..."
-echo "FFmpeg command: ffmpeg -y -c:v h264_cuvid -i ${LOCAL_INPUT} ${FFMPEG_ARGS[@]} -preset p7 ${LOCAL_OUTPUT}"
+echo "FFmpeg command: ffmpeg -y -c:v h264_cuvid -i ${LOCAL_INPUT} ${FFMPEG_ARGS} -preset p7 ${LOCAL_OUTPUT}"
 
 # Record start time
 TRANSCODE_START=$(date +%s.%N)
@@ -75,7 +75,7 @@ TRANSCODE_START_READABLE=$(date '+%Y-%m-%d %H:%M:%S')
 echo "Transcoding started at: ${TRANSCODE_START_READABLE}"
 
 # Execute ffmpeg with hardware acceleration
-ffmpeg -y -c:v h264_cuvid -i "${LOCAL_INPUT}" ${FFMPEG_ARGS[@]} -preset p7 "${LOCAL_OUTPUT}" 2>&1 | tee /tmp/ffmpeg.log
+ffmpeg -y -c:v h264_cuvid -i "${LOCAL_INPUT}" "${FFMPEG_ARGS[@]}" -preset p7 "${LOCAL_OUTPUT}" 2>&1 | tee /tmp/ffmpeg.log
 FFMPEG_EXIT_CODE=${PIPESTATUS[0]}
 
 # Record end time
@@ -86,11 +86,11 @@ TRANSCODE_DURATION=$(echo "$TRANSCODE_END - $TRANSCODE_START" | bc)
 echo "Transcoding ended at: ${TRANSCODE_END_READABLE}"
 echo "TRANSCODING DURATION: ${TRANSCODE_DURATION} seconds"
 
-if [ $FFMPEG_EXIT_CODE -ne 0 ]; then
+if [ "$FFMPEG_EXIT_CODE" -ne 0 ]; then
     echo "ERROR: FFmpeg transcoding failed with exit code ${FFMPEG_EXIT_CODE}"
     # Clean up input file to save space
     rm -f "${LOCAL_INPUT}"
-    exit $FFMPEG_EXIT_CODE
+    exit "$FFMPEG_EXIT_CODE"
 fi
 echo "Transcoding complete. Output file size: $(du -h ${LOCAL_OUTPUT} | cut -f1)"
 
@@ -135,7 +135,7 @@ fi
 # Step 5: Copy the output file mounted path
 echo ""
 echo "Step 5: Copying output file to GCS mounted path..."
-cp $LOCAL_OUTPUT $OUTPUT_PATH
+cp "$LOCAL_OUTPUT" "$OUTPUT_PATH"
 
 echo ""
 echo "==============================================="
