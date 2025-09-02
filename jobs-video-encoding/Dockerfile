@@ -2,29 +2,33 @@
 FROM nvidia/cuda:12.1.0-devel-ubuntu22.04 AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
+ENV DIRPATH=/workspace
+WORKDIR $DIRPATH
+
 # build the FFmpeg and nv codec headers packages from source
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential cmake git pkg-config yasm nasm \
     libx264-dev libx265-dev libvpx-dev libfdk-aac-dev \
     libmp3lame-dev libopus-dev libvorbis-dev libass-dev \
     libssl-dev wget
 
 # Use a specific version of nv-codec-headers that's compatible with NVENC API 12.1
-RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git && \
-    cd nv-codec-headers && \
-    git checkout n12.1.14.0 && \
-    make install && cd ..
+RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
+WORKDIR $DIRPATH/nv-codec-headers
+RUN git checkout n12.1.14.0 && \
+    make install
 
-RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg --depth 1 && \
-    cd ffmpeg && \
-    ./configure \
+WORKDIR $DIRPATH
+RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg --depth 1
+WORKDIR $DIRPATH/ffmpeg
+RUN ./configure \
         --prefix=/usr/local --enable-gpl --enable-version3 --enable-nonfree \
         --enable-cuda-nvcc --enable-cuda-llvm --enable-cuvid --enable-nvenc \
         --enable-nvdec --enable-libnpp --extra-cflags=-I/usr/local/cuda/include \
         --extra-ldflags=-L/usr/local/cuda/lib64 --enable-libx264 --enable-libx265 \
         --enable-libvpx --enable-libfdk-aac --enable-libmp3lame --enable-libopus \
         --enable-libvorbis --enable-libass --enable-openssl && \
-    make -j$(nproc) && make install
+    make -j "$(nproc)" && make install
 
 
 # --- Runtime stage ---
