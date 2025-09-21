@@ -3,9 +3,9 @@ set -e
 
 # Debug: Check NVIDIA driver and CUDA version
 echo "Checking NVIDIA environment..."
-nvidia-smi || echo "nvidia-smi not available"
+nvidia-smi || echo "nvidia-smi not available" && exit 1
 echo "CUDA Version check:"
-nvcc --version || echo "nvcc not available"
+nvcc --version || echo "nvcc not available" && exit 1
 
 # Expecting: ./entrypoint.sh input_video.mp4 output_video.mp4 -vcodec h264_nvenc ...
 INPUT_FILE=$1
