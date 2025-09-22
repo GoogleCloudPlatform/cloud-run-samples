@@ -19,7 +19,7 @@ RUN git checkout n13.0.19.0 && \
     make install
 
 WORKDIR $DIRPATH
-RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg --depth 1
+RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg
 WORKDIR $DIRPATH/ffmpeg
 RUN git checkout n8.0 && \
     ./configure \
