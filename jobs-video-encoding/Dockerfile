@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Use a specific version of nv-codec-headers that's compatible with NVENC API 12.1
 RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
 WORKDIR $DIRPATH/nv-codec-headers
-RUN git checkout n12.1.14.0 && \
+RUN git checkout n13.0.19.0 && \
     make install
 
 WORKDIR $DIRPATH
