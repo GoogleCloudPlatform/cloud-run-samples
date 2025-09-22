@@ -21,7 +21,8 @@ RUN git checkout n13.0.19.0 && \
 WORKDIR $DIRPATH
 RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg --depth 1
 WORKDIR $DIRPATH/ffmpeg
-RUN ./configure \
+RUN git checkout n8.0 && \
+    ./configure \
         --prefix=/usr/local --enable-gpl --enable-version3 --enable-nonfree \
         --enable-cuda-nvcc --enable-cuda-llvm --enable-cuvid --enable-nvenc \
         --enable-nvdec --enable-libnpp --extra-cflags=-I/usr/local/cuda/include \
