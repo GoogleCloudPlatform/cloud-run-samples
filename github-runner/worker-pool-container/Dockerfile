@@ -18,6 +18,7 @@ FROM ghcr.io/actions/actions-runner:2.327.1
 
 # Add scripts with right permissions.
 USER root
+# hadolint ignore=DL3045
 COPY start.sh start.sh
 RUN chmod +x start.sh
 
