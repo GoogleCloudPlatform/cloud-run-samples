@@ -19,7 +19,7 @@ RUN git checkout n12.1.14.0 && \
     make install
 
 WORKDIR $DIRPATH
-RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg
+RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg --depth 1
 WORKDIR $DIRPATH/ffmpeg
 RUN ./configure \
         --prefix=/usr/local --enable-gpl --enable-version3 --enable-nonfree \
