@@ -49,7 +49,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Copy compiled ffmpeg/ffprobe tools from the builder stage
-#TODO(glasnt): confirm delta of these two, should just copy compiled files?
 COPY --from=builder /usr/local /usr/local
 
 # Set library and binary paths
