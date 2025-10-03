@@ -1,5 +1,5 @@
 # --- Build stage ---
-FROM nvidia/cuda:13.0.1-devel-ubuntu24.04 AS builder
+FROM nvidia/cuda:12.1.0-devel-ubuntu22.04 AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
 ENV DIRPATH=/workspace
@@ -15,14 +15,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Use a specific version of nv-codec-headers that's compatible with NVENC API 12.1
 RUN git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
 WORKDIR $DIRPATH/nv-codec-headers
-RUN git checkout n13.0.19.0 && \
+RUN git checkout n12.1.14.0 && \
     make install
 
 WORKDIR $DIRPATH
 RUN git clone https://git.ffmpeg.org/ffmpeg.git ffmpeg
 WORKDIR $DIRPATH/ffmpeg
-RUN git checkout n8.0 && \
-    ./configure \
+RUN ./configure \
         --prefix=/usr/local --enable-gpl --enable-version3 --enable-nonfree \
         --enable-cuda-nvcc --enable-cuda-llvm --enable-cuvid --enable-nvenc \
         --enable-nvdec --enable-libnpp --extra-cflags=-I/usr/local/cuda/include \
@@ -33,7 +32,7 @@ RUN git checkout n8.0 && \
 
 
 # --- Runtime stage ---
-FROM nvidia/cuda:13.0.1-runtime-ubuntu24.04
+FROM nvidia/cuda:12.1.0-runtime-ubuntu22.04
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,video,utility
 
