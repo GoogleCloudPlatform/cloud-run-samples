@@ -1,11 +1,24 @@
 #!/bin/bash
-set -e
 
-# Debug: Check NVIDIA driver and CUDA version
+# Confirm setup: Check NVIDIA driver and CUDA version
+echo "-----"
 echo "Checking NVIDIA environment..."
-nvidia-smi || echo "nvidia-smi not available" && exit 1
+nvidia-smi
+retVal=$?
+if [ $retVal -ne 0 ]; then
+    echo "‼️ Error: nvidia-smi not available: exit code $retVal"
+    exit $retVal
+fi
+echo "----"
 echo "CUDA Version check:"
-nvcc --version || echo "nvcc not available" && exit 1
+which nvcc
+nvcc --version
+retVal=$?
+if [ $retVal -ne 0 ]; then
+    echo "‼️ nvcc not available: exit code $retVal"
+    exit $retVal
+echo "-----"
+fi
 
 # Expecting: ./entrypoint.sh input_video.mp4 output_video.mp4 -vcodec h264_nvenc ...
 INPUT_FILE=$1
