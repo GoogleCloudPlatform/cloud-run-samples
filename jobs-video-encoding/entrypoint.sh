@@ -11,7 +11,6 @@ if [ $retVal -ne 0 ]; then
 fi
 echo "----"
 echo "CUDA Version check:"
-which nvcc
 nvcc --version
 retVal=$?
 if [ $retVal -ne 0 ]; then
