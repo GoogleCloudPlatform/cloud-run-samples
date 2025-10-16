@@ -1,0 +1,81 @@
+steps:
+
+- id: 'Build Container Image'
+  name: 'gcr.io/cloud-builders/docker:latest'
+  dir: '${_SAMPLE_DIR}'
+  args: ['build', '-t', '${_IMAGE_NAME}', '.']
+
+- id: 'Push Container Image'
+  name: 'gcr.io/cloud-builders/docker:latest'
+  args: ['push', '${_IMAGE_NAME}']
+
+- id: 'Deploy to Cloud Run'
+  name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION'
+  entrypoint: /bin/bash
+  args:
+  - '-c'
+  - |
+    gcloud beta run jobs create $_JOB_NAME \
+      --image ${_IMAGE_NAME} \
+      --memory 32Gi \
+      --cpu 8 \
+      --gpu 1 \
+      --gpu-type nvidia-l4 \
+      --no-gpu-zonal-redundancy \
+      --max-retries 1 \
+      --add-volume=name=input-volume,type=cloud-storage,bucket=$_INPUT_BUCKET,readonly=true \
+      --add-volume-mount=volume=input-volume,mount-path=/inputs \
+      --add-volume=name=output-volume,type=cloud-storage,bucket=$_OUTPUT_BUCKET \
+      --add-volume-mount=volume=output-volume,mount-path=/outputs
+
+- id: 'Execute Job'
+  name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION'
+  entrypoint: '/bin/bash'
+  args:
+  - '-c'
+  - |
+    gcloud run jobs execute $_JOB_NAME \
+    --region $_REGION \
+    --wait \
+    --args="${_INPUT_OBJECT},${_OUTPUT_OBJECT},-vcodec,h264_nvenc,-cq,21,-movflags,+faststart"
+
+- id: 'Verify Job Output'
+  name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION'
+  entrypoint: '/bin/bash'
+  args:
+  - '-c'
+  - |
+    gcloud storage objects describe gs://${_OUTPUT_BUCKET}/${_OUTPUT_OBJECT}
+
+- id: 'Teardown'
+  name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:$_CLOUDSDK_VERSION'
+  entrypoint: '/bin/bash'
+  args:
+  - '-c'
+  - |
+    set -x
+    gcloud --quiet container images delete ${_IMAGE_NAME}
+    gcloud --quiet run jobs delete $_JOB_NAME --region ${_REGION}
+    gcloud storage rm gs://${_OUTPUT_BUCKET}/${_OUTPUT_OBJECT}
+    set +x
+    echo "View build details in the console: https://console.cloud.google.com/cloud-build/builds/${BUILD_ID}"
+
+options:
+  dynamicSubstitutions: true
+  env:
+    - "CLOUDSDK_RUN_REGION=${_REGION}"
+    - "GOOGLE_CLOUD_PROJECT=${PROJECT_ID}"
+  machineType: E2_HIGHCPU_32
+
+substitutions:
+  _JOB_NAME: video-encoding-${BUILD_ID}
+  _SAMPLE_DIR: jobs-video-encoding
+  _REGION: us-east4
+  _CLOUDSDK_VERSION: latest
+  _AR_REPO_NAME: samples
+  _IMAGE_NAME: us-central1-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO_NAME}/${_JOB_NAME}:${BUILD_ID}
+  _INPUT_BUCKET: video-encoding-cloud-run-samples-test
+  _INPUT_OBJECT: cat.mp4
+  _OUTPUT_BUCKET: video-encoding-output-cloud-run-samples-test
+  _OUTPUT_OBJECT: encoded_cat-${BUILD_ID}.mp4
+
