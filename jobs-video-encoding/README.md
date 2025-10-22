@@ -7,4 +7,4 @@ Run Jobs**.
 The use case is for low-priority offline transcoding of a batch of videos up to
 8Gib in size to their new format via a Cloud Run batch job.
 
-Read more at the tutorial (TODO(glasnt): tutorial link.)
+Read more at the tutorial [GPU-accelerated video transcoding with FFmpeg on Cloud Run jobs](https://cloud.google.com/run/docs/tutorials/video-encoding)
