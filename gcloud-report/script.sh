@@ -42,7 +42,7 @@ obj="gs://${GCLOUD_REPORT_BUCKET}/report-${search}-$(date +%s).txt"
 # deployed it, and any explicitly configured service "limits" such as CPU or Memory.
 gcloud run services list \
   --format "${format}" \
-  --filter "metadata.name~${search}" | gsutil -q cp -J - "${obj}"
+  --filter "metadata.name~${search}" | gcloud storage cp --gzip-in-flight-all - "${obj}"
 
 # /dev/stderr is sent to Cloud Logging.
 echo "gcloud-report: wrote to ${obj}" >&2

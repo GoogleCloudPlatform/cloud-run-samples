@@ -78,7 +78,7 @@ steps:
         echo "$out"
         obj=$(echo $out | grep -o gs://.*)
         echo "Downloading report ${obj} for local validation"
-        gsutil cp $obj .
+        gcloud storage cp $obj .
         cat $(basename $obj) | grep ${_SERVICE}
     env:
       - "GCLOUD_REPORT_BUCKET=${_BUCKET}"
