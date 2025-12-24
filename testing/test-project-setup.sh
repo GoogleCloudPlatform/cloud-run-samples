@@ -87,7 +87,7 @@ https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
 
   echo "Creating Cloud Storage bucket for sample integration"
   gcloud storage buckets create gs://${TESTING_PROJECT}
-  // Delete objects in this bucket after 3 days.
+  # Delete objects in this bucket after 3 days.
   gcloud storage buckets update gs://${TESTING_PROJECT} --lifecycle-file=sample-storage.lifecycle.json
 
   echo "Project setup complete"
