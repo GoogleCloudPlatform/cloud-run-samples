@@ -86,7 +86,7 @@ https://cloud.google.com/resource-manager/docs/migrating-projects-billing";
     --role roles/secretmanager.secretAccessor
 
   echo "Creating Cloud Storage bucket for sample integration"
-  gsutil mb gs://${TESTING_PROJECT}
+  gcloud storage buckets create gs://${TESTING_PROJECT}
   // Delete objects in this bucket after 3 days.
   gcloud storage buckets update gs://${TESTING_PROJECT} --lifecycle-file=sample-storage.lifecycle.json
 
