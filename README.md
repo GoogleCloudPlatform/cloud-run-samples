@@ -22,7 +22,7 @@ For all Cloud Run code samples, see the [Cloud Run sample browser](https://cloud
 | End user authentication    | Integrate with Identity Platform to restrict access     | [Node.js][idp_sql_nodejs], [Java][idp_sql_java], [Python][idp_sql_python] |
 | Invoking with gRPC         | Demonstrates service-to-service gRPC requests           | [Go][grpc_go] |
 | Service to Service Request | Snippet: Authenticated requests between services        | [Go][idtoken_request_go], [Node.js][idtoken_request_nodejs], [Python][idtoken_request_python], [Java][idtoken_request_java] |
-| gcloud as a service        | Use `gcloud` and `gsutil` in a service                  | [Go][gcloud_report]                 |
+| gcloud as a service        | Use `gcloud` and `gcloud storage` in a service                  | [Go][gcloud_report]                 |
 | VPC Testing                | Egress and ingress settings with VPC                    | [Python][vpc_sample]                |
 | Multi-container Hello Nginx| Multi-containers with nginx                             | [YAML][multicontainer_hello_nginx_sample] |
 | Markdown Preview           | 2 tier secure microservices for Markdown rendering      | [Go][markdown_preview_go], [Nodejs][markdown_preview_nodejs], [Python][markdown_preview_python], [Java][markdown_preview_java] |
