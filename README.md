@@ -116,7 +116,7 @@ makes your Cloud Run service deployable with the push of a button. (It will open
 [qs_guide]: https://cloud.google.com/run/docs/quickstarts#build-and-deploy-a-web-service
 [run_button_hello_python]: https://deploy.cloud.run/?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&dir=run/helloworld
 [run_button_hello_java]: https://deploy.cloud.run/?git_repo=https://github.com/GoogleCloudPlatform/java-docs-samples&dir=run/helloworld
-[run_button_hello_nodejs]: https://deploy.cloud.run/?git_repo=https://github.com/GoogleCloudPlatform/nodejs-docs-samples&dir=run/helloworld
+[run_button_hello_nodejs]: https://deploy.cloud.run/?git_repo=https://github.com/citrusoft/nodejs-docs-samples&dir=run/helloworld
 [run_button_hello_go]: https://deploy.cloud.run/?git_repo=https://github.com/GoogleCloudPlatform/golang-samples&dir=run/helloworld
 
 Find more samples to deploy with the Cloud Run Button by using the [Sample Index](#sample-index) above.
