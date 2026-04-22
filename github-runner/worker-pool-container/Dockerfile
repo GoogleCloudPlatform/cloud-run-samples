@@ -14,7 +14,7 @@
 
 
 # [START cloudrun_github_worker_pool_dockerfile]
-FROM ghcr.io/actions/actions-runner:2.332.0
+FROM ghcr.io/actions/actions-runner:2.334.0
 
 # Add scripts with right permissions.
 USER root
