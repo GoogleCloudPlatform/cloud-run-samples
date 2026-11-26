@@ -1,0 +1,13 @@
+project_id                 = "my-gcp-project-id"
+region                     = "us-central1"
+github_org                 = "my-github-org"
+github_app_id              = "123456"
+github_app_installation_id = "12345678"
+
+# Optional overrides
+# runner_cpu      = "4"
+# runner_memory   = "4Gi"
+# min_replicas    = 0
+# max_replicas    = 10
+# cooldown_period = 300
+# runner_labels   = "self-hosted,cloud-run,linux"
